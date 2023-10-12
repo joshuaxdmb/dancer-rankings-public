@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { use } from 'react';
 import { twMerge } from 'tailwind-merge';
 import StyledButton from './SytledButton';
 import useAuthModal from '@/hooks/useAuthModal';
@@ -24,6 +24,10 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
   useEffect(() => {
     setVisible(window.innerWidth >= 630);
   }, []);
+
+  useEffect(() => {
+    console.log('Updated user state',user,spotifySession)
+  },[spotifySession, user, showUserBadge])
 
   useEffect(() => {
     // Function to handle the resize event
@@ -63,7 +67,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
     >
       <div className="w-full mb-4 flex items-center justify-between">
         <div className="flex gap-x-2 items-center"></div>
-        {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+        {visible && pageTitle && !showButtons && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
         {(!user || !spotifySession) && showButtons && (
           <div className="flex flex-row items-center">
             <div>
@@ -96,7 +100,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
               width={25}
               height={25}
               className="rounded-full w-10 h-10"
-              src={spotifySession?.user?.image || 'assets/icons/spotify.svg'}
+              src={spotifySession?.user?.image || '/assets/icons/spotify.svg'}
               alt="user-image"
             />
             <h2>{spotifySession?.user?.name}</h2>
@@ -104,7 +108,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
           </div>
         )}
       </div>
-      {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+      {((!visible && pageTitle) || (!user || !spotifySession)) && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
       {children}
     </div>
   );

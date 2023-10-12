@@ -39,10 +39,6 @@ const Center = ({ playlistFilter }: Props) => {
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
   const router = useRouter();
 
-  // const updateSongs = async () => {
-  //   const songs = await supabaseClient.getVotedSongs(playlistFilter, location);
-  //   return songs;
-  // };
   useEffect(() => {
     if (!songs[location] || !songs[location]?.[playlistFilter] || !songs[location]?.[playlistFilter]?.length) {
       console.log('here');
@@ -82,6 +78,12 @@ const Center = ({ playlistFilter }: Props) => {
 
   const spotifyApi = useSpotify();
   const handleSearch = (query: string) => {
+    if(!spotifySession){
+      toast.error('You must be logged in to spotify to search for a song', {
+        id: 'failed-spotify-search',
+      });
+      return;
+    }
     setSearchOpen(true);
     setSearchQuery(query);
     spotifyApi
@@ -206,13 +208,6 @@ const Center = ({ playlistFilter }: Props) => {
     if (!user) {
       toast.error('You must be logged in to upvote a song', {
         id: 'failed-upvote-song-supabase',
-      });
-      return;
-    }
-
-    if (!spotifySession.user) {
-      toast.error('You must be logged in to spotify to upvote a song', {
-        id: 'failed-upvote-song-spotify',
       });
       return;
     }
