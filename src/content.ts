@@ -1,5 +1,34 @@
 import { PlaylistInfo, Routes } from "./types/types";
+export enum LocationIdsEnum {
+    toronto = 'toronto',
+    newyork = 'newyork'
+}
 
+export enum PlaylistEnum{
+    bachata = 'bachata',
+    salsa = 'salsa',
+    zoilk = 'zouk'
+}
+
+export const Locations = [
+    {
+        id:LocationIdsEnum.toronto,
+        label:'Toronto',
+    },
+    {
+        id:LocationIdsEnum.newyork,
+        label:'New York',
+    }
+]
+
+type LocationLabels = {
+    [key in LocationIdsEnum]: string
+  };
+
+export const LocationLabels:LocationLabels = {
+    "toronto":'Toronto',
+    "newyork":'New York'
+}
 
 export const EventsThisWeek: Array<any> = [
     {

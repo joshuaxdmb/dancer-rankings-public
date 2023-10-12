@@ -5,8 +5,8 @@ import { IoMdClose } from 'react-icons/io';
 type Props = {
   isOpen: boolean;
   onChange: (open: boolean) => void;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   children: React.ReactNode;
 };
 

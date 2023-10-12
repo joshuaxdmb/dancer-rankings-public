@@ -1,8 +1,16 @@
-import Sidebar from '@/app/components/Sidebar';
+'use client'
 import Header from '@/app/components/Header';
-import SytledButton from '@/app/components/SytledButton';
-import ListItem from '@/app/components/MainLinkItem';
+import Center from '../components/Center';
+import { LocationLabels, PlaylistEnum } from '@/content';
+import { useRecoilState } from 'recoil';
+import { locationAtom } from '@/atoms/locationAtom';
+
+
 export default function Home() {
+
+  const [location] = useRecoilState(locationAtom)
+  const songs = []
+
   return (
     <div
       className="
@@ -14,14 +22,9 @@ export default function Home() {
         overflow-y-auto
       "
     >
-      <Header>
-        <div className='mb-2'>
-          <h1 className='text-white text-3xl font-semibold'>{`If you're not a dancer, kindly close your browser 💃 🕺`}</h1>
-        </div>
-        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4'>
-            
-        </div>
+      <Header className='bg-gradient-to-b from-purple-900' pageTitle={`Top Bachata Songs | ${LocationLabels[location]}`}>
       </Header>
+      <Center playlistFilter={PlaylistEnum.bachata}/>
     </div>
   );
 }

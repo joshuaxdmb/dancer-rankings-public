@@ -5,16 +5,8 @@ import { Figtree } from 'next/font/google';
 import SupabaseProvider from '@/app/providers/SupabaseProvider';
 import UserProvider from '@/app/providers/UserProvider';
 import ModalProvider from '@/app/providers/ModalProvider';
-import { getProviders, signIn } from 'next-auth/react';
-
-export async function getServerSideProps() {
-  const providers = await getProviders();
-  console.log('Providers', providers)
-
-  return {
-    props: { providers },
-  };
-}
+import RecoilProvider from './providers/RecoilProvider';
+import ToasterProvider from './providers/ToasterProvider';
 
 const font = Figtree({ subsets: ['latin'] });
 
@@ -25,18 +17,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  providers
 }: {
   children: React.ReactNode;
-  providers: any;
 }) {
   return (
     <html lang="en">
       <body className={font.className}>
+        <ToasterProvider />
         <SupabaseProvider>
           <UserProvider>
-            <ModalProvider/>
-            <Sidebar>{children}</Sidebar>
+            <RecoilProvider>
+              <ModalProvider />
+              <Sidebar>{children}</Sidebar>
+            </RecoilProvider>
           </UserProvider>
         </SupabaseProvider>
       </body>

@@ -101,67 +101,6 @@ export interface Database {
           }
         ]
       }
-      locations: {
-        Row: {
-          id: number
-          location_id: string
-        }
-        Insert: {
-          id?: number
-          location_id: string
-        }
-        Update: {
-          id?: number
-          location_id?: string
-        }
-        Relationships: []
-      }
-      playlist_song_map: {
-        Row: {
-          added_by: string | null
-          created_at: string
-          id: number
-          playlist_id: string | null
-          song_spotify_id: string | null
-        }
-        Insert: {
-          added_by?: string | null
-          created_at?: string
-          id?: number
-          playlist_id?: string | null
-          song_spotify_id?: string | null
-        }
-        Update: {
-          added_by?: string | null
-          created_at?: string
-          id?: number
-          playlist_id?: string | null
-          song_spotify_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "playlist_song_map_playlist_id_fkey"
-            columns: ["playlist_id"]
-            referencedRelation: "playlists"
-            referencedColumns: ["playlist_id"]
-          }
-        ]
-      }
-      playlists: {
-        Row: {
-          id: number
-          playlist_id: string
-        }
-        Insert: {
-          id?: number
-          playlist_id: string
-        }
-        Update: {
-          id?: number
-          playlist_id?: string
-        }
-        Relationships: []
-      }
       prices: {
         Row: {
           active: boolean | null
@@ -242,54 +181,45 @@ export interface Database {
         Row: {
           added_by: string | null
           author: string | null
+          categories: Json
           created_at: string
-          down_votes: number | null
+          downvotes: number | null
+          id: number
           image_path: string | null
-          location_id: string
-          playlist_id: string
-          preview_url: string | null
-          spotify_id: string
+          song_path: string | null
           title: string | null
-          up_votes: number | null
+          upvotes: number | null
         }
         Insert: {
           added_by?: string | null
           author?: string | null
+          categories: Json
           created_at?: string
-          down_votes?: number | null
+          downvotes?: number | null
+          id?: number
           image_path?: string | null
-          location_id: string
-          playlist_id: string
-          preview_url?: string | null
-          spotify_id: string
+          song_path?: string | null
           title?: string | null
-          up_votes?: number | null
+          upvotes?: number | null
         }
         Update: {
           added_by?: string | null
           author?: string | null
+          categories?: Json
           created_at?: string
-          down_votes?: number | null
+          downvotes?: number | null
+          id?: number
           image_path?: string | null
-          location_id?: string
-          playlist_id?: string
-          preview_url?: string | null
-          spotify_id?: string
+          song_path?: string | null
           title?: string | null
-          up_votes?: number | null
+          upvotes?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_location"
-            columns: ["location_id"]
-            referencedRelation: "locations"
-            referencedColumns: ["location_id"]
-          },
-          {
-            foreignKeyName: "fk_playlist"
-            columns: ["playlist_id"]
-            referencedRelation: "playlists"
-            referencedColumns: ["playlist_id"]
+            foreignKeyName: "songs_added_by_fkey"
+            columns: ["added_by"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -297,35 +227,32 @@ export interface Database {
         Row: {
           created_at: string
           id: string
-          location: string
           song_id: number
           vote: number
         }
         Insert: {
-          created_at?: string
+          created_at: string
           id: string
-          location: string
           song_id: number
           vote: number
         }
         Update: {
           created_at?: string
           id?: string
-          location?: string
           song_id?: number
           vote?: number
         }
         Relationships: [
           {
-            foreignKeyName: "fk_location"
-            columns: ["location"]
-            referencedRelation: "locations"
-            referencedColumns: ["location_id"]
-          },
-          {
             foreignKeyName: "songs_votes_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "songs_votes_song_id_fkey"
+            columns: ["song_id"]
+            referencedRelation: "songs"
             referencedColumns: ["id"]
           }
         ]
@@ -401,35 +328,41 @@ export interface Database {
         Row: {
           avatar_url: string | null
           billing_address: Json | null
-          default_location: string
           email: string | null
           email: string | null
           full_name: string | null
           id: string
           payment_method: Json | null
-          username: string | null
+          votes_bachata_songs: Json[] | null
+          votes_events: Json[] | null
+          votes_salsa_songs: Json[] | null
+          votes_zouk_songs: Json[] | null
         }
         Insert: {
           avatar_url?: string | null
           billing_address?: Json | null
-          default_location: string
           email?: string | null
           email?: string | null
           full_name?: string | null
           id: string
           payment_method?: Json | null
-          username?: string | null
+          votes_bachata_songs?: Json[] | null
+          votes_events?: Json[] | null
+          votes_salsa_songs?: Json[] | null
+          votes_zouk_songs?: Json[] | null
         }
         Update: {
           avatar_url?: string | null
           billing_address?: Json | null
-          default_location?: string
           email?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
           payment_method?: Json | null
-          username?: string | null
+          votes_bachata_songs?: Json[] | null
+          votes_events?: Json[] | null
+          votes_salsa_songs?: Json[] | null
+          votes_zouk_songs?: Json[] | null
         }
         Relationships: [
           {

@@ -25,7 +25,7 @@ async function refreshAccessToken(token) {
   }
 }
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -66,10 +66,9 @@ export default NextAuth({
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.username = token.username;
-
-      console.log('User logged in',session.user)
-      
       return session;
     },
   },
-});
+}
+
+export default NextAuth(authOptions);

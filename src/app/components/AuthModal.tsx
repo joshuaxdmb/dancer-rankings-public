@@ -6,92 +6,82 @@ import {
 } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { signIn} from 'next-auth/react'
+import { signIn } from 'next-auth/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import useAuthModal from '@/hooks/useAuthModal';
+import { toast } from 'react-hot-toast';
+import { LocationIdsEnum, Locations } from '@/content';
+import SupabaseWrapper from '@/hooks/useSupabase';
+import { isValidEmail } from '@/utils/utils';
 
+type Props = {};
 
-type Props = {
-};
-
-const AuthModal = ({}:Props) => {
-  const {onClose, isOpen, authOption, setAuthOption} = useAuthModal();
-  const supabaseClient = useSupabaseClient();
+const AuthModal = ({}: Props) => {
+  const { onClose, isOpen, authOption, setAuthOption } = useAuthModal();
+  const supabaseClient = new SupabaseWrapper(useSupabaseClient());
   const router = useRouter();
   const { session } = useSessionContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
-  
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+  const [selectedLocation, setSelectedLocation] = useState(Locations[0].id);
 
-  const onChange = (open:boolean) => {
-    if(!open){
-      onClose()
+  const onChange = (open: boolean) => {
+    if (!open) {
+      onClose();
     }
-  }
+  };
+
+  const verifyEmailInSupabase = async (
+    userId: any,
+    email: any,
+    userName: string
+  ) => {
+    const { data: existingUser } = await supabaseClient.getUserByEmail(email);
+
+    if ((!existingUser || existingUser.length < 1) && isValidEmail(email)) {
+      const insertData = {
+        email: email,
+        full_name: userName,
+        location: selectedLocation,
+        // other fields can be added here if needed
+      };
+
+      const { error: insertError } = await supabaseClient.updateUser(
+        userId,
+        insertData
+      );
+
+      if (insertError) {
+        console.error('Error inserting user:', insertError);
+      }
+    }
+  };
 
   useEffect(() => {
-    if(session){
-      router.refresh();
-      console.log('User session found',session)
-      onClose()
+    if (session) {
+      //router.refresh();
+      console.log('User session found');
+      onClose();
     }
-  },[session, router, onClose])
-
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const code = urlParams.get('code');
-
-  //   if (code) {
-  //     handleSpotifyCallback(code);
-  //   }
-  // }, []);
-
-  // const handleSpotifyCallback = async (code: any) => {
-  //   // Send this code to your Next.js API route to exchange it for tokens
-  //   const response = await fetch('/api/spotify/token', {
-  //     method: 'POST',
-  //     body: JSON.stringify({ code }),
-  //   });
-
-  //   console.log(response,response.json())
-  //   const data = await response.json();
-
-  //   if (data.accessToken) {
-  //     // Use this access token to get Spotify user details
-  //     const userResponse = await fetch('/api/spotify/user', {
-  //       method: 'POST',
-  //       body: JSON.stringify({ accessToken: data.accessToken }),
-  //     });
-
-  //     const userData = await userResponse.json();
-  //   }
-  // };
+  }, [session, router, onClose]);
 
   const handleSupabaseAuth = async () => {
     if (authOption === 'login') {
-      const { data: existingUser } = await supabaseClient
-        .from('users')
-        .select('*')
-        .eq('email', email);
+      const { data: existingUser } = await supabaseClient.getUserByEmail(email);
 
       if (!existingUser || existingUser.length < 1) {
-        setError('We couldn\'t find your email');
+        setError("We couldn't find your email");
       }
 
       const {
         data: { user },
         error,
-      } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
+      } = await supabaseClient.signIn(email, password);
+
+      if (user) verifyEmailInSupabase(user.id, user.email, userName);
 
       if (error) {
         console.error(error.message);
@@ -99,28 +89,21 @@ const AuthModal = ({}:Props) => {
       } else {
         console.log('User signed in:', user);
       }
-
     } else {
       // First, check if the user already exists in the `public.users` table
-      const { data: existingUser } = await supabaseClient
-        .from('users')
-        .select('*')
-        .eq('email', email);
+      const { data: existingUser } = await supabaseClient.getUserByEmail(email);
 
       if (existingUser && existingUser.length > 0) {
         setError('User already registered. Please login.');
-        throw new Error('User already registered. Please login.')
+        throw new Error('User already registered. Please login.');
       }
 
       // If not, then proceed with the signup
-      console.log("User not found, proceeding with signup",email)
+      console.log('User not found, proceeding with signup', email);
       const {
         data: { user },
         error,
-      } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-      });
+      } = await supabaseClient.signUp(email, password);
 
       if (error) {
         setError(error.message);
@@ -130,51 +113,47 @@ const AuthModal = ({}:Props) => {
 
       if (user) {
         console.log('User signed up:', user);
-        const insertData = {
-          email: user.email,
-          full_name: userName,
-          // other fields can be added here if needed
-        };
-
-        const { error: insertError } = await supabaseClient
-          .from('users')
-          .update([insertData])
-          .eq('id',user.id)
-
-        if (insertError) {
-          console.error('Error inserting user:', insertError);
-          throw new Error('Unable to log in with those credentials')
-        }
+        verifyEmailInSupabase(user.id, email, userName);
       }
     }
   };
 
-  const handleAuth = async() =>{
-    if(!isValidEmail(email)){
-      setError('Hmm... your email does not look right')
-      return
+  const handleAuth = async () => {
+    if (!isValidEmail(email)) {
+      setError('Hmm... your email does not look right');
+      return;
     }
-    if(password.length < 8){
-      setError('Too easy to hack! Password must be at least 8 characters long')
-      return
+    if (password.length < 8) {
+      setError('Too easy to hack! Password must be at least 8 characters long');
+      return;
     }
 
-    try{
-      await handleSupabaseAuth()
-      if(!error){} await handleSpotifyAuth()
-    } catch(e:any){
-      console.log('Error',e)
-      setError(e.message)
+    try {
+      await handleSupabaseAuth();
+      if (!error) {
+        await handleSpotifyAuth();
+        toast.success('Logged in!', { id: 'auth success' });
+      }
+      
+    } catch (e: any) {
+      console.log('Error', e);
+      setError(e.message);
     }
-    
-  }
+  };
 
-  const handleSpotifyAuth = async() => {
-    signIn('spotify', { callbackUrl: '/' }).then((res) => {
-      console.log('Logged in with Spotify', res)
-    }).catch((e) =>{
-      console.log('Could not log in with Spotify',e)
-    })
+  const handleSpotifyAuth = async () => {
+    const spotifySession = await (await fetch('/api/auth/session')).json();
+    if (spotifySession.token && session?.user?.id) {
+      const insertData = {username: spotifySession.user.username}
+      const { error: insertError } = await supabaseClient.updateUser(
+        session.user.id,
+        insertData
+      );
+      if(insertError) console.log('Failed to add username from Spotify',insertError)
+      console.log('User already signed in on Spotify');
+      return;
+    }
+    signIn('spotify', { callbackUrl: '/' });
   };
 
   return (
@@ -186,15 +165,22 @@ const AuthModal = ({}:Props) => {
     >
       <div className="flex items-center justify-center">
         <div className=" p-8 pt-2 rounded shadow-md w-96">
-          <form onSubmit={(e)=>{e.preventDefault}} className="space-y-4">
-            {authOption !== 'login' && ( <input
-              type="name"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="How should we call you?"
-              className="w-full p-2 border rounded"
-            />)}
-           
+          <form
+            onSubmit={(e) => {
+              e.preventDefault;
+            }}
+            className="space-y-4"
+          >
+            {authOption !== 'login' && (
+              <input
+                type="name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="How should we call you?"
+                className="w-full p-2 border rounded"
+              />
+            )}
+
             <input
               type="email"
               value={email}
@@ -209,21 +195,35 @@ const AuthModal = ({}:Props) => {
               placeholder="Password"
               className="w-full p-2 border rounded"
             />
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-200"
+            >
+              Select your community:
+            </label>
+            <select
+              id="location"
+              name="location"
+              className="w-full p-2 border rounded mt-1"
+              value={selectedLocation}
+              onChange={(e) => {
+                setSelectedLocation(e.target.value as LocationIdsEnum);
+              }}
+            >
+              {Locations.map((location, index) => (
+                <option key={index} value={location.id}>
+                  {location.label}
+                </option>
+              ))}
+            </select>
 
-            {/* {Object.values(providers).map((provider: any) => (
-              <div key={provider.name}>
-                <button>Login with {provider.name}</button>
-              </div>
-            ))} */}
             <button
               onClick={handleAuth}
-              type='button'
+              type="button"
               className="w-full p-2 bg-green-500 text-white rounded hover:bg-green-600 items-center justify-center flex"
             >
-              {authOption === 'login'
-                ? 'Login'
-                : 'Register'}
-                <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
+              {authOption === 'login' ? 'Login' : 'Register'}
+              <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
             </button>
             {authOption === 'login' ? (
               <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">

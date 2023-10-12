@@ -1,3 +1,4 @@
+import { PlaylistEnum } from "@/content";
 import Stripe from "stripe";
 
 export interface UserDetailsType {
@@ -14,7 +15,64 @@ export interface UserDetailsType {
     votes_salsa_songs?:string
     votes_zouk_songs?:string
     billing_address?: Stripe.Address;
+    default_location?:string
 
+}
+
+export interface Song {
+    added_by: string | null
+    author: string | null
+    created_at?: string
+    image_path: string | null
+    preview_url: string | null
+    spotify_id: string
+    title: string | null
+}
+
+export interface SongLocal {
+    added_by: string | null
+    author: string | null
+    image_path: string | null
+    preview_url: string | null
+    spotify_id: string
+    title: string | null
+    up_votes: number
+    down_votes: number
+    location_id: string
+    playlist_id: PlaylistEnum
+    total_votes: number
+}
+
+export interface SongVoteLocal {
+    song_spotify_id: string
+    user_id: string
+    location_id: string
+    playlist_id: PlaylistEnum
+    vote: number
+}
+
+export interface VotesMap {
+    [key: string]: any;
+};
+
+export interface SpotifySong{
+    album: any;
+    artists: any[];
+    available_markets: string[];
+    disc_number: number;
+    duration_ms: number;
+    explicit: boolean;
+    external_ids: any;
+    external_urls: any;
+    href: string;
+    id: string;
+    is_local: boolean;
+    name: string;
+    popularity: number;
+    preview_url: string;
+    track_number: number;
+    type: string;
+    uri: string;
 }
 
 export enum SubscriptionStatusEnum {
