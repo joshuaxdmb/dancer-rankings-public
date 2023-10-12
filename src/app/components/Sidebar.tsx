@@ -24,7 +24,7 @@ const Sidebar = ({ children }: Props) => {
   const pathname = usePathname();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(window.innerWidth >= 768);
   const [location, setLocation] = useRecoilState(locationAtom)
 
   const handleLocationChange = async (location: LocationIdsEnum) => {

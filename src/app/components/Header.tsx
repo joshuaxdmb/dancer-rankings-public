@@ -18,7 +18,7 @@ type Props = {
 const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge=true }) => {
   const authModal = useAuthModal();
   const { user, spotifySession } = useUser();
-  const [showButtons, setShowButtons] = useState(false); // New state for showing buttons
+  const [isLoading, setIsLoading] = useState(true); // New state for showing buttons
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowButtons(true);
+      setIsLoading(false);
     }, 2000); // 2-second delay
 
     return () => clearTimeout(timer); // Clear the timer on component unmount
@@ -67,8 +67,8 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
     >
       <div className="w-full mb-4 flex items-center justify-between">
         <div className="flex gap-x-2 items-center"></div>
-        {visible && pageTitle && !showButtons && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
-        {(!user || !spotifySession) && showButtons && (
+        {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+        {(!user || !spotifySession) && !isLoading && (
           <div className="flex flex-row items-center">
             <div>
               <StyledButton
@@ -108,7 +108,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
           </div>
         )}
       </div>
-      {((!visible && pageTitle) || (!user || !spotifySession)) && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+      {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
       {children}
     </div>
   );
