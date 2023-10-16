@@ -7,6 +7,9 @@ import UserProvider from '@/app/providers/UserProvider';
 import ModalProvider from '@/app/providers/ModalProvider';
 import RecoilProvider from './providers/RecoilProvider';
 import ToasterProvider from './providers/ToasterProvider';
+import PlayingBar from './components/PlayingBar';
+import SpotifyProvider from './providers/SpotifyProvider';
+import Script from 'next/script';
 
 const font = Figtree({ subsets: ['latin'] });
 
@@ -27,8 +30,10 @@ export default function RootLayout({
         <SupabaseProvider>
           <UserProvider>
             <RecoilProvider>
+              <SpotifyProvider>
               <ModalProvider />
               <Sidebar>{children}</Sidebar>
+              </SpotifyProvider>
             </RecoilProvider>
           </UserProvider>
         </SupabaseProvider>

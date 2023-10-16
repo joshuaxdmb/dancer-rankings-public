@@ -142,6 +142,7 @@ const AuthModal = ({}: Props) => {
   };
 
   const handleSpotifyAuth = async () => {
+    console.log('Logging in to Spotify')
     const spotifySession = await (await fetch('/api/auth/session')).json();
     if (spotifySession.token && session?.user?.id) {
       const insertData = {username: spotifySession.user.username}

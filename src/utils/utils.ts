@@ -20,7 +20,7 @@ export const isValidEmail = (email: string) => {
     };
 };
 
-export const updateSongsVotes = (currentSongs:any, song:SongLocal, location:LocationIdsEnum, playlist:PlaylistEnum, spotify_id:string, vote:number) => {
+export const updateSongsVotes = (currentSongs:any, location:LocationIdsEnum, playlist:PlaylistEnum, spotify_id:string, vote:number, currentVote:number) => {
     const updatedLocation = {
         ...currentSongs[location],
         [playlist]: currentSongs[location]?.[playlist]?.map((s:SongLocal) => {
@@ -29,7 +29,7 @@ export const updateSongsVotes = (currentSongs:any, song:SongLocal, location:Loca
                     ...s,
                     up_votes: s.up_votes + vote,
                     down_votes: s.down_votes - vote,
-                    total_votes: s.total_votes + vote
+                    total_votes: s.total_votes + vote - currentVote
                 };
             }
             return s;

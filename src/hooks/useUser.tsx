@@ -9,7 +9,6 @@ import {
 } from '@supabase/auth-helpers-react';
 import React, { useContext, useEffect } from 'react';
 import { createContext, useState } from 'react';
-import toast from 'react-hot-toast';
 
 type UserContextType = {
   accessToken: string | null;
@@ -17,7 +16,6 @@ type UserContextType = {
   userDetails: UserDetailsType | null;
   isLoading: boolean;
   subscription: SubscriptionType | null;
-  spotifySession: any;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -40,14 +38,6 @@ export const MyUserContextProvider = (props: Props) => {
   const [subscription, setSubscription] = useState<SubscriptionType | null>(
     null
   );
-  const [spotifySession, setSpotifySession] = useState<any>(null);
-
-  const getSpotifySession = async() =>{
-    const response = await fetch('/api/auth/session');
-    const session = await response.json();
-    console.log('Fetched spotify session')
-    return session;
-  }
   
   const getUserDetails = () => supabase.from('users').select('*').single();
   const getSubscription = () =>
@@ -84,30 +74,12 @@ export const MyUserContextProvider = (props: Props) => {
 
   }, [user, isLoadingUser]); //eslint-disable-line
 
-  useEffect(() => {
-    if(!spotifySession){
-      getSpotifySession().then((session)=>{
-        if(session.error==='RefreshAccessTokenError'){
-          toast.error('Failed to log into Spotify',{id:'spotify-error'})
-          return
-        }
-        setSpotifySession(session);
-        toast.success('Logged into Spotify',{id:'spotify success'})
-      }).catch((e)=>{
-        console.log('Failed to fetch Spotify session',e)
-      })
-    } else {
-      console.log('Spotify session already fetched')
-    }
-  },[spotifySession])//eslint-disable-line
-
   const value = {
     accessToken,
     user,
     userDetails,
     isLoading: isLoadingData || isLoadingUser,
     subscription,
-    spotifySession,
   };
 
   return <UserContext.Provider value={value} {...props} />;

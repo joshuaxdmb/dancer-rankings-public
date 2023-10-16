@@ -7,6 +7,7 @@ import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
 import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
 import Image from 'next/image';
+import { useSpotify } from '@/hooks/useSpotify';
 
 type Props = {
   children: React.ReactNode;
@@ -15,9 +16,15 @@ type Props = {
   showUserBadge?: boolean;
 };
 
-const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge=true }) => {
+const Header: React.FC<Props> = ({
+  children,
+  className,
+  pageTitle,
+  showUserBadge = true,
+}) => {
   const authModal = useAuthModal();
-  const { user, spotifySession } = useUser();
+  const { user } = useUser();
+  const { spotifySession } = useSpotify();
   const [isLoading, setIsLoading] = useState(true); // New state for showing buttons
   const [visible, setVisible] = useState(true);
 
@@ -26,8 +33,8 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
   }, []);
 
   useEffect(() => {
-    console.log('Updated user state',user,spotifySession)
-  },[spotifySession, user, showUserBadge])
+    console.log('Updated user state', user);
+  }, [user, showUserBadge]);
 
   useEffect(() => {
     // Function to handle the resize event
@@ -49,7 +56,6 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
     };
   }, [visible]);
 
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -67,7 +73,9 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
     >
       <div className="w-full mb-4 flex items-center justify-between">
         <div className="flex gap-x-2 items-center"></div>
-        {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+        {visible && pageTitle && (
+          <h1 className="ml-4 text-2xl font-semibold lg:w-full lg:text-center">{pageTitle}</h1>
+        )}
         {(!user || !spotifySession) && !isLoading && (
           <div className="flex flex-row items-center">
             <div>
@@ -95,7 +103,7 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
           </div>
         )}
         {user && spotifySession && showUserBadge && (
-          <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg ">
+          <div className="lg:absolute lg:right-6 lg:top-6 flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg ">
             <Image
               width={25}
               height={25}
@@ -103,12 +111,13 @@ const Header: React.FC<Props> = ({ children, className, pageTitle, showUserBadge
               src={spotifySession?.user?.image || '/assets/icons/spotify.svg'}
               alt="user-image"
             />
-            <h2>{spotifySession?.user?.name}</h2>
-            <ChevronDownIcon className="w-5 h-5" />
+            <h2 className="px-2">{spotifySession?.user?.name}</h2>
           </div>
         )}
       </div>
-      {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+      {!visible && pageTitle && (
+        <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
+      )}
       {children}
     </div>
   );

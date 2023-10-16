@@ -9,14 +9,17 @@ type Props = {
   song: SongLocal;
   onVote: (song: SongLocal, vote: 1 | -1) => void;
   userVote: 1 | -1 | undefined;
+  onPlay: (song: SongLocal) => void;
 };
 
-const SongItem = ({ song, onVote, userVote }: Props) => {
+const SongItem = ({ song, onVote, userVote, onPlay }: Props) => {
   return (
-    <div className="mx-4 flex flex-row justify-between items-center mt-2 border-b border-gray-800">
-      <button className="flex flex-col pb-2 cursor-pointer">
-        <h2 className="text-md">{song.title}</h2>
-        <p className="text-sm text-gray-400">{song.author}</p>
+    <div className="px-4 flex flex-row justify-between items-center mt-2 border-b border-gray-800 w-full
+    ">
+      <button onClick={()=>{onPlay(song)}} className="flex flex-col pb-2 cursor-pointer text-left flex-grow truncate">
+        <h2 className="text-md w-full truncate">{song.title}</h2>
+        <p className="text-sm text-gray-300 w-full">{song.author}</p>
+        <p className="text-xs text-gray-400 w-full">suggested by: {song.added_by} {song.total_votes}</p>
       </button>
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-col items-center">

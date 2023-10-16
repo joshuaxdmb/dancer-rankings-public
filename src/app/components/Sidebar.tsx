@@ -16,6 +16,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import { LocationIdsEnum, Locations } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
+import { signOut } from 'next-auth/react';
 
 type Props = { children: React.ReactNode };
 
@@ -26,6 +27,7 @@ const Sidebar = ({ children }: Props) => {
   const router = useRouter();
   const [visible, setVisible] = useState(window.innerWidth >= 768);
   const [location, setLocation] = useRecoilState(locationAtom)
+  
 
   const handleLocationChange = async (location: LocationIdsEnum) => {
     setLocation(location);
@@ -33,6 +35,7 @@ const Sidebar = ({ children }: Props) => {
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
+    await signOut();
     //Add reset any playing songs
     router.push('/');
     if (error) {
@@ -177,7 +180,7 @@ const Sidebar = ({ children }: Props) => {
           onClick={() => {
             setVisible(true);
           }}
-          className="h-12 w-12 absolute top-6 left-4 z-20 md:hidden rounded-full bg-black flex items-center justify-center hover:opacity-60 transition p-3"
+          className="h-12 w-12 absolute top-6 left-4 z-20 md:hidden rounded-full bg-black flex items-center justify-center hover:opacity-60 transition p-3 shadow-sm shadow-gray-900 "
         >
           <GiHamburgerMenu className="text-white" size={22} />
         </button>

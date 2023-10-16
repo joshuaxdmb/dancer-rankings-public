@@ -50,6 +50,8 @@ export const authOptions = {
           username: account.providerAccountId,
           accessTokenExpires: account.expires_at * 1000,
           image: user.image, 
+          product: user.product,
+          ...user
         };
       }
 
@@ -67,7 +69,12 @@ export const authOptions = {
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.username = token.username;
-      session.user.image = token.image;
+      session.user.image = token.picture;
+      session.user.product = token.product;
+      session.user = {
+        ...session.user,
+        ...token
+      }
       return session;
     },
   },

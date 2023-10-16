@@ -4,6 +4,8 @@ import Center from '../components/Center';
 import { LocationLabels, PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
+import Script from 'next/script';
+import PlayingBar from '../components/PlayingBar';
 
 
 export default function Home() {
@@ -20,11 +22,13 @@ export default function Home() {
         w-full 
         overflow-hidden 
         overflow-y-auto
+        bg-gradient-to-b from-purple-900 via-black
       "
     >
-      <Header className='bg-gradient-to-b from-purple-900' pageTitle={`Top Bachata Songs | ${LocationLabels[location]}`}>
+      <Header className='bg-none'pageTitle={`Top Bachata Songs | ${LocationLabels[location]}`}>
       </Header>
       <Center playlistFilter={PlaylistEnum.bachata}/>
+      <PlayingBar/>
     </div>
   );
 }

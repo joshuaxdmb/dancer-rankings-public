@@ -3,6 +3,7 @@ import Header from '@/app/components/Header';
 import MainLinkItem from '@/app/components/MainLinkItem';
 import { ActiveLinks } from '@/content';
 import { useUser } from '@/hooks/useUser';
+import Script from 'next/script';
 import { useEffect, useState } from 'react';
 
 

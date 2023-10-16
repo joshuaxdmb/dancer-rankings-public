@@ -1,10 +1,6 @@
-import { LocationIdsEnum, PlaylistEnum } from '@/content';
-import useSpotify from '@/hooks/useSpotify';
+import { PlaylistEnum } from '@/content';
+import {useSpotify} from '@/hooks/useSpotify';
 import React, { useEffect, useState } from 'react';
-import { HiSearch } from 'react-icons/hi';
-import { twMerge } from 'tailwind-merge';
-import SearchModal from './SearchModal';
-import { IoMdClose } from 'react-icons/io';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import SupabaseWrapper from '@/hooks/useSupabase';
 import {
@@ -18,30 +14,59 @@ import { useUser } from '@/hooks/useUser';
 import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
-import { useRouter } from 'next/navigation';
 import { songsAtom } from '@/atoms/songsAtom';
 import SongItem from './SongItem';
 import { votesByUserAtom } from '@/atoms/votesByUserAtom';
 import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/utils';
+import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
+import SearchBar from './SearchBar';
 
 type Props = {
   playlistFilter: PlaylistEnum;
 };
 
 const Center = ({ playlistFilter }: Props) => {
-  const { user, spotifySession } = useUser();
-  const [searchOpen, setSearchOpen] = useState(false);
+  const { user } = useUser();
+  const { spotifySession, togglePlay, spotifyApi, spotifyDeviceId } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [votes, setVotes] = useRecoilState<VotesMap>(votesByUserAtom);
-  const [searchedSongs, setSearchedSongs] = useState<SpotifySong[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom)
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
-  const router = useRouter();
+
+  useEffect(() => {
+    spotifyApi.transferMyPlayback([spotifyDeviceId]).catch(e=>{
+      console.log('Error setting device on Spotify',e)
+    })
+
+    if(spotifySession?.user.product === 'premium'){
+     // setPreviewPlayerLogic
+    }
+  },[spotifyDeviceId, spotifyApi, spotifySession])
+
+  const playSong = async(song: SongLocal) => {
+    console.log('Currently playing', currentTrack?.title)
+
+    if(currentTrack?.spotify_id === song.spotify_id && isPlaying){
+      spotifyApi.pause().catch((err: any) => {
+        console.log('Something failed pausing from Spotify',err)
+      })
+      return
+    }
+
+    spotifyApi.transferMyPlayback([spotifyDeviceId]).then(()=>{
+      spotifyApi.play({uris: [`spotify:track:${song.spotify_id}`]}).catch((err: any) => {
+        console.log('Something failed playing from Spotify',err)
+      })
+      setCurrentTrack(song)
+    }).catch(e=>{
+      console.log('Error setting device on Spotify',e)
+    })
+  }
 
   useEffect(() => {
     if (!songs[location] || !songs[location]?.[playlistFilter] || !songs[location]?.[playlistFilter]?.length) {
-      console.log('here');
       supabaseClient
         .getVotedSongs(playlistFilter, location)
         .then((data: any) => {
@@ -76,39 +101,6 @@ const Center = ({ playlistFilter }: Props) => {
     }
   }, [user]); //eslint-disable-line
 
-  const spotifyApi = useSpotify();
-  const handleSearch = (query: string) => {
-    if(!spotifySession){
-      toast.error('You must be logged in to spotify to search for a song', {
-        id: 'failed-spotify-search',
-      });
-      return;
-    }
-    setSearchOpen(true);
-    setSearchQuery(query);
-    spotifyApi
-      .searchTracks(query, { limit: 10 })
-      .then((data: any) => {
-        setSearchedSongs(data.body.tracks.items);
-      })
-      .catch((err: any) => {
-        console.log('ERROR', err);
-        if (err.statusCode === 401) {
-          toast.error('Your spotify session expired. Refreshing', {
-            id: 'failed-spotify-search',
-          });
-          router.refresh();
-        }
-      });
-    console.log(searchedSongs);
-  };
-
-  const handleCloseSearch = () => {
-    console.log('close search');
-    setSearchOpen(false);
-    setSearchQuery('');
-  };
-
   const handleAddSong = async (songDetails: SpotifySong) => {
     if (!user) {
       toast.error('You must be logged in to add a song', {
@@ -132,7 +124,6 @@ const Center = ({ playlistFilter }: Props) => {
       songDetails.id
     );
 
-    console.log('EXISTING SONG', existingSong);
     const insertLocalSong: SongLocal = {
       added_by: spotifySession.user.username,
       author: artists,
@@ -211,14 +202,17 @@ const Center = ({ playlistFilter }: Props) => {
       });
       return;
     }
+
+    if(votes?.[location]?.[playlistFilter]?.[song.spotify_id] === vote) return
+
     supabaseClient
       .voteSong(song.spotify_id, user.id, location, playlistFilter, vote)
       .then((data: any) => {
         console.log('Voted for song', data);
         const newVotes = mergeVotes(votes, location, playlistFilter, song.spotify_id, vote)
         setVotes(newVotes);
-
-        const newSongs = updateSongsVotes(songs, song, location, playlistFilter, song.spotify_id, vote)
+        const currentVote = votes?.[location]?.[playlistFilter]?.[song.spotify_id] || 0
+        const newSongs = updateSongsVotes(songs, location, playlistFilter, song.spotify_id, vote, currentVote)
         setSongs(newSongs);
       })
       .catch((e: any) => {
@@ -228,51 +222,18 @@ const Center = ({ playlistFilter }: Props) => {
 
   return (
     <div>
-      <section className="flex items-center justify-center space-x-7">
-        <div
-          className={twMerge(
-            'bg-white mx-4 rounded-full text-sm flex py-2 px-6 flex-row  transition cursor-pointer text-neutral-600 gap-1'
-          )}
-        >
-          <HiSearch
-            onClick={handleSearch}
-            size={22}
-            className="flex-shrink-0"
-          />
-          <input
-            type="text"
-            placeholder={`What song makes you want to dance? 💃`}
-            className="bg-transparent outline-none border-none flex-grow min-w-[260px]"
-            value={searchQuery}
-            onChange={(e) => {
-              const inputValue = (e.target as HTMLInputElement).value;
-              handleSearch(inputValue);
-            }}
-          />
-          <IoMdClose
-            onClick={handleCloseSearch}
-            size={22}
-            className="flex-shrink-0"
-          />
-        </div>
+      <section className="flex items-center justify-center space-x-7 mb-0">
+        <SearchBar handleAddSong={handleAddSong} spotifyApi={spotifyApi} spotifySession={spotifySession}/>
       </section>
       <section>
-        {searchOpen && (
-          <div className="flex items-center justify-center mt-4 w-full">
-            <SearchModal
-              isOpen={searchOpen}
-              songs={searchedSongs}
-              addSong={handleAddSong}
-            />
-          </div>
-        )}
-        <div className='mt-4'>
+        <div className='mt-2'>
           {songs[location]?.[playlistFilter]?.map(
             (song: SongLocal, index: number) => (
               <SongItem
                 key={index}
                 song={song}
                 onVote={handleVote}
+                onPlay = {playSong}
                 userVote={
                   votes?.[location]?.[playlistFilter]?.[song.spotify_id]
                 }
