@@ -1,21 +1,47 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { isPlayingAtom, currentTrackAtom } from '@/atoms/playingSongAtom';
-import {useSpotify} from '@/hooks/useSpotify';
+import { useSpotify } from '@/hooks/useSpotify';
+import { SongLocal } from '@/types/types';
 
-type Props = {}
+type Props = {};
 
 const PlayingBar: React.FC<Props> = () => {
-  const spotify = useSpotify();
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [audio, setAudio] = useState<HTMLAudioElement>();
+  const [isUserPremium, setIsUserPremium] = useState(false);
+  const { userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
 
-  // Effect to create audio instance and set event listeners
   useEffect(() => {
-    const audioInstance = new Audio(currentTrack?.spotify_id);
+    spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e) => {
+      console.log('Error setting device on Spotify', e);
+    });
 
+    if (userDetails?.product === 'premium') {
+      setIsUserPremium(true);
+    }
+  }, [spotifyDeviceId, spotifyApi, userDetails?.product]);
+
+  const playSong = async (song: SongLocal) => {
+    if (isUserPremium) {
+      console.log('Currently playing', song?.title);
+      spotifyApi
+        .transferMyPlayback([spotifyDeviceId])
+        .then(() => {
+          spotifyApi
+            .play({ uris: [`spotify:track:${song.spotify_id}`] })
+            .catch((err: any) => {
+              console.log('Something failed playing from Spotify', err);
+            });
+        })
+        .catch((e) => {
+          console.log('Error setting device on Spotify', e);
+        });
+      return;
+    }
+    const audioInstance = new Audio(song?.preview_url || '');
     audioInstance.onplay = () => setIsPlaying(true);
     audioInstance.onpause = () => setIsPlaying(false);
     audioInstance.onended = () => {
@@ -23,28 +49,35 @@ const PlayingBar: React.FC<Props> = () => {
     };
 
     setAudio(audioInstance);
-
+    audioInstance.play();
     return () => {
       audioInstance.pause();
       setAudio(undefined);
     };
-  }, [ setIsPlaying]);
+  };
+
+  useEffect(() => {
+    if (currentTrack?.spotify_id) playSong(currentTrack);
+  }, [currentTrack]);
 
   const handlePlayPause = () => {
+    if (isUserPremium) {
+      isPlaying ? spotifyApi.pause() : spotifyApi.play();
+    }
     if (audio) {
       isPlaying ? audio.pause() : audio.play();
     }
-  }
+  };
 
   return (
     <div className="playing-bar bg-slate-500 h-48 w-full sticky bottom-0">
-        <>
-          <button onClick={handlePlayPause}>
-            {isPlaying ? 'Pause' : 'Play'}
-          </button>
-        </>
+      <>
+        <button onClick={handlePlayPause}>
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
+      </>
     </div>
-  )
-}
+  );
+};
 
 export default PlayingBar;

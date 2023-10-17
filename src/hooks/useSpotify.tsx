@@ -15,6 +15,7 @@ type SpotifyContextType = {
   spotifySession: any;
   spotifyApi: SpotifyWebApi;
   spotifyDeviceId: string;
+  userDetails?: any;
 };
 
 const SpotifyContext = createContext<SpotifyContextType | null>(null);
@@ -28,12 +29,12 @@ export const SpotifyProviderContext = (props: Props) => {
   const [player, setPlayer] = useState<any | null>(null);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [isPlayerActive, setIsPlayerActive] = useState(false);
-  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const [spotifyDeviceId, setSpotifyDeviceId] = useState<string>('');
   const [spotifyApi, setSpotifyApi] = useState<SpotifyWebApi>(new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   }));
+  const [userDetails, setUserDetails] = useState<any>(null);
 
   const initializeSpotifyPlayer = (sessionToken: any) => {
     const existingScript = document.querySelector(
@@ -121,8 +122,7 @@ export const SpotifyProviderContext = (props: Props) => {
   const initializeApi = async (token:any) =>{
     spotifyApi.setAccessToken(token)
     const userDetails = await spotifyApi.getMe();
-    const updatedSession = {...spotifySession, user: {...spotifySession.user, ...userDetails.body}}
-    setSpotifySession(updatedSession)
+    setUserDetails(userDetails.body)
   }
 
 
@@ -164,7 +164,7 @@ export const SpotifyProviderContext = (props: Props) => {
 
   return (
     <SpotifyContext.Provider
-      value={{spotifySession, spotifyApi, spotifyDeviceId }}
+      value={{spotifySession, spotifyApi, spotifyDeviceId, userDetails }}
       {...props}
     />
   );

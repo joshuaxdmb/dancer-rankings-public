@@ -20,60 +20,31 @@ import { votesByUserAtom } from '@/atoms/votesByUserAtom';
 import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/utils';
 import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
+import { playlistAtom } from '@/atoms/playlistAtom';
 
 type Props = {
-  playlistFilter: PlaylistEnum;
+  playlistFilter?: PlaylistEnum;
 };
 
-const Center = ({ playlistFilter }: Props) => {
+const Center = ({ }: Props) => {
   const { user } = useUser();
-  const { spotifySession, togglePlay, spotifyApi, spotifyDeviceId } = useSpotify();
+  const { spotifySession, userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [votes, setVotes] = useRecoilState<VotesMap>(votesByUserAtom);
+  const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom)
-  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
 
   useEffect(() => {
-    spotifyApi.transferMyPlayback([spotifyDeviceId]).catch(e=>{
-      console.log('Error setting device on Spotify',e)
-    })
-
-    if(spotifySession?.user.product === 'premium'){
-     // setPreviewPlayerLogic
-    }
-  },[spotifyDeviceId, spotifyApi, spotifySession])
-
-  const playSong = async(song: SongLocal) => {
-    console.log('Currently playing', currentTrack?.title)
-
-    if(currentTrack?.spotify_id === song.spotify_id && isPlaying){
-      spotifyApi.pause().catch((err: any) => {
-        console.log('Something failed pausing from Spotify',err)
-      })
-      return
-    }
-
-    spotifyApi.transferMyPlayback([spotifyDeviceId]).then(()=>{
-      spotifyApi.play({uris: [`spotify:track:${song.spotify_id}`]}).catch((err: any) => {
-        console.log('Something failed playing from Spotify',err)
-      })
-      setCurrentTrack(song)
-    }).catch(e=>{
-      console.log('Error setting device on Spotify',e)
-    })
-  }
-
-  useEffect(() => {
-    if (!songs[location] || !songs[location]?.[playlistFilter] || !songs[location]?.[playlistFilter]?.length) {
+    if (!songs[location] || !songs[location]?.[playlist] || !songs[location]?.[playlist]?.length) {
       supabaseClient
-        .getVotedSongs(playlistFilter, location)
+        .getVotedSongs(playlist, location)
         .then((data: any) => {
           const updatedSongs = mergeSongs(
             songs,
             location,
-            playlistFilter,
+            playlist,
             data
           );
           setSongs(updatedSongs);
@@ -100,6 +71,10 @@ const Center = ({ playlistFilter }: Props) => {
       }
     }
   }, [user]); //eslint-disable-line
+
+  const selectSong = (song: SongLocal) => {
+    setCurrentTrack(song)
+  }
 
   const handleAddSong = async (songDetails: SpotifySong) => {
     if (!user) {
@@ -134,18 +109,18 @@ const Center = ({ playlistFilter }: Props) => {
       up_votes: 1,
       down_votes: 0,
       total_votes: 1,
-      playlist_id: playlistFilter,
+      playlist_id: playlist,
       location_id: location,
     };
 
     if (existingSong.length) {
       //If song already exists in the db, just add it to the top of the list so user can vote
       toast.success('Song already exists', { id: 'song-exists' });
-      const localSongExists = songs[location]?.[playlistFilter]?.find(
+      const localSongExists = songs[location]?.[playlist]?.find(
         (song: SongLocal) => song.spotify_id === songDetails.id
       );
       if (!localSongExists) {
-        setSongs(mergeSongs(songs, location, playlistFilter, [insertLocalSong]));
+        setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
       }
       return;
     } else {
@@ -168,7 +143,7 @@ const Center = ({ playlistFilter }: Props) => {
             });
           } else {
             toast.success('Song added!', { id: 'song-added' });
-            setSongs(mergeSongs(songs, location, playlistFilter, [insertLocalSong]));
+            setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
           }
         })
         .catch((e: any) => {
@@ -176,13 +151,13 @@ const Center = ({ playlistFilter }: Props) => {
         });
 
       supabaseClient
-        .voteSong(insertSong.spotify_id, user.id, location, playlistFilter, 1)
+        .voteSong(insertSong.spotify_id, user.id, location, playlist, 1)
         .then((data: any) => {
           const newVotes = {
             ...votes,
             [location]: {
-              [playlistFilter]: {
-                ...votes[location]?.[playlistFilter],
+              [playlist]: {
+                ...votes[location]?.[playlist],
                 [insertSong.spotify_id]: 1,
               },
             },
@@ -203,16 +178,16 @@ const Center = ({ playlistFilter }: Props) => {
       return;
     }
 
-    if(votes?.[location]?.[playlistFilter]?.[song.spotify_id] === vote) return
+    if(votes?.[location]?.[playlist]?.[song.spotify_id] === vote) return
 
     supabaseClient
-      .voteSong(song.spotify_id, user.id, location, playlistFilter, vote)
+      .voteSong(song.spotify_id, user.id, location, playlist, vote)
       .then((data: any) => {
         console.log('Voted for song', data);
-        const newVotes = mergeVotes(votes, location, playlistFilter, song.spotify_id, vote)
+        const newVotes = mergeVotes(votes, location, playlist, song.spotify_id, vote)
         setVotes(newVotes);
-        const currentVote = votes?.[location]?.[playlistFilter]?.[song.spotify_id] || 0
-        const newSongs = updateSongsVotes(songs, location, playlistFilter, song.spotify_id, vote, currentVote)
+        const currentVote = votes?.[location]?.[playlist]?.[song.spotify_id] || 0
+        const newSongs = updateSongsVotes(songs, location, playlist, song.spotify_id, vote, currentVote)
         setSongs(newSongs);
       })
       .catch((e: any) => {
@@ -227,15 +202,15 @@ const Center = ({ playlistFilter }: Props) => {
       </section>
       <section>
         <div className='mt-2'>
-          {songs[location]?.[playlistFilter]?.map(
+          {songs[location]?.[playlist]?.map(
             (song: SongLocal, index: number) => (
               <SongItem
                 key={index}
                 song={song}
                 onVote={handleVote}
-                onPlay = {playSong}
+                onSelect = {selectSong}
                 userVote={
-                  votes?.[location]?.[playlistFilter]?.[song.spotify_id]
+                  votes?.[location]?.[playlist]?.[song.spotify_id]
                 }
               />
             )
