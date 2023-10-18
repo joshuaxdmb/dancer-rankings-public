@@ -67,14 +67,16 @@ const Header: React.FC<Props> = ({
   return (
     <div
       className={twMerge(
-        `h-fit bg-gradient-to-b from-red-950 p-4 md:p-6`,
+        `p-4 md:p-6`,
         className
       )}
     >
+      <div className={
+        `h-fit bg-gradient-to-b from-red-950`}/>
       <div className="w-full mb-4 flex items-center justify-between">
-        <div className="flex gap-x-2 items-center"></div>
+        <div className="flex gap-x-2 items-center lg:hidden"/>
         {visible && pageTitle && (
-          <h1 className="ml-4 text-2xl font-semibold lg:w-full lg:text-center">{pageTitle}</h1>
+          <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}
         {(!user || !spotifySession) && !isLoading && (
           <div className="flex flex-row items-center">
@@ -103,7 +105,7 @@ const Header: React.FC<Props> = ({
           </div>
         )}
         {user && spotifySession && showUserBadge && (
-          <div className="lg:absolute lg:right-6 lg:top-6 flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg ">
+          <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg ">
             <Image
               width={25}
               height={25}
