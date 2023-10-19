@@ -65,16 +65,10 @@ const Header: React.FC<Props> = ({
   }, []);
 
   return (
-    <div
-      className={twMerge(
-        `p-4 md:p-6`,
-        className
-      )}
-    >
-      <div className={
-        `h-fit bg-gradient-to-b from-red-950`}/>
+    <div className={twMerge(`p-4 md:p-6`, className)}>
+      <div className={`h-fit bg-gradient-to-b from-red-950`} />
       <div className="w-full mb-4 flex items-center justify-between">
-        <div className="flex gap-x-2 items-center lg:hidden"/>
+        <div className="flex gap-x-2 items-center lg:hidden" />
         {visible && pageTitle && (
           <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}

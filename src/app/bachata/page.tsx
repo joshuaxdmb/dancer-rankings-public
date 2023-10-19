@@ -28,7 +28,7 @@ export default function Home() {
       <Header className='bg-none'pageTitle={`Top Bachata Songs | ${LocationLabels[location]}`}>
       </Header>
       <Center playlistFilter={PlaylistEnum.bachata}/>
-      <PlayingBar/>
+      <PlayingBar backGroundColor='bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'/>
     </div>
   );
 }
