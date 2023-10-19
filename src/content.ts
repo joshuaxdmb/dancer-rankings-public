@@ -7,7 +7,7 @@ export enum LocationIdsEnum {
 export enum PlaylistEnum{
     bachata = 'bachata',
     salsa = 'salsa',
-    zoilk = 'zouk'
+    zouk = 'zouk'
 }
 
 export const Locations = [

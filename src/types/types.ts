@@ -134,7 +134,8 @@ export enum Routes {
     Bachata = '/bachata',
     Zouk = '/zouk',
     Home = '/',
-    Events = '/events'
+    Events = '/events',
+    Songs = '/songs',
 }
 
 export type PlaylistInfo = {

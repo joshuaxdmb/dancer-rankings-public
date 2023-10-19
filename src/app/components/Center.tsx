@@ -28,7 +28,7 @@ type Props = {
 
 const Center = ({ }: Props) => {
   const { user } = useUser();
-  const { spotifySession, userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
+  const { spotifySession, spotifyApi } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [votes, setVotes] = useRecoilState<VotesMap>(votesByUserAtom);
@@ -196,7 +196,7 @@ const Center = ({ }: Props) => {
   };
 
   return (
-    <div>
+    <div className='h-full'>
       <section className="flex items-center justify-center space-x-7 mb-0">
         <SearchBar handleAddSong={handleAddSong} spotifyApi={spotifyApi} spotifySession={spotifySession}/>
       </section>
@@ -214,6 +214,11 @@ const Center = ({ }: Props) => {
                 }
               />
             )
+          )}
+          {!songs[location]?.[playlist]?.length && (
+            <div className='text-xl text-center text-gray-300 flex items-center justify-center mb-10'>
+            <h1>{`No songs found :( Try adding one!`}</h1>
+            </div>
           )}
         </div>
       </section>

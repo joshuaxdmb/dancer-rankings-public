@@ -13,10 +13,11 @@ import { useUser } from '@/hooks/useUser';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { FaSignOutAlt } from 'react-icons/fa';
-import { LocationIdsEnum, Locations } from '@/content';
+import { LocationIdsEnum, Locations, PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
 import { signOut } from 'next-auth/react';
+import { playlistAtom } from '@/atoms/playlistAtom';
 
 type Props = { children: React.ReactNode };
 
@@ -27,6 +28,7 @@ const Sidebar = ({ children }: Props) => {
   const router = useRouter();
   const [visible, setVisible] = useState(window.innerWidth >= 768);
   const [location, setLocation] = useRecoilState(locationAtom)
+  const [playlist, setPlaylist] = useRecoilState(playlistAtom)
   
 
   const handleLocationChange = async (location: LocationIdsEnum) => {
@@ -53,18 +55,21 @@ const Sidebar = ({ children }: Props) => {
       },
       {
         label: `🔥 Bachata`,
-        active: pathname === '/' + Routes.Bachata,
-        href: Routes.Bachata,
+        active: playlist === PlaylistEnum.bachata,
+        onClick: () => setPlaylist(PlaylistEnum.bachata),
+        href: Routes.Songs,
       },
       {
         label: `🎉 Salsa`,
-        active: pathname === '/' + Routes.Salsa,
-        href: Routes.Salsa,
+        active: playlist === PlaylistEnum.salsa,
+        href: Routes.Songs,
+        onClick: () => setPlaylist(PlaylistEnum.salsa),
       },
       {
         label: `🌊 Zouk`,
-        active: pathname === '/' + Routes.Zouk,
-        href: Routes.Zouk,
+        active: playlist === PlaylistEnum.zouk,
+        href: Routes.Songs,
+        onClick: () => setPlaylist(PlaylistEnum.zouk),
       },
       {
         label: `💃 Events`,
@@ -117,9 +122,10 @@ const Sidebar = ({ children }: Props) => {
         </button>
         {routes.map((p) => (
           <Link
-            key={p.href}
+            key={p.label}
             href={p.href}
             onClick={() => {
+              p.onClick && p.onClick();
               if(window.innerWidth < 768) setVisible(false);
             }}
             className={twMerge(
@@ -135,13 +141,6 @@ const Sidebar = ({ children }: Props) => {
         ))}
         {user && (
           <div className="mt-10 w-full flex items-center justify-center flex-col gap-4">
-            {/* <StyledButton
-              onClick={handleLogout}
-              className="bg-white px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
-            >
-              Account
-              <FaUserAlt />
-            </StyledButton> */}
             <StyledButton
               onClick={() => {}}
               className="bg-white px-6 py-0 max-w-[200px] flex items-center justify-center gap-x-2"
