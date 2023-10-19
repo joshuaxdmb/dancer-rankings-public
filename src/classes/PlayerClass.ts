@@ -42,6 +42,7 @@ export class NonPremiumPlayer extends Player {
     private audioInstance?: HTMLAudioElement;
 
     play(song: SongLocal): void {
+        console.log('Currently previewing', song?.title);
         this.audioInstance = new Audio(song?.preview_url || '');
         this.audioInstance.play();
     }

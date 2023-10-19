@@ -1,5 +1,5 @@
 import { PlaylistEnum } from '@/content';
-import {useSpotify} from '@/hooks/useSpotify';
+import { useSpotify } from '@/hooks/useSpotify';
 import React, { useEffect, useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import SupabaseWrapper from '@/hooks/useSupabase';
@@ -21,60 +21,73 @@ import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/utils';
 import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
 import { playlistAtom } from '@/atoms/playlistAtom';
+import { Dots } from '@zendeskgarden/react-loaders';
 
 type Props = {
   playlistFilter?: PlaylistEnum;
 };
 
-const Center = ({ }: Props) => {
+const Center = ({}: Props) => {
   const { user } = useUser();
   const { spotifySession, spotifyApi } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [votes, setVotes] = useRecoilState<VotesMap>(votesByUserAtom);
-  const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
-  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom)
+  const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom);
+  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!songs[location] || !songs[location]?.[playlist] || !songs[location]?.[playlist]?.length) {
+    setIsLoading(true);
+    if (
+      !songs[location] ||
+      !songs[location]?.[playlist] ||
+      !songs[location]?.[playlist]?.length
+    ) {
       supabaseClient
         .getVotedSongs(playlist, location)
         .then((data: any) => {
-          const updatedSongs = mergeSongs(
-            songs,
-            location,
-            playlist,
-            data
-          );
+          const updatedSongs = mergeSongs(songs, location, playlist, data);
           setSongs(updatedSongs);
+        })
+        .catch((e: any) => {
+          toast.error('Failed to fetch songs', { id: 'failed-fetch-songs' });
+          setIsLoading(false);
         });
     }
     if (Object.keys(votes).length < 1) {
       if (user) {
         const newVotes: VotesMap = {};
-        supabaseClient.getVotedSongsByUser(user?.id).then((data: any) => {
-          console.log('votes fetched', data);
-          data.map((vote: SongVoteLocal) => {
-            newVotes[vote.location_id as string] = {
-              [vote.playlist_id as string]: {
-                ...newVotes[vote.location_id as string]?.[
-                  vote.playlist_id as string
-                ],
-                [vote.song_spotify_id as string]: vote.vote,
-              },
-            };
+        supabaseClient
+          .getVotedSongsByUser(user?.id)
+          .then((data: any) => {
+            console.log('votes fetched', data);
+            data.map((vote: SongVoteLocal) => {
+              newVotes[vote.location_id as string] = {
+                [vote.playlist_id as string]: {
+                  ...newVotes[vote.location_id as string]?.[
+                    vote.playlist_id as string
+                  ],
+                  [vote.song_spotify_id as string]: vote.vote,
+                },
+              };
+            });
+            setVotes(newVotes);
+            console.log(newVotes);
+          })
+          .catch((e: any) => {
+            toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' });
+            setIsLoading(false);
           });
-          setVotes(newVotes);
-          console.log(newVotes);
-        });
       }
     }
-  }, [user]); //eslint-disable-line
+    setIsLoading(false);
+  }, [user, playlist, location]); //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {
-    setCurrentTrack(song)
-  }
+    setCurrentTrack(song);
+  };
 
   const handleAddSong = async (songDetails: SpotifySong) => {
     if (!user) {
@@ -178,16 +191,30 @@ const Center = ({ }: Props) => {
       return;
     }
 
-    if(votes?.[location]?.[playlist]?.[song.spotify_id] === vote) return
+    if (votes?.[location]?.[playlist]?.[song.spotify_id] === vote) return;
 
     supabaseClient
       .voteSong(song.spotify_id, user.id, location, playlist, vote)
       .then((data: any) => {
         console.log('Voted for song', data);
-        const newVotes = mergeVotes(votes, location, playlist, song.spotify_id, vote)
+        const newVotes = mergeVotes(
+          votes,
+          location,
+          playlist,
+          song.spotify_id,
+          vote
+        );
         setVotes(newVotes);
-        const currentVote = votes?.[location]?.[playlist]?.[song.spotify_id] || 0
-        const newSongs = updateSongsVotes(songs, location, playlist, song.spotify_id, vote, currentVote)
+        const currentVote =
+          votes?.[location]?.[playlist]?.[song.spotify_id] || 0;
+        const newSongs = updateSongsVotes(
+          songs,
+          location,
+          playlist,
+          song.spotify_id,
+          vote,
+          currentVote
+        );
         setSongs(newSongs);
       })
       .catch((e: any) => {
@@ -196,28 +223,38 @@ const Center = ({ }: Props) => {
   };
 
   return (
-    <div className='h-full'>
+    <div className="h-full">
       <section className="flex items-center justify-center space-x-7 mb-0">
-        <SearchBar handleAddSong={handleAddSong} spotifyApi={spotifyApi} spotifySession={spotifySession}/>
+        <SearchBar
+          handleAddSong={handleAddSong}
+          spotifyApi={spotifyApi}
+          spotifySession={spotifySession}
+        />
       </section>
       <section>
-        <div className='mt-2'>
+        <div className="mt-2">
+          
+          {isLoading && (
+            <div className='w-full flex items-center justify-center flex-col'>
+            <Dots color="white" size={60} />
+            <h1 className='text-lg mt-4'>Getting you the latest 🔥 tunes</h1>
+            </div>
+          )}
           {songs[location]?.[playlist]?.map(
             (song: SongLocal, index: number) => (
               <SongItem
                 key={index}
                 song={song}
                 onVote={handleVote}
-                onSelect = {selectSong}
-                userVote={
-                  votes?.[location]?.[playlist]?.[song.spotify_id]
-                }
+                onSelect={selectSong}
+                userVote={votes?.[location]?.[playlist]?.[song.spotify_id]}
+                isPlaying={currentTrack?.spotify_id === song.spotify_id}
               />
             )
           )}
-          {!songs[location]?.[playlist]?.length && (
-            <div className='text-xl text-center text-gray-300 flex items-center justify-center mb-10'>
-            <h1>{`No songs found :( Try adding one!`}</h1>
+          {!songs[location]?.[playlist]?.length && !isLoading && (
+            <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10">
+              <h1>{`No songs found :( Try adding one!`}</h1>
             </div>
           )}
         </div>
