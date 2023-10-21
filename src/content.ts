@@ -1,4 +1,4 @@
-import { PlaylistInfo, Routes } from "./types/types";
+import { ActiveLink, Routes } from "./types/types";
 export enum LocationIdsEnum {
     toronto = 'toronto',
     newyork = 'newyork'
@@ -63,26 +63,29 @@ export const EventsThisWeek: Array<any> = [
     }
 ]
 
-export const ActiveLinks: Array<PlaylistInfo> = [
+export const ActiveLinks: Array<ActiveLink> = [
     {
-        route: Routes.Salsa,
+        href: Routes.Songs,
         emoji:'🎉',
         label:`Vote Salsa`,
+        playlist:PlaylistEnum.salsa
     },
     { 
-        route: Routes.Bachata,
+        href: Routes.Songs,
         emoji:'🔥',
         label:'Vote Bachata',
+        playlist:PlaylistEnum.bachata
     },
     {
-        route: Routes.Zouk,
+        href: Routes.Songs,
         emoji:'🌊',
-        label:'Vote Zouk'
+        label:'Vote Zouk',
+        playlist:PlaylistEnum.zouk
     },
     {
-        route: Routes.Events,
+        href: Routes.Events,
         emoji:'💃',
-        label:'Vote Events'
+        label:'Vote Events',
     },
 ]
 

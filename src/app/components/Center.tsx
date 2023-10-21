@@ -21,7 +21,7 @@ import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/utils';
 import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
 import { playlistAtom } from '@/atoms/playlistAtom';
-import { Dots } from '@zendeskgarden/react-loaders';
+import { BeatLoader } from 'react-spinners';
 
 type Props = {
   playlistFilter?: PlaylistEnum;
@@ -39,7 +39,11 @@ const Center = ({}: Props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
+    if (isLoading) setIsLoading(false);
+  }, [songs]); //eslint-disable-line
+
+  useEffect(() => {
+    !isLoading && setIsLoading(true);
     if (
       !songs[location] ||
       !songs[location]?.[playlist] ||
@@ -82,7 +86,6 @@ const Center = ({}: Props) => {
           });
       }
     }
-    setIsLoading(false);
   }, [user, playlist, location]); //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {
@@ -223,7 +226,7 @@ const Center = ({}: Props) => {
   };
 
   return (
-    <div className="h-full">
+    <div className="h-full mb-20">
       <section className="flex items-center justify-center space-x-7 mb-0">
         <SearchBar
           handleAddSong={handleAddSong}
@@ -232,32 +235,33 @@ const Center = ({}: Props) => {
         />
       </section>
       <section>
-        <div className="mt-2">
-          
-          {isLoading && (
-            <div className='w-full flex items-center justify-center flex-col'>
-            <Dots color="white" size={60} />
-            <h1 className='text-lg mt-4'>Getting you the latest 🔥 tunes</h1>
+          {isLoading ? (
+            <div className="w-full flex items-center justify-center flex-col h-screen">
+              <div className="loader-container">
+                <BeatLoader color="#FFFFFF" size={20} />
+              </div>
+              <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
             </div>
-          )}
-          {songs[location]?.[playlist]?.map(
-            (song: SongLocal, index: number) => (
-              <SongItem
-                key={index}
-                song={song}
-                onVote={handleVote}
-                onSelect={selectSong}
-                userVote={votes?.[location]?.[playlist]?.[song.spotify_id]}
-                isPlaying={currentTrack?.spotify_id === song.spotify_id}
-              />
-            )
-          )}
-          {!songs[location]?.[playlist]?.length && !isLoading && (
+          ) : songs[location]?.[playlist]?.length ? (
+            <div>{
+            songs[location]?.[playlist]?.map(
+              (song: SongLocal, index: number) => (
+                <SongItem
+                  key={index}
+                  song={song}
+                  onVote={handleVote}
+                  onSelect={selectSong}
+                  userVote={votes?.[location]?.[playlist]?.[song.spotify_id]}
+                  isPlaying={currentTrack?.spotify_id === song.spotify_id}
+                />
+              )
+            )}
+            </div>
+          ) : (
             <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10">
               <h1>{`No songs found :( Try adding one!`}</h1>
             </div>
           )}
-        </div>
       </section>
     </div>
   );

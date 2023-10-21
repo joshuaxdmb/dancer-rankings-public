@@ -26,7 +26,7 @@ const Sidebar = ({ children }: Props) => {
   const pathname = usePathname();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
-  const [visible, setVisible] = useState(window.innerWidth >= 768);
+  const [visible, setVisible] = useState(false);
   const [location, setLocation] = useRecoilState(locationAtom)
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
   
@@ -77,7 +77,7 @@ const Sidebar = ({ children }: Props) => {
         href: Routes.Events,
       },
     ],
-    [pathname]
+    [pathname, playlist]
   );
 
   useEffect(() => {

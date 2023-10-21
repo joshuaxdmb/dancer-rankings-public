@@ -1,5 +1,5 @@
 'use client';
-import React, { use } from 'react';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import StyledButton from './SytledButton';
 import useAuthModal from '@/hooks/useAuthModal';
@@ -29,7 +29,7 @@ const Header: React.FC<Props> = ({
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setVisible(window.innerWidth >= 630);
+    setVisible(window.innerWidth >= 768);
   }, []);
 
   useEffect(() => {
@@ -39,10 +39,10 @@ const Header: React.FC<Props> = ({
   useEffect(() => {
     // Function to handle the resize event
     const handleResize = () => {
-      if (window.innerWidth >= 630 && !visible) {
+      if (window.innerWidth >= 768 && !visible) {
         // If window width is greater than or equal to 768px and sidebar is hidden, show the sidebar
         setVisible(true);
-      } else if (window.innerWidth < 630 && visible) {
+      } else if (window.innerWidth < 768 && visible) {
         setVisible(false);
       }
     };
@@ -99,7 +99,7 @@ const Header: React.FC<Props> = ({
           </div>
         )}
         {user && spotifySession && showUserBadge && (
-          <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg ">
+          <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0">
             <Image
               width={25}
               height={25}

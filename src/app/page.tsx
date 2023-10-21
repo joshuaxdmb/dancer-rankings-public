@@ -1,17 +1,35 @@
 'use client'
 import Header from '@/app/components/Header';
 import MainLinkItem from '@/app/components/MainLinkItem';
-import { ActiveLinks } from '@/content';
+import { playlistAtom } from '@/atoms/playlistAtom';
+import { PlaylistEnum, ActiveLinks } from '@/content';
 import { useUser } from '@/hooks/useUser';
-import Script from 'next/script';
-import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 
 export default function Home() {
   const { user, userDetails} = useUser();
   const [showMessahe, setShowMessage] = useState(false); // New state for showing buttons
   const [topMargin, setTopMargin] = useState(true);
+  const pathname = usePathname();
+  const [playlist, setPlaylist] = useRecoilState(playlistAtom)
 
+  const routes = useMemo(
+    () => 
+      ActiveLinks.map((link)=>(
+        {
+          label: link.label,
+          active: pathname === link.href,
+          href: link.href,
+          icon: link.icon ? link.icon : null,
+          onClick: link.playlist ? () => setPlaylist(link.playlist as PlaylistEnum) : null,
+          emoji: link.emoji ? link.emoji : null,
+        }
+      ))
+    ,[pathname, playlist])//eslint-disable-line
+    
   useEffect(() => {
     setTopMargin(window.innerWidth <= 768);
   }, []);
@@ -55,12 +73,12 @@ export default function Home() {
         overflow-y-auto
       "
     >
-      <Header className='' pageTitle={(showMessahe && user)?`Hi ${(userDetails?.full_name && (userDetails.full_name.length >= 2)?userDetails?.full_name:'there')} 👋`: `If you're not a dancer, kindly close your browser 💃 🕺`}>
+      <Header className='' pageTitle={`If you're not a dancer, kindly close your browser 💃 🕺`}>
         
       </Header>
       <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4'>
-          {ActiveLinks.map((al)=>(
-            <MainLinkItem key={al.route} name={al.label} emoji={al.emoji} href={al.route}/>
+          {routes.map((al)=>(
+            <MainLinkItem key={al.href} name={al.label} emoji={al.emoji} href={al.href} onClick={al.onClick}/>
           ))}
         </div>
     </div>

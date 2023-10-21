@@ -138,10 +138,12 @@ export enum Routes {
     Songs = '/songs',
 }
 
-export type PlaylistInfo = {
-    route: Routes;
+export type ActiveLink = {
+    href: Routes;
     emoji: any,
     label: string,
+    playlist?: PlaylistEnum
+    icon?: any
 };
 
 export enum SupportedCommunities {
