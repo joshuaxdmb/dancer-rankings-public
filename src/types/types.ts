@@ -1,6 +1,7 @@
 import { PlaylistEnum } from "@/content";
 import Stripe from "stripe";
 
+//Music
 export interface UserDetailsType {
     id: string;
     first_name: string;
@@ -52,7 +53,11 @@ export interface SongVoteLocal {
 }
 
 export interface VotesMap {
-    [key: string]: any;
+    [location_id: string]: {
+        [playlist_id: string]: {
+            [song_spotify_id: string]: number;
+        };
+    };
 };
 
 export interface SpotifySong{
@@ -74,6 +79,8 @@ export interface SpotifySong{
     type: string;
     uri: string;
 }
+
+//Subscriptions
 
 export enum SubscriptionStatusEnum {
     ACTIVE = 'active',
@@ -129,6 +136,12 @@ export interface Product {
     metadata?: Stripe.Metadata
 }
 
+export interface ProductWithPrice extends Product {
+    prices?: Price[];
+}
+
+//Navigation
+
 export enum Routes {
     Salsa = '/salsa',
     Bachata = '/bachata',
@@ -147,7 +160,12 @@ export type ActiveLink = {
 };
 
 export enum SupportedCommunities {
-    Toronto = 'Toronto'
+    Toronto = 'Toronto',
+    NewYork = 'New York',
+    Spain = 'Spain',
+    Europe = 'Europe',
+    LatinAmerica = 'Latin America',
+    Global = 'Global'
 }
 
 export type User = {

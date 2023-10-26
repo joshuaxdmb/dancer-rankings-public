@@ -1,7 +1,7 @@
 'use client'
 import Header from '@/app/components/Header';
 import Center from '../components/Center';
-import { LocationIdsEnum, LocationLabels, PlaylistEnum } from '@/content';
+import { LocationIdsEnum, LocationLabels, PlaylistEnum, PlaylistLabels } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
 import Script from 'next/script';
@@ -41,7 +41,7 @@ export default function Home() {
         ${themes[playlist].pageBackground}
       `}
     >
-      <Header className='bg-none'pageTitle={`Top Bachata Songs | ${LocationLabels[location]}`}>
+      <Header className='bg-none'pageTitle={`Top ${PlaylistLabels[playlist]} Songs | ${LocationLabels[location]}`}>
       </Header>
       <Center playlistFilter={PlaylistEnum.bachata}/>
       <PlayingBar backGroundColor={themes[playlist].playingBarBackground}/>

@@ -20,7 +20,7 @@ const SongItem = ({ song, onVote, userVote, onSelect, isPlaying }: Props) => {
       <button onClick={()=>{onSelect(song)}} className="flex flex-col pb-2 cursor-pointer text-left flex-grow truncate">
         <h2 className={`text-md w-full truncate ${isPlaying && 'text-green-500'}`}>{song.title}</h2>
         <p className="text-sm text-gray-300 w-full">{song.author}</p>
-        <p className="text-xs text-gray-400 w-full">suggested by: {song.added_by} {song.total_votes}</p>
+        <p className="text-xs text-gray-400 w-full">suggested by: {song.added_by}</p>
       </button>
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-col items-center">

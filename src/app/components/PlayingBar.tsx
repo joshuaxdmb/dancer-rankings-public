@@ -29,14 +29,13 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
 
   useEffect(() => {
     if (userDetails?.product === 'premium') {
-      spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e) => {
+      spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e:any) => {
         console.log('Error setting device on Spotify', e);
       });
       setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId));
-      toast.success('Found your Premium account', {id: 'spotify-premium'});
     } else {
       setPlayer(new NonPremiumPlayer());
-      toast.success('Not Spotify Premium. Only previews avaialble.', {id: 'spotify-premium'});
+        toast.success('Login with Spotify Premium to play complete songs!', {id: 'spotify-premium'});
     }
   }, [spotifyDeviceId, spotifyApi, userDetails?.product]);
 

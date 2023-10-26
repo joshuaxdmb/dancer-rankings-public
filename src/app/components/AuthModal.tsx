@@ -13,7 +13,7 @@ import useAuthModal from '@/hooks/useAuthModal';
 import { toast } from 'react-hot-toast';
 import { LocationIdsEnum, Locations } from '@/content';
 import SupabaseWrapper from '@/hooks/useSupabase';
-import { isValidEmail } from '@/utils/utils';
+import { isValidEmail } from '@/utils/songsUtils';
 
 type Props = {};
 

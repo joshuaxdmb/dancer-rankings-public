@@ -43,6 +43,7 @@ export class NonPremiumPlayer extends Player {
 
     play(song: SongLocal): void {
         console.log('Currently previewing', song?.title);
+        if(!song?.preview_url) throw new Error('No preview url')
         this.audioInstance = new Audio(song?.preview_url || '');
         this.audioInstance.play();
     }

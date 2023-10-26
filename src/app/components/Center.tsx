@@ -17,8 +17,8 @@ import { locationAtom } from '@/atoms/locationAtom';
 import { songsAtom } from '@/atoms/songsAtom';
 import SongItem from './SongItem';
 import { votesByUserAtom } from '@/atoms/votesByUserAtom';
-import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/utils';
-import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
+import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/songsUtils';
+import { currentTrackAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import { BeatLoader } from 'react-spinners';
@@ -37,10 +37,6 @@ const Center = ({}: Props) => {
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (isLoading) setIsLoading(false);
-  }, [songs]); //eslint-disable-line
 
   useEffect(() => {
     !isLoading && setIsLoading(true);
@@ -62,23 +58,21 @@ const Center = ({}: Props) => {
     }
     if (Object.keys(votes).length < 1) {
       if (user) {
-        const newVotes: VotesMap = {};
         supabaseClient
           .getVotedSongsByUser(user?.id)
           .then((data: any) => {
-            console.log('votes fetched', data);
-            data.map((vote: SongVoteLocal) => {
-              newVotes[vote.location_id as string] = {
-                [vote.playlist_id as string]: {
-                  ...newVotes[vote.location_id as string]?.[
-                    vote.playlist_id as string
-                  ],
-                  [vote.song_spotify_id as string]: vote.vote,
-                },
-              };
-            });
-            setVotes(newVotes);
-            console.log(newVotes);
+            console.log(data.length, 'votes fetched');
+            const transformedVotes = data.reduce((acc: VotesMap, vote: SongVoteLocal) => {
+              if (!acc[vote.location_id]) {
+                  acc[vote.location_id] = {};
+              }
+              if (!acc[vote.location_id][vote.playlist_id]) {
+                  acc[vote.location_id][vote.playlist_id] = {};
+              }
+              acc[vote.location_id][vote.playlist_id][vote.song_spotify_id] = vote.vote;
+              return acc;
+          }, {});
+            setVotes(transformedVotes);
           })
           .catch((e: any) => {
             toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' });
@@ -86,6 +80,7 @@ const Center = ({}: Props) => {
           });
       }
     }
+    setIsLoading(false);
   }, [user, playlist, location]); //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {
@@ -94,14 +89,14 @@ const Center = ({}: Props) => {
 
   const handleAddSong = async (songDetails: SpotifySong) => {
     if (!user) {
-      toast.error('You must be logged in to add a song', {
+      toast.error('You login to add a song', {
         id: 'failed-add-song-supabase',
       });
       return;
     }
 
     if (!spotifySession.user) {
-      toast.error('You must be logged in to spotify to add a song', {
+      toast.error('You log into spotify to add a song', {
         id: 'failed-add-song-spotify',
       });
       return;
@@ -188,7 +183,7 @@ const Center = ({}: Props) => {
 
   const handleVote = async (song: SongLocal, vote: number) => {
     if (!user) {
-      toast.error('You must be logged in to upvote a song', {
+      toast.error('You log in to upvote a song', {
         id: 'failed-upvote-song-supabase',
       });
       return;
@@ -258,7 +253,7 @@ const Center = ({}: Props) => {
             )}
             </div>
           ) : (
-            <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10">
+            <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen">
               <h1>{`No songs found :( Try adding one!`}</h1>
             </div>
           )}

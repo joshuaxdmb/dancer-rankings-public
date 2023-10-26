@@ -1,7 +1,11 @@
 import { ActiveLink, Routes } from "./types/types";
 export enum LocationIdsEnum {
     toronto = 'toronto',
-    newyork = 'newyork'
+    newyork = 'newyork',
+    spain='spain',
+    europe='europe',
+    latinamerica='latinamerica',
+    global='global'
 }
 
 export enum PlaylistEnum{
@@ -18,7 +22,23 @@ export const Locations = [
     {
         id:LocationIdsEnum.newyork,
         label:'New York',
-    }
+    },
+    {
+        id:LocationIdsEnum.spain,
+        label:'Spain',
+    },
+    {
+        id:LocationIdsEnum.europe,
+        label:'Europe',
+    },
+    {
+        id:LocationIdsEnum.latinamerica,
+        label:'Latin America',
+    },
+    {
+        id:LocationIdsEnum.global,
+        label:'Global',
+    },
 ]
 
 type LocationLabels = {
@@ -27,7 +47,17 @@ type LocationLabels = {
 
 export const LocationLabels:LocationLabels = {
     "toronto":'Toronto',
-    "newyork":'New York'
+    "newyork":'New York',
+    "spain":'Spain',
+    "europe":'Europe',
+    "latinamerica":'Latin America',
+    "global":'Global'
+}
+
+export const PlaylistLabels = {
+    "bachata":'Bachata',
+    "salsa":'Salsa',
+    "zouk":'Zouk'
 }
 
 export const EventsThisWeek: Array<any> = [

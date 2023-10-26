@@ -10,19 +10,27 @@ import ToasterProvider from './providers/ToasterProvider';
 import PlayingBar from './components/PlayingBar';
 import SpotifyProvider from './providers/SpotifyProvider';
 import Script from 'next/script';
+import getActiveProductsWithPrices from '@/utils/productUtils';
+import { ProductWithPrice } from '@/types/types';
 
 const font = Figtree({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: '💃🕺 Dancers Rankings App',
   description: 'The best music and events ranked by dancers',
+  icons: {
+    icon: 'icon.svg',
+  },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  const products:ProductWithPrice[] = await getActiveProductsWithPrices()
+
   return (
     <html lang="en">
       <body className={font.className}>
@@ -31,8 +39,8 @@ export default function RootLayout({
           <UserProvider>
             <RecoilProvider>
               <SpotifyProvider>
-              <ModalProvider />
-              <Sidebar>{children}</Sidebar>
+                <ModalProvider products={products}/>
+                <Sidebar>{children}</Sidebar>
               </SpotifyProvider>
             </RecoilProvider>
           </UserProvider>

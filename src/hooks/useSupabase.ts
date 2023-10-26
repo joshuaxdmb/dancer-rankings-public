@@ -135,6 +135,8 @@ class SupabaseWrapper {
             .from('songs')
             .insert([song])
     }
+
+    
 }
 
 export default SupabaseWrapper;
