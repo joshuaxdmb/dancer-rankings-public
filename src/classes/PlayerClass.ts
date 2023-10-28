@@ -1,4 +1,5 @@
 import { SongLocal } from "@/types/types";
+import toast from 'react-hot-toast';
 
 export abstract class Player {
     abstract play(song: SongLocal): void;
@@ -43,7 +44,10 @@ export class NonPremiumPlayer extends Player {
 
     play(song: SongLocal): void {
         console.log('Currently previewing', song?.title);
-        if(!song?.preview_url) throw new Error('No preview url')
+        if(!song?.preview_url){
+            toast.error('No preview available for this song. Spotify Premium needed');
+            return
+        }
         this.audioInstance = new Audio(song?.preview_url || '');
         this.audioInstance.play();
     }

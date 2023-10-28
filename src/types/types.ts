@@ -149,6 +149,7 @@ export enum Routes {
     Home = '/',
     Events = '/events',
     Songs = '/songs',
+    Classes = '/classes'
 }
 
 export type ActiveLink = {

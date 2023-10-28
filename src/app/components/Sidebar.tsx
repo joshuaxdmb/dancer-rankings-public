@@ -55,26 +55,31 @@ const Sidebar = ({ children }: Props) => {
       },
       {
         label: `🔥 Bachata`,
-        active: playlist === PlaylistEnum.bachata,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.bachata,
         onClick: () => setPlaylist(PlaylistEnum.bachata),
         href: Routes.Songs,
       },
       {
         label: `🎉 Salsa`,
-        active: playlist === PlaylistEnum.salsa,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.salsa,
         href: Routes.Songs,
         onClick: () => setPlaylist(PlaylistEnum.salsa),
       },
       {
         label: `🌊 Zouk`,
-        active: playlist === PlaylistEnum.zouk,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.zouk,
         href: Routes.Songs,
         onClick: () => setPlaylist(PlaylistEnum.zouk),
       },
       {
         label: `💃 Events`,
-        active: pathname === '/' + Routes.Events,
+        active: pathname === Routes.Events,
         href: Routes.Events,
+      },
+      {
+        label: `🕺 Classes`,
+        active: pathname === Routes.Classes,
+        href: Routes.Classes,
       },
     ],
     [pathname, playlist]

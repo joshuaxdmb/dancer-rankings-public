@@ -8,7 +8,7 @@ import {
 type Props = {
   song: SongLocal;
   onVote: (song: SongLocal, vote: 1 | -1) => void;
-  userVote: 1 | -1 | undefined;
+  userVote: number | undefined;
   onSelect: (song: SongLocal) => void;
   isPlaying: boolean;
 };

@@ -117,5 +117,10 @@ export const ActiveLinks: Array<ActiveLink> = [
         emoji:'💃',
         label:'Vote Events',
     },
+    {
+        href: Routes.Classes,
+        emoji:'🕺',
+        label:'Book Classes',
+    },
 ]
 

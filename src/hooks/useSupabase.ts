@@ -133,7 +133,7 @@ class SupabaseWrapper {
     async addSong(song: Song) {
         return await this.client
             .from('songs')
-            .insert([song])
+            .upsert([song])
     }
 
     

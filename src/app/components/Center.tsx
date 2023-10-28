@@ -62,16 +62,20 @@ const Center = ({}: Props) => {
           .getVotedSongsByUser(user?.id)
           .then((data: any) => {
             console.log(data.length, 'votes fetched');
-            const transformedVotes = data.reduce((acc: VotesMap, vote: SongVoteLocal) => {
-              if (!acc[vote.location_id]) {
+            const transformedVotes = data.reduce(
+              (acc: VotesMap, vote: SongVoteLocal) => {
+                if (!acc[vote.location_id]) {
                   acc[vote.location_id] = {};
-              }
-              if (!acc[vote.location_id][vote.playlist_id]) {
+                }
+                if (!acc[vote.location_id][vote.playlist_id]) {
                   acc[vote.location_id][vote.playlist_id] = {};
-              }
-              acc[vote.location_id][vote.playlist_id][vote.song_spotify_id] = vote.vote;
-              return acc;
-          }, {});
+                }
+                acc[vote.location_id][vote.playlist_id][vote.song_spotify_id] =
+                  vote.vote;
+                return acc;
+              },
+              {}
+            );
             setVotes(transformedVotes);
           })
           .catch((e: any) => {
@@ -106,10 +110,6 @@ const Center = ({}: Props) => {
       .map((a: any, index: number) => `${index === 0 ? '' : ','} ${a.name}`)
       .join('');
 
-    const existingSong = await supabaseClient.getSongBySpotifyId(
-      songDetails.id
-    );
-
     const insertLocalSong: SongLocal = {
       added_by: spotifySession.user.username,
       author: artists,
@@ -124,60 +124,52 @@ const Center = ({}: Props) => {
       location_id: location,
     };
 
-    if (existingSong.length) {
-      //If song already exists in the db, just add it to the top of the list so user can vote
-      toast.success('Song already exists', { id: 'song-exists' });
-      const localSongExists = songs[location]?.[playlist]?.find(
-        (song: SongLocal) => song.spotify_id === songDetails.id
-      );
-      if (!localSongExists) {
-        setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
-      }
-      return;
-    } else {
-      //Add song if it does not exist in the db, and also add locally
-      const insertSong: Song = {
-        added_by: spotifySession.user.username,
-        author: artists,
-        image_path: songDetails.album.images[0]?.url || null,
-        preview_url: songDetails.preview_url || null,
-        spotify_id: songDetails.id,
-        title: songDetails.name,
-      };
+    const insertSong: Song = {
+      added_by: spotifySession.user.username,
+      author: artists,
+      image_path: songDetails.album.images[0]?.url || null,
+      preview_url: songDetails.preview_url || null,
+      spotify_id: songDetails.id,
+      title: songDetails.name,
+    };
+    supabaseClient
+      .addSong(insertSong)
+      .then((data: any) => {
+        if (data.status !== 201) {
+          toast.error('Failed to add song', {
+            id: 'failed-add-song-supabase',
+          });
+        } else {
+          toast.success('Song added!', { id: 'song-added' });
+        }
+      })
+      .catch((e: any) => {
+        console.log('Failed to add song', e);
+      });
 
-      supabaseClient
-        .addSong(insertSong)
-        .then((data: any) => {
-          if (data.status !== 201) {
-            toast.error('Failed to add song', {
-              id: 'failed-add-song-supabase',
-            });
-          } else {
-            toast.success('Song added!', { id: 'song-added' });
-            setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
-          }
-        })
-        .catch((e: any) => {
-          console.log('Failed to add song', e);
-        });
-
-      supabaseClient
-        .voteSong(insertSong.spotify_id, user.id, location, playlist, 1)
-        .then((data: any) => {
-          const newVotes = {
-            ...votes,
-            [location]: {
-              [playlist]: {
-                ...votes[location]?.[playlist],
-                [insertSong.spotify_id]: 1,
-              },
+    supabaseClient
+      .voteSong(insertSong.spotify_id, user.id, location, playlist, 1)
+      .then((data: any) => {
+        const newVotes = {
+          ...votes,
+          [location]: {
+            [playlist]: {
+              ...votes[location]?.[playlist],
+              [insertSong.spotify_id]: 1,
             },
-          };
-          setVotes(newVotes);
-        })
-        .catch((e: any) => {
-          console.log('Failed to vote for song', e);
-        });
+          },
+        };
+        setVotes(newVotes);
+      })
+      .catch((e: any) => {
+        console.log('Failed to vote for song', e);
+      });
+
+    const localSongExists = songs[location]?.[playlist]?.find(
+      (song: SongLocal) => song.spotify_id === songDetails.id
+    );
+    if (!localSongExists) {
+      setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
     }
   };
 
@@ -230,16 +222,16 @@ const Center = ({}: Props) => {
         />
       </section>
       <section>
-          {isLoading ? (
-            <div className="w-full flex items-center justify-center flex-col h-screen">
-              <div className="loader-container">
-                <BeatLoader color="#FFFFFF" size={20} />
-              </div>
-              <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
+        {isLoading ? (
+          <div className="w-full flex items-center justify-center flex-col h-screen">
+            <div className="loader-container">
+              <BeatLoader color="#FFFFFF" size={20} />
             </div>
-          ) : songs[location]?.[playlist]?.length ? (
-            <div>{
-            songs[location]?.[playlist]?.map(
+            <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
+          </div>
+        ) : songs[location]?.[playlist]?.length ? (
+          <div>
+            {songs[location]?.[playlist]?.map(
               (song: SongLocal, index: number) => (
                 <SongItem
                   key={index}
@@ -251,12 +243,12 @@ const Center = ({}: Props) => {
                 />
               )
             )}
-            </div>
-          ) : (
-            <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen">
-              <h1>{`No songs found :( Try adding one!`}</h1>
-            </div>
-          )}
+          </div>
+        ) : (
+          <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen">
+            <h1>{`No songs found :( Try adding one!`}</h1>
+          </div>
+        )}
       </section>
     </div>
   );
