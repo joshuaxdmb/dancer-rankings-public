@@ -1,5 +1,5 @@
 import { LocationIdsEnum, PlaylistEnum } from "@/content";
-import { Song } from "@/types/types";
+import { EventLocalType, Song, SongLocal } from "@/types/types";
 
 class SupabaseWrapper {
     private client: any; // Using 'any' since the exact type wasn't specified
@@ -44,6 +44,26 @@ class SupabaseWrapper {
         }
     }
 
+    async getVotedEventsByUser(user_id: string) {
+        try {
+            const { data, error } = await this.client
+                .from('events_votes')
+                .select('event_id')  // This line ensures only these columns are fetched
+                .eq('user_id', user_id)
+    
+            if (error) {
+                console.error('Error fetching voted events:', error);
+                return [];
+            }
+    
+            return data; // return the fetched songs data
+    
+        } catch (err) {
+            console.error('Error executing getVotedEventsByUser:', err);
+            return [];
+        }
+    }
+
     async getVotedSongs(playlist_id: PlaylistEnum, location_id: LocationIdsEnum) {
         try {
             const { data, error } = await this.client.rpc('get_voted_songs', { p_playlist_id: playlist_id, p_location_id: location_id });
@@ -53,7 +73,7 @@ class SupabaseWrapper {
                 return [];
             }
 
-            return data; // return the fetched songs data
+            return data as SongLocal[]; // return the fetched songs data
 
         } catch (err) {
             console.error('Error executing getVotedSongs:', err);
@@ -61,6 +81,20 @@ class SupabaseWrapper {
         }
     }
 
+    async getVotedEvents(location_id:LocationIdsEnum){
+        try{
+            const {data, error} = await this.client.rpc('get_voted_events', {p_location_id: location_id})
+            if(error){
+                console.error('Error fetching voted events!:', error);
+                return [];
+            }
+
+            return data as EventLocalType[]
+        } catch (err) {
+            console.error('Error executing getVotedEvents:', err);
+            return [];
+        }
+    }
 
     async voteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum, playlist_id:PlaylistEnum, vote: number) {
         return await this.client
@@ -77,6 +111,46 @@ class SupabaseWrapper {
             ])
     }
 
+    async voteEvent(eventId: string, userId: string) {
+
+        try{
+            const { data, error } = await this.client
+            .from('events_votes')
+            .upsert([
+                {
+                    event_id: eventId,
+                    user_id: userId,
+                    vote: 1,
+                    created_at: new Date().toISOString(),
+                }
+            ])
+
+            if (error) {
+                throw error; // or return an error object/message if you prefer
+            }
+        } catch (err) {
+            console.error('Error executing voteEvent:', err);
+            throw err; // or return an error object/message if you prefer
+        }
+    }
+
+    async deleteVoteEvent(eventId: string, userId: string) {
+        try{
+            const { data, error } = await this.client
+            .from('events_votes')
+            .delete()
+            .eq('user_id', userId)
+            .eq('event_id', eventId)
+
+            if (error) {
+                throw error; // or return an error object/message if you prefer
+            }
+        } catch (err) {
+            console.error('Error executing deleteVoteEvent:', err);
+            throw err; // or return an error object/message if you prefer
+        }
+    }
+
     async deleteVoteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum) {
         try {
             const { data, error } = await this.client
@@ -90,8 +164,6 @@ class SupabaseWrapper {
                 console.error('Error deleting upvote:', error);
                 throw error; // or return an error object/message if you prefer
             }
-
-            return data;
         } catch (err) {
             console.error('Error executing deleteUpVoteSong:', err);
             throw err; // or return an error object/message if you prefer
@@ -104,8 +176,6 @@ class SupabaseWrapper {
             password: password,
         });
     }
-
-
 
     async getSongBySpotifyId(spotifyId: string) {
         try {

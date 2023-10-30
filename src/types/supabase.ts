@@ -9,6 +9,46 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      classes_by_instructor: {
+        Row: {
+          created_at: string
+          duration_in_minutes: number | null
+          for_dance_level: string
+          for_dance_role: Database["public"]["Enums"]["dance_roles"]
+          genre: string
+          id: number
+          instructor_id: number
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_in_minutes?: number | null
+          for_dance_level: string
+          for_dance_role: Database["public"]["Enums"]["dance_roles"]
+          genre: string
+          id?: number
+          instructor_id: number
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_in_minutes?: number | null
+          for_dance_level?: string
+          for_dance_role?: Database["public"]["Enums"]["dance_roles"]
+          genre?: string
+          id?: number
+          instructor_id?: number
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_by_instructor_instructor_id_fkey"
+            columns: ["instructor_id"]
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       customers: {
         Row: {
           id: string
@@ -35,55 +75,71 @@ export interface Database {
         Row: {
           classes_included: string | null
           created_at: string
+          end_time: string
+          event_location: string
           event_site: string | null
           id: number
+          image_path: string | null
           instructors: string | null
           label: string | null
           location_link: string | null
-          start_time: string | null
+          start_time: string
           venue: string | null
         }
         Insert: {
           classes_included?: string | null
           created_at?: string
+          end_time: string
+          event_location: string
           event_site?: string | null
           id?: number
+          image_path?: string | null
           instructors?: string | null
           label?: string | null
           location_link?: string | null
-          start_time?: string | null
+          start_time: string
           venue?: string | null
         }
         Update: {
           classes_included?: string | null
           created_at?: string
+          end_time?: string
+          event_location?: string
           event_site?: string | null
           id?: number
+          image_path?: string | null
           instructors?: string | null
           label?: string | null
           location_link?: string | null
-          start_time?: string | null
+          start_time?: string
           venue?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "events_event_location_fkey"
+            columns: ["event_location"]
+            referencedRelation: "locations"
+            referencedColumns: ["location_id"]
+          }
+        ]
       }
       events_votes: {
         Row: {
           created_at: string
           event_id: number
-          id: string
+          user_id: string
           vote: number
         }
         Insert: {
           created_at: string
           event_id: number
-          id: string
+          user_id: string
           vote: number
         }
         Update: {
           created_at?: string
           event_id?: number
-          id?: string
+          user_id?: string
           vote?: number
         }
         Relationships: [
@@ -94,12 +150,48 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "events_votes_id_fkey"
-            columns: ["id"]
+            foreignKeyName: "events_votes_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]
+      }
+      instructors: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_name: string
+          id: number
+          image_url: string | null
+          instagram_id: string | null
+          last_name: string
+          phone_number: string | null
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_name: string
+          id?: number
+          image_url?: string | null
+          instagram_id?: string | null
+          last_name: string
+          phone_number?: string | null
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: number
+          image_url?: string | null
+          instagram_id?: string | null
+          last_name?: string
+          phone_number?: string | null
+          website?: string | null
+        }
+        Relationships: []
       }
       locations: {
         Row: {
@@ -243,88 +335,78 @@ export interface Database {
           added_by: string | null
           author: string | null
           created_at: string
-          down_votes: number | null
           image_path: string | null
-          location_id: string
-          playlist_id: string
           preview_url: string | null
           spotify_id: string
           title: string | null
-          up_votes: number | null
         }
         Insert: {
           added_by?: string | null
           author?: string | null
           created_at?: string
-          down_votes?: number | null
           image_path?: string | null
-          location_id: string
-          playlist_id: string
           preview_url?: string | null
           spotify_id: string
           title?: string | null
-          up_votes?: number | null
         }
         Update: {
           added_by?: string | null
           author?: string | null
           created_at?: string
-          down_votes?: number | null
           image_path?: string | null
-          location_id?: string
-          playlist_id?: string
           preview_url?: string | null
           spotify_id?: string
           title?: string | null
-          up_votes?: number | null
+        }
+        Relationships: []
+      }
+      songs_votes: {
+        Row: {
+          created_at: string
+          location_id: string
+          playlist_id: string
+          song_spotify_id: string
+          user_id: string
+          vote: number
+        }
+        Insert: {
+          created_at?: string
+          location_id: string
+          playlist_id: string
+          song_spotify_id: string
+          user_id: string
+          vote: number
+        }
+        Update: {
+          created_at?: string
+          location_id?: string
+          playlist_id?: string
+          song_spotify_id?: string
+          user_id?: string
+          vote?: number
         }
         Relationships: [
           {
-            foreignKeyName: "fk_location"
+            foreignKeyName: "songs_votes_location_id_fkey"
             columns: ["location_id"]
             referencedRelation: "locations"
             referencedColumns: ["location_id"]
           },
           {
-            foreignKeyName: "fk_playlist"
+            foreignKeyName: "songs_votes_playlist_id_fkey"
             columns: ["playlist_id"]
             referencedRelation: "playlists"
             referencedColumns: ["playlist_id"]
-          }
-        ]
-      }
-      songs_votes: {
-        Row: {
-          created_at: string
-          id: string
-          location: string
-          song_id: number
-          vote: number
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          location: string
-          song_id: number
-          vote: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          location?: string
-          song_id?: number
-          vote?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_location"
-            columns: ["location"]
-            referencedRelation: "locations"
-            referencedColumns: ["location_id"]
           },
           {
-            foreignKeyName: "songs_votes_id_fkey"
-            columns: ["id"]
+            foreignKeyName: "songs_votes_song_spotify_id_fkey"
+            columns: ["song_spotify_id"]
+            referencedRelation: "songs"
+            referencedColumns: ["spotify_id"]
+          },
+          {
+            foreignKeyName: "songs_votes_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -445,9 +527,52 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_voted_events: {
+        Args: {
+          p_location_id: string
+        }
+        Returns: {
+          id: number
+          label: string
+          venue: string
+          location_link: string
+          image_path: string
+          event_site: string
+          start_time: string
+          classes_included: string
+          end_time: string
+          event_location: string
+          total_votes: number
+        }[]
+      }
+      get_voted_songs: {
+        Args: {
+          p_playlist_id: string
+          p_location_id: string
+        }
+        Returns: {
+          spotify_id: string
+          added_by: string
+          author: string
+          image_path: string
+          title: string
+          preview_url: string
+          playlist_id: string
+          location_id: string
+          up_votes: number
+          down_votes: number
+          total_votes: number
+        }[]
+      }
     }
     Enums: {
+      dance_levels:
+        | "beginner1"
+        | "beginner2"
+        | "intermediate1"
+        | "intermediate2"
+        | "advanced"
+      dance_roles: "lead" | "follow" | "both"
       pricing_plan_interval: "day" | "week" | "month" | "year"
       pricing_type: "one_time" | "recurring"
       subscription_status:

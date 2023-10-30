@@ -12,6 +12,7 @@ import { playlistAtom } from '@/atoms/playlistAtom';
 import { songsAtom } from '@/atoms/songsAtom';
 import { locationAtom } from '@/atoms/locationAtom';
 import { SongLocal } from '@/types/types';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   backGroundColor?: string;
@@ -26,6 +27,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   const [songIndex, setSongIndex] = useState<number | null>(null);
   const { userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
   const [player, setPlayer] = useState<Player | undefined>();
+  const router = useRouter();
 
   useEffect(() => {
     if (userDetails?.product === 'premium') {
@@ -57,7 +59,18 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
     if (isPlaying) {
       player?.pause();
     } else {
-      player?.play(currentTrack); // Assuming there's always a track to play
+      try{
+        player?.play(currentTrack)
+      }
+      catch(err: any) {
+        console.error('ERROR', err);
+        if (err.statusCode === 401) {
+          toast.error('Your spotify session expired. Refreshing', {
+            id: 'failed-spotify-search',
+          });
+          router.refresh();
+        }
+      }
     }
   };
 
@@ -80,7 +93,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
     if (songIndex === null || songIndex < 0|| !currentTrack) {
       return
     } else if (songIndex === 0){
-      player?.play(currentTrack)
+      player?.play(currentTrack, 0)
     } else {
       newIndex = songIndex - 1;
       const nextSong = songs?.[location]?.[playlist][newIndex];

@@ -18,11 +18,12 @@ import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
 import { signOut } from 'next-auth/react';
 import { playlistAtom } from '@/atoms/playlistAtom';
+import { BeatLoader } from 'react-spinners';
 
 type Props = { children: React.ReactNode };
 
 const Sidebar = ({ children }: Props) => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const pathname = usePathname();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
@@ -176,6 +177,14 @@ const Sidebar = ({ children }: Props) => {
       </Box>
     </div>
   );
+
+  if (isLoading) {
+    return (
+      <Box className="h-full flex items-center justify-center flex-col">
+             <BeatLoader color="#FFFFFF" size={20} />
+        </Box>
+    )
+  }
 
   return (
     <div className="flex h-full relative">

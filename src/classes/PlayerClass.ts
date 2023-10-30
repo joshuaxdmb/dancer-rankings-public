@@ -2,7 +2,7 @@ import { SongLocal } from "@/types/types";
 import toast from 'react-hot-toast';
 
 export abstract class Player {
-    abstract play(song: SongLocal): void;
+    abstract play(song: SongLocal, position_ms?:number): void;
     abstract pause(): void;
     abstract stop(): void;
 }
@@ -13,13 +13,13 @@ export class PremiumPlayer extends Player {
         super();
     }
 
-    play(song: SongLocal): void {
+    play(song: SongLocal, position_ms?:number): void {
         console.log('Currently playing', song?.title);
         this.spotifyApi
             .transferMyPlayback([this.spotifyDeviceId])
             .then(() => {
                 this.spotifyApi
-                    .play({ uris: [`spotify:track:${song.spotify_id}`] })
+                    .play({uris: [`spotify:track:${song.spotify_id}`], options:{position_ms},  })
                     .catch((err: any) => {
                         console.log('Something failed playing from Spotify', err);
                     });
@@ -42,7 +42,7 @@ export class PremiumPlayer extends Player {
 export class NonPremiumPlayer extends Player {
     private audioInstance?: HTMLAudioElement;
 
-    play(song: SongLocal): void {
+    play(song: SongLocal, position_ms?:number): void {
         console.log('Currently previewing', song?.title);
         if(!song?.preview_url){
             toast.error('No preview available for this song. Spotify Premium needed');

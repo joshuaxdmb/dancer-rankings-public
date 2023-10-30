@@ -1,5 +1,6 @@
-import { PlaylistEnum } from "@/content";
+import { LocationIdsEnum, PlaylistEnum } from "@/content";
 import Stripe from "stripe";
+import { ClassOfferedByInstructor } from "./danceClassesTypes";
 
 //Music
 export interface UserDetailsType {
@@ -176,4 +177,39 @@ export type User = {
     phone?: string,
     isPhoneVerified?: boolean,
     communities: Array<SupportedCommunities>
+}
+
+export type EventVoteType = {
+    id: string,
+    event_id: string,
+    vote: number,
+    created_at: any
+}
+
+export type EventType = {
+    created_at: any,
+    label: string,
+    venue: string,
+    location_link?: string,
+    event_site?:string,
+    start_time: any,
+    classes_included?: ClassOfferedByInstructor[],
+    instructors: string,
+    end_time: any,
+    event_location:LocationIdsEnum
+}
+
+export type EventLocalType = {
+    id: string,
+    label: string,
+    venue: string,
+    location_link?: string,
+    image_path?: string,
+    event_site?:string,
+    start_time: any,
+    classes_included?: string,
+    instructors: string,
+    end_time: any,
+    event_location:LocationIdsEnum,
+    total_votes: number,
 }

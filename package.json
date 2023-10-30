@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "update-supabase": "npx supabase gen types typescript --project-id tjsnffpooaepqzufjetf --schema public > src/types/supabase.ts"
+    "update-supabase": "npx supabase gen types typescript --project-id tjsnffpooaepqzufjetf --schema public > src/types/supabase.ts",
+    "stripe-login": "stripe login",
+    "stripe-forward": "stripe listen --forward-to localhost:3000/api/stripe-webhooks",
+    "stripe": "npm run stripe-login && npm run stripe-forward"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -28,6 +31,7 @@
     "@supabase/supabase-js": "^2.38.2",
     "@zendeskgarden/container-utilities": "^1.0.12",
     "@zendeskgarden/react-loaders": "^8.73.0",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "ionicons": "^7.1.2",
     "next": "latest",

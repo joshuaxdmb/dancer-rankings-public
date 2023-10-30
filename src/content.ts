@@ -5,7 +5,8 @@ export enum LocationIdsEnum {
     spain='spain',
     europe='europe',
     latinamerica='latinamerica',
-    global='global'
+    global='global',
+    USA='USA'
 }
 
 export enum PlaylistEnum{
@@ -39,6 +40,10 @@ export const Locations = [
         id:LocationIdsEnum.global,
         label:'Global',
     },
+    {
+        id:LocationIdsEnum.USA,
+        label:'USA',
+    },
 ]
 
 type LocationLabels = {
@@ -51,7 +56,8 @@ export const LocationLabels:LocationLabels = {
     "spain":'Spain',
     "europe":'Europe',
     "latinamerica":'Latin America',
-    "global":'Global'
+    "global":'Global',
+    "USA":'USA'
 }
 
 export const PlaylistLabels = {

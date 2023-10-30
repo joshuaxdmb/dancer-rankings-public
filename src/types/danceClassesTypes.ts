@@ -8,18 +8,18 @@ export type Instructor = {
     phoneNumber: string;
 }
 
-export type ClassOfferedByInstructor = {
-    title: string;
-    genre: string;
-    forDanceRole: DanceRoles;
-    forDanceLevel: DanceLevels[];
-    durationInMinutes: number;
-}
-
 export enum DanceRoles {
     lead = 'lead',
     follow = 'follow',
     both = 'both'
+}
+
+export type ClassOfferedByInstructor = {
+    title: string;
+    genre: string;
+    forDanceRole: DanceRoles;
+    forDanceLevels: DanceLevels[];
+    durationInMinutes: number;
 }
 
 export enum DanceLevels {

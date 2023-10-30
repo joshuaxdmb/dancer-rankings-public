@@ -1,5 +1,5 @@
 import { LocationIdsEnum, PlaylistEnum } from "@/content";
-import { SongLocal } from "@/types/types";
+import { EventLocalType, SongLocal } from "@/types/types";
 
 export const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,6 +19,34 @@ export const isValidEmail = (email: string) => {
         [location]: updatedLocation
     };
 };
+
+export const mergeEvents = (currentEvents:any, location:LocationIdsEnum, newEvents:any[]) => {
+    const updatedLocation = {
+        ...currentEvents[location],
+        ...newEvents
+    };
+    return {
+        ...currentEvents,
+        [location]: updatedLocation
+    };
+}
+
+export const updateEventsVotes = (currentEvents:any, location:LocationIdsEnum, event_id:string, vote:number) => {
+    const updatedLocation = currentEvents[location].map((e:EventLocalType) => {
+        if(e.id === event_id){
+            return {
+                ...e,
+                total_votes: e.total_votes + vote
+            }
+        }
+        return e
+    }).sort((a:EventLocalType, b:EventLocalType) => b.total_votes - a.total_votes)
+    
+    return {
+        ...currentEvents,
+        [location]: updatedLocation
+    };
+}
 
 export const updateSongsVotes = (currentSongs:any, location:LocationIdsEnum, playlist:PlaylistEnum, spotify_id:string, vote:number, currentVote:number) => {
     const updatedLocation = {

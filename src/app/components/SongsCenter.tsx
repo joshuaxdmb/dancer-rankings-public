@@ -32,7 +32,7 @@ const Center = ({}: Props) => {
   const { spotifySession, spotifyApi } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
-  const [votes, setVotes] = useRecoilState<VotesMap>(votesByUserAtom);
+  const [userVotes, setUserVotes] = useRecoilState<VotesMap>(votesByUserAtom);
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom);
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
@@ -56,7 +56,7 @@ const Center = ({}: Props) => {
           setIsLoading(false);
         });
     }
-    if (Object.keys(votes).length < 1) {
+    if (Object.keys(userVotes).length < 1) {
       if (user) {
         supabaseClient
           .getVotedSongsByUser(user?.id)
@@ -76,7 +76,7 @@ const Center = ({}: Props) => {
               },
               {}
             );
-            setVotes(transformedVotes);
+            setUserVotes(transformedVotes);
           })
           .catch((e: any) => {
             toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' });
@@ -151,15 +151,15 @@ const Center = ({}: Props) => {
       .voteSong(insertSong.spotify_id, user.id, location, playlist, 1)
       .then((data: any) => {
         const newVotes = {
-          ...votes,
+          ...userVotes,
           [location]: {
             [playlist]: {
-              ...votes[location]?.[playlist],
+              ...userVotes[location]?.[playlist],
               [insertSong.spotify_id]: 1,
             },
           },
         };
-        setVotes(newVotes);
+        setUserVotes(newVotes);
       })
       .catch((e: any) => {
         console.log('Failed to vote for song', e);
@@ -181,22 +181,22 @@ const Center = ({}: Props) => {
       return;
     }
 
-    if (votes?.[location]?.[playlist]?.[song.spotify_id] === vote) return;
+    if (userVotes?.[location]?.[playlist]?.[song.spotify_id] === vote) return;
 
     supabaseClient
       .voteSong(song.spotify_id, user.id, location, playlist, vote)
       .then((data: any) => {
         console.log('Voted for song', data);
         const newVotes = mergeVotes(
-          votes,
+          userVotes,
           location,
           playlist,
           song.spotify_id,
           vote
         );
-        setVotes(newVotes);
+        setUserVotes(newVotes);
         const currentVote =
-          votes?.[location]?.[playlist]?.[song.spotify_id] || 0;
+        userVotes?.[location]?.[playlist]?.[song.spotify_id] || 0;
         const newSongs = updateSongsVotes(
           songs,
           location,
@@ -238,7 +238,7 @@ const Center = ({}: Props) => {
                   song={song}
                   onVote={handleVote}
                   onSelect={selectSong}
-                  userVote={votes?.[location]?.[playlist]?.[song.spotify_id]}
+                  userVote={userVotes?.[location]?.[playlist]?.[song.spotify_id]}
                   isPlaying={currentTrack?.spotify_id === song.spotify_id}
                 />
               )

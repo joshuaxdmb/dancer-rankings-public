@@ -1,13 +1,13 @@
 'use client';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import StyledButton from './SytledButton';
-import useAuthModal from '@/hooks/useAuthModal';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
-import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
-import Image from 'next/image';
+import LoginButtons from './LoginButtons';
 import { useSpotify } from '@/hooks/useSpotify';
+import Image from 'next/image';
+
+
 
 type Props = {
   children: React.ReactNode;
@@ -22,11 +22,9 @@ const Header: React.FC<Props> = ({
   pageTitle,
   showUserBadge = true,
 }) => {
-  const authModal = useAuthModal();
-  const { user } = useUser();
-  const { spotifySession } = useSpotify();
-  const [isLoading, setIsLoading] = useState(true); // New state for showing buttons
+  const { user, isLoading } = useUser();
   const [visible, setVisible] = useState(true);
+  const { spotifySession } = useSpotify();
 
   useEffect(() => {
     setVisible(window.innerWidth >= 768);
@@ -56,48 +54,14 @@ const Header: React.FC<Props> = ({
     };
   }, [visible]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // 2-second delay
-
-    return () => clearTimeout(timer); // Clear the timer on component unmount
-  }, []);
-
   return (
-    <div className={twMerge(`p-4 md:p-6`, className)}>
-      <div className={`h-fit bg-gradient-to-b from-red-950`} />
+    <div className={twMerge(`p-4 md:p-6 bg-gradient-to-b from-red-950`, className)}>
       <div className="w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between">
         <div className="flex gap-x-2 items-center lg:hidden" />
         {visible && pageTitle && (
           <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}
-        {(!user || !spotifySession) && !isLoading && (
-          <div className="flex flex-row items-center">
-            <div>
-              <StyledButton
-                onClick={() => {
-                  authModal.setAuthOption('signup');
-                  authModal.onOpen();
-                }}
-                className="bg-transparent text-neutral-200 font-medium"
-              >
-                Sign Up
-              </StyledButton>
-            </div>
-            <div>
-              <StyledButton
-                onClick={() => {
-                  authModal.setAuthOption('login');
-                  authModal.onOpen();
-                }}
-                className="bg-white px-6 py-2"
-              >
-                Log In
-              </StyledButton>
-            </div>
-          </div>
-        )}
+        <LoginButtons isLoading={isLoading} user={user} spotifySession={spotifySession} />
         {user && spotifySession && showUserBadge && (
           <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0">
             <Image
