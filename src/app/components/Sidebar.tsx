@@ -8,43 +8,21 @@ import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import StyledButton from './SytledButton';
 import { useUser } from '@/hooks/useUser';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useRouter } from 'next/navigation';
-import { FaSignOutAlt } from 'react-icons/fa';
-import { LocationIdsEnum, Locations, PlaylistEnum } from '@/content';
+import { PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
-import { locationAtom } from '@/atoms/locationAtom';
-import { signOut } from 'next-auth/react';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import { BeatLoader } from 'react-spinners';
+import AuthButtons from './AuthButtons';
 
 type Props = { children: React.ReactNode };
 
 const Sidebar = ({ children }: Props) => {
   const { user, isLoading } = useUser();
   const pathname = usePathname();
-  const supabaseClient = useSupabaseClient();
-  const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [location, setLocation] = useRecoilState(locationAtom)
-  const [playlist, setPlaylist] = useRecoilState(playlistAtom)
-  
+  const [playlist, setPlaylist] = useRecoilState(playlistAtom);
 
-  const handleLocationChange = async (location: LocationIdsEnum) => {
-    setLocation(location);
-  }
-
-  const handleLogout = async () => {
-    const { error } = await supabaseClient.auth.signOut();
-    await signOut();
-    //Add reset any playing songs
-    router.push('/');
-    if (error) {
-      console.log(error);
-    }
-  };
 
   const routes = useMemo(
     () => [
@@ -132,7 +110,7 @@ const Sidebar = ({ children }: Props) => {
             href={p.href}
             onClick={() => {
               p.onClick && p.onClick();
-              if(window.innerWidth < 768) setVisible(false);
+              if (window.innerWidth < 768) setVisible(false);
             }}
             className={twMerge(
               'flex py-6 pl-6 text-xl flex-col hover:text-white transition cursor-pointer text-neutral-400',
@@ -146,33 +124,7 @@ const Sidebar = ({ children }: Props) => {
           </Link>
         ))}
         {user && (
-          <div className="mt-10 w-full flex items-center justify-center flex-col gap-4">
-            <StyledButton
-              onClick={() => {}}
-              className="bg-white px-6 py-0 max-w-[200px] flex items-center justify-center gap-x-2"
-            >
-              <select
-              id="location"
-              name="location"
-              className="w-full p-2 border-none rounded mt-1 bg-white text-center"
-              value={location}
-              onChange={(e) =>{ 
-                handleLocationChange(e.target.value as LocationIdsEnum)}}
-            >
-              {Locations.map((location, index) => (
-                <option key={index} value={location.id}>
-                  {location.label}
-                </option>
-              ))}
-            </select>
-            </StyledButton>
-            <StyledButton
-              onClick={handleLogout}
-              className="bg-white px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
-            >
-              Log Out <FaSignOutAlt />
-            </StyledButton>
-          </div>
+          <AuthButtons />
         )}
       </Box>
     </div>
@@ -181,9 +133,9 @@ const Sidebar = ({ children }: Props) => {
   if (isLoading) {
     return (
       <Box className="h-full flex items-center justify-center flex-col">
-             <BeatLoader color="#FFFFFF" size={20} />
-        </Box>
-    )
+        <BeatLoader color="#FFFFFF" size={20} />
+      </Box>
+    );
   }
 
   return (

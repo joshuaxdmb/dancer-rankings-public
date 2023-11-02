@@ -1,7 +1,4 @@
-import {
-  SubscriptionType,
-  UserDetailsType,
-} from '@/types/types';
+import { SubscriptionType, UserDetailsType } from '@/types/types';
 import { User } from '@supabase/auth-helpers-nextjs';
 import {
   useSessionContext,
@@ -38,28 +35,31 @@ export const MyUserContextProvider = (props: Props) => {
   const [subscription, setSubscription] = useState<SubscriptionType | null>(
     null
   );
-  
-  const getUserDetails = () => supabase.from('users').select('*').single();
-  const getSubscription = () =>
-    supabase
+
+  const getUserDetails = () => supabase
+  .from('users')
+  .select('*')
+  .eq('id', user?.id) //Possibly not needed because only has access to own user anyway
+
+  const getSubscription = () => supabase
       .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
-      .single();
+      .eq('user_id', user?.id)//Possibly not needed because only has access to own user anyway
 
   useEffect(() => {
-    if ((!user || !userDetails) && !isLoadingData) {
+    if (!userDetails && !isLoadingData && user?.id) {
       setIsLoadingData(true);
       Promise.allSettled([getUserDetails(), getSubscription()])
         .then((results) => {
-          const userDetailsPromise = results[0];
-          const subscriptionPromise = results[1];
-          if (userDetailsPromise.status === 'fulfilled') {
-            setUserDetails(userDetailsPromise.value.data as UserDetailsType);
+          const userDetailsResult = results[0];
+          const subscriptionResult = results[1];
+          if (userDetailsResult.status === 'fulfilled' && userDetailsResult.value.data?.length) {
+            setUserDetails(userDetailsResult.value.data[0] as UserDetailsType);
           }
 
-          if (subscriptionPromise.status === 'fulfilled') {
-            setSubscription(subscriptionPromise.value.data as SubscriptionType);
+          if (subscriptionResult.status === 'fulfilled' && subscriptionResult.value.data?.length) {
+            setSubscription(subscriptionResult.value.data[0] as SubscriptionType);
           }
 
           setIsLoadingData(false);
@@ -71,7 +71,6 @@ export const MyUserContextProvider = (props: Props) => {
       setUserDetails(null);
       setSubscription(null);
     }
-
   }, [user, isLoadingUser]); //eslint-disable-line
 
   const value = {
