@@ -1,10 +1,13 @@
 import React, { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
+import Sparkles from 'react-sparkle';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  sparkle?: boolean;
+}
 
 const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, type = 'button', ...props }, ref) => {
+  ({ className, children, disabled, type = 'button', sparkle, ...props }, ref) => {
     return (
       <button
         type={type}
@@ -15,6 +18,9 @@ const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
+        <div className='absolute w-[150px] h-[10px]'>
+        {sparkle && <Sparkles count={5} minSize={12} fadeOutSpeed={10} flicker={false} />} {/* Sparkle component */}
+        </div>
         {children}
       </button>
     );

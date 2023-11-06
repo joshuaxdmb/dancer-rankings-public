@@ -18,7 +18,7 @@ import AuthButtons from './Auth/SidebarButtons';
 type Props = { children: React.ReactNode };
 
 const Sidebar = ({ children }: Props) => {
-  const { user, isLoading } = useUser();
+  const { user, isLoading, isPremium } = useUser();
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [playlist, setPlaylist] = useRecoilState(playlistAtom);
@@ -124,7 +124,7 @@ const Sidebar = ({ children }: Props) => {
           </Link>
         ))}
         {user && (
-          <AuthButtons />
+          <AuthButtons isPremiumUser = {isPremium} />
         )}
       </Box>
     </div>

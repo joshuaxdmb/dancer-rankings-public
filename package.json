@@ -12,7 +12,7 @@
     "stripe-login": "stripe login",
     "stripe-forward": "stripe listen --forward-to localhost:3000/api/stripe-webhooks",
     "stripe": "npm run stripe-login && npm run stripe-forward",
-    "stripe-test":"stripe trigger payment_intent.succeeded"
+    "stripe-test": "stripe trigger payment_intent.succeeded"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -43,6 +43,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
     "react-loader-spinner": "^5.4.5",
+    "react-sparkle": "^2.0.0",
     "react-spinners": "^0.13.8",
     "recoil": "^0.7.7",
     "spotify-web-api-node": "^5.0.2",

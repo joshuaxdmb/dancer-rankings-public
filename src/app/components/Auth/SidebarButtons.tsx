@@ -9,9 +9,11 @@ import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
 
-type Props = {};
+type Props = {
+  isPremiumUser: boolean;
+};
 
-const AuthButtons = (props: Props) => {
+const AuthButtons = ({ isPremiumUser }: Props) => {
   const [location, setLocation] = useRecoilState(locationAtom);
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
@@ -59,12 +61,23 @@ const AuthButtons = (props: Props) => {
       >
         Log Out <FaSignOutAlt />
       </StyledButton>
-      <StyledButton
-        onClick={openSubscribe}
-        className="bg-green-400 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
-      >
-        Go Premium
-      </StyledButton>
+      {isPremiumUser ? (
+        <StyledButton
+          sparkle={true}
+          onClick={() => {}}
+          className="bg-green-500 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
+        >
+          Premium
+        </StyledButton>
+      ) : (
+        <StyledButton
+          sparkle={true}
+          onClick={openSubscribe}
+          className="bg-green-400 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
+        >
+          Go Premium
+        </StyledButton>
+      )}
     </div>
   );
 };

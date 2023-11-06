@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 
-export default function Home() {
+export default function Account() {
   const { user, userDetails} = useUser();
   const [showMessahe, setShowMessage] = useState(false); // New state for showing buttons
   const [topMargin, setTopMargin] = useState(true);
