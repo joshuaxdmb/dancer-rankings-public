@@ -61,13 +61,14 @@ const createOrRetrieveCustomer = async ({ email, uuid }
         .from('customers')
         .select('stripe_customer_id')
         .eq('id', uuid)
-        .single()
+
+    const customerData = data?.[0]
 
     if (error) {
         console.log('Error retrieving customer', error)
         throw error
     }
-    if (!data?.stripe_customer_id) {
+    if (!customerData?.stripe_customer_id) {
         const customerData: { metadata: { supabaseUUID: string }; email?: string } = {
             metadata: { supabaseUUID: uuid }
         }
@@ -77,6 +78,7 @@ const createOrRetrieveCustomer = async ({ email, uuid }
         }
 
         const customer = await stripe.customers.create(customerData)
+        console.log('Created customer', customer)
         const { error: supabaseError } = await supabaseAdmin
             .from('customers')
             .insert([{ id: uuid, stripe_customer_id: customer.id }])
@@ -88,7 +90,7 @@ const createOrRetrieveCustomer = async ({ email, uuid }
         console.log('Inserted customer', customer)
         return customer.id
     }
-    return data.stripe_customer_id
+    return customerData.stripe_customer_id
 }
 
 const copyBillingDetailsToCustomer = async (uuid: string, payment_method: Stripe.PaymentMethod) => {

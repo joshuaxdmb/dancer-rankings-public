@@ -2,7 +2,7 @@ import React from 'react'
 import useAuthModal from '@/hooks/useAuthModal';
 import { signIn } from 'next-auth/react';
 
-import StyledButton from './SytledButton';
+import StyledButton from '../SytledButton';
 
 type Props = {
     isLoading: boolean;

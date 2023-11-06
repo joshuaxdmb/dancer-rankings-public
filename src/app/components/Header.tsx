@@ -3,7 +3,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
-import LoginButtons from './LoginButtons';
+import LoginButtons from './Auth/LoginButtons';
 import { useSpotify } from '@/hooks/useSpotify';
 import Image from 'next/image';
 

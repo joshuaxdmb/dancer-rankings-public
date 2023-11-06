@@ -7,11 +7,10 @@ import UserProvider from '@/providers/UserProvider';
 import ModalProvider from '@/providers/ModalProvider';
 import RecoilProvider from '../providers/RecoilProvider';
 import ToasterProvider from '../providers/ToasterProvider';
-import PlayingBar from './components/PlayingBar';
 import SpotifyProvider from '../providers/SpotifyProvider';
-import Script from 'next/script';
 import getActiveProductsWithPrices from '@/utils/productUtils';
 import { ProductWithPrice } from '@/types/types';
+import Script from 'next/script';
 
 const font = Figtree({ subsets: ['latin'] });
 
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   description: 'The best music and events ranked by dancers',
   icons: {
     icon: 'icon.svg',
-  },
+  }
 };
 
 export default async function RootLayout({
@@ -34,6 +33,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
+        <Script src="https://js.stripe.com/v3/" />
         <ToasterProvider />
         <SupabaseProvider>
           <UserProvider>

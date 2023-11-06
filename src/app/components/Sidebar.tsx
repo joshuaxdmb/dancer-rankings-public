@@ -13,7 +13,7 @@ import { PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import { BeatLoader } from 'react-spinners';
-import AuthButtons from './AuthButtons';
+import AuthButtons from './Auth/SidebarButtons';
 
 type Props = { children: React.ReactNode };
 

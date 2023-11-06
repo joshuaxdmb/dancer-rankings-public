@@ -1,7 +1,7 @@
 import { Price } from "@/types/types";
 
 export const getUrl = () => {
-    let url = process.env.NEXT_PUBLIC_SITE_URL ?? ''
+    let url = process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.NEXT_PUBLIC_VERCEL_URL ??
         'http://localhost:3000'
 
@@ -11,8 +11,9 @@ export const getUrl = () => {
 }
 
 export const postData = async ({ url, data }: { url: string, data?: {price:Price} }) => {
-    console.log('PORT REQUEST   ', url, data)
-    const res: Response = await fetch(url, {
+    const fullUrl = `${getUrl()}${url}`
+    console.log('PORT REQUEST', fullUrl, data)
+    const res: Response = await fetch(fullUrl, {
         method: 'POST',
         headers: new Headers({
             'Content-Type': 'application/json'
@@ -23,7 +24,6 @@ export const postData = async ({ url, data }: { url: string, data?: {price:Price
 
     if(!res.ok){
         console.log('Error posting data', {url, data, res})
-
         throw new Error(res.statusText)
     }
 

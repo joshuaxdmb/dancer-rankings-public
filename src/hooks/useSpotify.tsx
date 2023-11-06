@@ -127,6 +127,7 @@ export const SpotifyProviderContext = (props: Props) => {
 
 
   useEffect(() => {
+    toast.success('Logging you in...', { id: 'spotify-login' });
     if (!spotifySession?.user) {
       getSpotifySession()
         .then((session) => {
@@ -138,7 +139,7 @@ export const SpotifyProviderContext = (props: Props) => {
           setSpotifySession(session);
           if (!player) initializeSpotifyPlayer(session.user.accessToken);
           initializeApi(session.user.accessToken)
-          toast.success('Logged into Spotify', { id: 'spotify success' });
+          toast.success('Logged into Spotify', { id: 'spotify-login' });
         })
         .catch((e) => {
           console.log('Failed to fetch Spotify session', e);
