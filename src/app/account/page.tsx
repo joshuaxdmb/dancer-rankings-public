@@ -7,6 +7,7 @@ import { useUser } from '@/hooks/useUser';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import AccountContent from './AccountContent';
 
 
 export default function Account() {
@@ -76,11 +77,7 @@ export default function Account() {
       <Header className='' pageTitle={userDetails? `Hi ${userDetails.first_name || userDetails.full_name || 'there'} 👋! `:`If you're not a dancer, kindly close your browser 💃 🕺`}>
         
       </Header>
-      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4'>
-          {routes.map((al)=>(
-            <MainLinkItem key={al.label} name={al.label} emoji={al.emoji} href={al.href} onClick={al.onClick}/>
-          ))}
-        </div>
+          <AccountContent/>
     </div>
   );
 }

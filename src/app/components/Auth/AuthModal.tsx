@@ -70,12 +70,6 @@ const AuthModal = ({}: Props) => {
 
   const handleSupabaseAuth = async () => {
     if (authOption === 'login') {
-      const { data: existingUser } = await supabaseClient.getUserByEmail(email);
-
-      if (!existingUser || existingUser.length < 1) {
-        setError("We couldn't find your email");
-      }
-
       const {
         data: { user },
         error,
