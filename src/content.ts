@@ -1,3 +1,4 @@
+import { DanceLevels, DanceRoles } from "./types/danceClassesTypes";
 import { ActiveLink, Routes } from "./types/types";
 export enum LocationIdsEnum {
     toronto = 'toronto',
@@ -46,11 +47,11 @@ export const Locations = [
     },
 ]
 
-type LocationLabels = {
+type LocationLabelsType = {
     [key in LocationIdsEnum]: string
   };
 
-export const LocationLabels:LocationLabels = {
+export const LocationLabels:LocationLabelsType = {
     "toronto":'Toronto',
     "newyork":'New York',
     "spain":'Spain',
@@ -58,6 +59,28 @@ export const LocationLabels:LocationLabels = {
     "latinamerica":'Latin America',
     "global":'Global',
     "USA":'USA'
+}
+
+type DanceLevelLabelsType = {
+    [key in DanceLevels]: string
+  };    
+
+export const DanceLevelLabels:DanceLevelLabelsType = {
+    "beginner1":'Beginner 1',
+    "beginner2":'Beginner 2',
+    "intermediate1":'Intermediate 1',
+    "intermediate2":'Intermediate 2',
+    "advanced":'Advanced'
+}
+
+type DanceRoleLabelsType = {
+    [key in DanceRoles]: string
+}
+
+export const DanceRoleLabels:DanceRoleLabelsType = {
+    "lead":'Lead',
+    "follow":'Follow',
+    "both":'Both'
 }
 
 export const PlaylistLabels = {

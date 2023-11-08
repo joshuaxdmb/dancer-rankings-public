@@ -1,6 +1,6 @@
 import { LocationIdsEnum, PlaylistEnum } from "@/content";
 import Stripe from "stripe";
-import { ClassOfferedByInstructor } from "./danceClassesTypes";
+import { ClassOfferedByInstructor, DanceLevelsEnum, DanceRolesEnum } from "./danceClassesTypes";
 
 //Music
 export interface UserDetailsType {
@@ -177,6 +177,23 @@ export type User = {
     phone?: string,
     isPhoneVerified?: boolean,
     communities: Array<SupportedCommunities>
+}
+
+export enum GendersEnum {
+    Male='Male',
+    Female='Female',
+    X='X'
+}
+
+export type UserSignUpType ={
+    email: string,
+    default_location: LocationIdsEnum,
+    password: string,
+    gender: GendersEnum,
+    primary_dance_role: DanceRolesEnum,
+    lead_level:DanceLevelsEnum,
+    follow_level:DanceLevelsEnum,
+    full_name: string,
 }
 
 export type EventVoteType = {

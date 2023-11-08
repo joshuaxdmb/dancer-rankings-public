@@ -11,9 +11,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import useAuthModal from '@/hooks/useAuthModal';
 import { toast } from 'react-hot-toast';
-import { LocationIdsEnum, Locations } from '@/content';
+import {
+  DanceLevelLabels,
+  DanceRoleLabels,
+  LocationIdsEnum,
+  Locations,
+} from '@/content';
 import SupabaseWrapper from '@/hooks/useSupabase';
 import { isValidEmail } from '@/utils/songsUtils';
+import { DanceLevelsEnum, DanceRolesEnum } from '@/types/danceClassesTypes';
+import { GendersEnum, UserSignUpType } from '@/types/types';
 
 type Props = {};
 
@@ -27,6 +34,9 @@ const AuthModal = ({}: Props) => {
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(Locations[0].id);
+  const [danceRole, setDancerole] = useState(DanceRolesEnum.lead);
+  const [danceLevel, setDanceLevel] = useState(DanceLevelsEnum.beginner1);
+  const [gender, setGender] = useState(GendersEnum.Female);
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -94,10 +104,20 @@ const AuthModal = ({}: Props) => {
 
       // If not, then proceed with the signup
       console.log('User not found, proceeding with signup', email);
+      const insertUser: UserSignUpType = {
+        email: email,
+        full_name: userName,
+        default_location: selectedLocation,
+        primary_dance_role: danceRole,
+        lead_level: danceLevel,
+        follow_level: danceLevel,
+        password: password,
+        gender: gender,
+      };
       const {
         data: { user },
         error,
-      } = await supabaseClient.signUp(email, password);
+      } = await supabaseClient.signUp(insertUser);
 
       if (error) {
         setError(error.message);
@@ -128,7 +148,6 @@ const AuthModal = ({}: Props) => {
         await handleSpotifyAuth();
         toast.success('Logged in!', { id: 'auth success' });
       }
-      
     } catch (e: any) {
       console.log('Error', e);
       setError(e.message);
@@ -136,15 +155,16 @@ const AuthModal = ({}: Props) => {
   };
 
   const handleSpotifyAuth = async () => {
-    console.log('Logging in to Spotify')
+    console.log('Logging in to Spotify');
     const spotifySession = await (await fetch('/api/auth/session')).json();
     if (spotifySession.token && session?.user?.id) {
-      const insertData = {username: spotifySession.user.username}
+      const insertData = { username: spotifySession.user.username };
       const { error: insertError } = await supabaseClient.updateUser(
         session.user.id,
         insertData
       );
-      if(insertError) console.log('Failed to add username from Spotify',insertError)
+      if (insertError)
+        console.log('Failed to add username from Spotify', insertError);
       console.log('User already signed in on Spotify');
       return;
     }
@@ -164,18 +184,98 @@ const AuthModal = ({}: Props) => {
             onSubmit={(e) => {
               e.preventDefault;
             }}
-            className="space-y-4"
+            className="space-y-4 mb-8"
           >
             {authOption !== 'login' && (
-              <input
-                type="name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="How should we call you?"
-                className="w-full p-2 border rounded"
-              />
+              <>
+                <label
+                  htmlFor="name"
+                  className="text-left block text-sm font-medium text-gray-200"
+                >
+                  How should we call you?:
+                </label>
+                <input
+                  type="name"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="Your Name"
+                  className="w-full p-2 border rounded"
+                />
+                <label
+                  htmlFor="dancerole"
+                  className="text-left block text-sm font-medium text-gray-200"
+                >
+                  Your primary dancing role:
+                </label>
+                <select
+                  id="dancerole"
+                  name="dancerole"
+                  className="w-full p-2 border rounded"
+                  value={danceRole}
+                  onChange={(e) => {
+                    setDancerole(e.target.value as DanceRolesEnum);
+                  }}
+                >
+                  {Object.keys(DanceRolesEnum).map((dr) => (
+                    <option key={dr} value={dr}>
+                      {DanceRoleLabels[dr as DanceRolesEnum]}
+                    </option>
+                  ))}
+                </select>
+                <label
+                  htmlFor="dancelevel"
+                  className="text-left block text-sm font-medium text-gray-200"
+                >
+                  Your dancer level (assigned by teachers):
+                </label>
+                <select
+                  id="dancelevel"
+                  name="dancelevel"
+                  className="w-full p-2 border rounded text-gray-400"
+                  value={danceLevel}
+                  onChange={(e) => {
+                    {
+                    }
+                  }}
+                >
+                  {[
+                    <option className="text-gray-400" key={danceLevel}>
+                      {DanceLevelLabels[danceLevel]}
+                    </option>,
+                  ]}
+                </select>
+                <label
+                  htmlFor="dancelevel"
+                  className="text-left block text-sm font-medium text-gray-200"
+                >
+                  Your gender:
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  className="w-full p-2 border rounded text-gray-400"
+                  value={gender}
+                  onChange={(e) => {
+                    {
+                      setGender(e.target.value as GendersEnum);
+                    }
+                  }}
+                  //Note: genders values are the same as keys
+                >
+                  {Object.values(GendersEnum).map((g) => (
+                    <option key={g} value={g}>
+                      {g}
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
-
+            <label
+              htmlFor="email"
+              className="text-left block text-sm font-medium text-gray-200"
+            >
+              Your email:
+            </label>
             <input
               type="email"
               value={email}
@@ -183,6 +283,12 @@ const AuthModal = ({}: Props) => {
               placeholder="Email"
               className="w-full p-2 border rounded"
             />
+            <label
+              htmlFor="password"
+              className="text-left block text-sm font-medium text-gray-200"
+            >
+              Choose a password:
+            </label>
             <input
               type="password"
               value={password}
@@ -192,9 +298,9 @@ const AuthModal = ({}: Props) => {
             />
             <label
               htmlFor="location"
-              className="block text-sm font-medium text-gray-200"
+              className="text-left block text-sm font-medium text-gray-200"
             >
-              Select your community:
+              Your community:
             </label>
             <select
               id="location"
@@ -211,37 +317,38 @@ const AuthModal = ({}: Props) => {
                 </option>
               ))}
             </select>
-
-            <button
-              onClick={handleAuth}
-              type="button"
-              className="w-full p-2 bg-green-500 text-white rounded hover:bg-green-600 items-center justify-center flex"
-            >
-              {authOption === 'login' ? 'Login' : 'Register'}
-              <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
-            </button>
-            {authOption === 'login' ? (
-              <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">
-                <a
-                  onClick={() => {
-                    setAuthOption('signup');
-                  }}
-                >
-                  Not with us yet? Create an account.
-                </a>
-              </div>
-            ) : (
-              <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">
-                <a
-                  onClick={() => {
-                    setAuthOption('login');
-                  }}
-                >
-                  Already have an account? Login
-                </a>
-              </div>
-            )}
           </form>
+
+          <button
+            onClick={handleAuth}
+            type="button"
+            className="w-full p-2 bg-green-500 text-white rounded hover:bg-green-600 items-center justify-center flex"
+          >
+            {authOption === 'login' ? 'Login' : 'Register'}
+            <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
+          </button>
+          {authOption === 'login' ? (
+            <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">
+              <a
+                onClick={() => {
+                  setAuthOption('signup');
+                }}
+              >
+                Not with us yet? Create an account.
+              </a>
+            </div>
+          ) : (
+            <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">
+              <a
+                onClick={() => {
+                  setAuthOption('login');
+                }}
+              >
+                Already have an account? Login
+              </a>
+            </div>
+          )}
+
           {error && <p className="text-red-500 mt-4">{error}</p>}
         </div>
       </div>

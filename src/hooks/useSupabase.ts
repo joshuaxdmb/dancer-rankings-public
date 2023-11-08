@@ -1,10 +1,11 @@
 import { LocationIdsEnum, PlaylistEnum } from "@/content";
-import { EventLocalType, Song, SongLocal } from "@/types/types";
+import { EventLocalType, Song, SongLocal, UserSignUpType } from "@/types/types";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 class SupabaseWrapper {
     private client: any; // Using 'any' since the exact type wasn't specified
 
-    constructor(client: any) {
+    constructor(client: SupabaseClient) {
         this.client = client;
     }
 
@@ -30,14 +31,14 @@ class SupabaseWrapper {
                 .from('songs_votes')
                 .select('song_spotify_id, vote, location_id, playlist_id')  // This line ensures only these columns are fetched
                 .eq('user_id', user_id)
-    
+
             if (error) {
                 console.error('Error fetching voted songs:', error);
                 return [];
             }
-    
+
             return data; // return the fetched songs data
-    
+
         } catch (err) {
             console.error('Error executing getVotedSongsByUser:', err);
             return [];
@@ -50,14 +51,14 @@ class SupabaseWrapper {
                 .from('events_votes')
                 .select('event_id')  // This line ensures only these columns are fetched
                 .eq('user_id', user_id)
-    
+
             if (error) {
                 console.error('Error fetching voted events:', error);
                 return [];
             }
-    
+
             return data; // return the fetched songs data
-    
+
         } catch (err) {
             console.error('Error executing getVotedEventsByUser:', err);
             return [];
@@ -81,10 +82,10 @@ class SupabaseWrapper {
         }
     }
 
-    async getVotedEvents(location_id:LocationIdsEnum){
-        try{
-            const {data, error} = await this.client.rpc('get_voted_events', {p_location_id: location_id})
-            if(error){
+    async getVotedEvents(location_id: LocationIdsEnum) {
+        try {
+            const { data, error } = await this.client.rpc('get_voted_events', { p_location_id: location_id })
+            if (error) {
                 console.error('Error fetching voted events!:', error);
                 return [];
             }
@@ -96,7 +97,7 @@ class SupabaseWrapper {
         }
     }
 
-    async voteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum, playlist_id:PlaylistEnum, vote: number) {
+    async voteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum, playlist_id: PlaylistEnum, vote: number) {
         return await this.client
             .from('songs_votes')
             .upsert([
@@ -113,17 +114,17 @@ class SupabaseWrapper {
 
     async voteEvent(eventId: string, userId: string) {
 
-        try{
+        try {
             const { data, error } = await this.client
-            .from('events_votes')
-            .upsert([
-                {
-                    event_id: eventId,
-                    user_id: userId,
-                    vote: 1,
-                    created_at: new Date().toISOString(),
-                }
-            ])
+                .from('events_votes')
+                .upsert([
+                    {
+                        event_id: eventId,
+                        user_id: userId,
+                        vote: 1,
+                        created_at: new Date().toISOString(),
+                    }
+                ])
 
             if (error) {
                 throw error; // or return an error object/message if you prefer
@@ -135,12 +136,12 @@ class SupabaseWrapper {
     }
 
     async deleteVoteEvent(eventId: string, userId: string) {
-        try{
+        try {
             const { data, error } = await this.client
-            .from('events_votes')
-            .delete()
-            .eq('user_id', userId)
-            .eq('event_id', eventId)
+                .from('events_votes')
+                .delete()
+                .eq('user_id', userId)
+                .eq('event_id', eventId)
 
             if (error) {
                 throw error; // or return an error object/message if you prefer
@@ -170,11 +171,33 @@ class SupabaseWrapper {
         }
     }
 
-    async signUp(email: string, password: string) {
-        return await this.client.auth.signUp({
-            email: email,
-            password: password,
-        });
+    async signUp(user: UserSignUpType) {
+        const { userResult, error } = await this.client.auth.signUp({
+            email: user.email,
+            password: user.password,
+        })
+
+        if (error) {
+            console.error('Error signing up:', error);
+            throw error
+        }
+
+        const { userData, error2 } = await this.client.from('users').insert([
+            {
+                full_name: user.full_name,
+                email: user.email,
+                default_location: user.default_location,
+                gender: user.gender,
+                primary_dance_role: user.primary_dance_role,
+                lead_level: user.lead_level,
+                follow_level: user.follow_level,
+            }
+        ])
+
+        if (error2) {
+            console.error('Error creating user:', error2);
+            throw error2
+        }
     }
 
     async getSongBySpotifyId(spotifyId: string) {
@@ -206,7 +229,7 @@ class SupabaseWrapper {
             .upsert([song])
     }
 
-    
+
 }
 
 export default SupabaseWrapper;
