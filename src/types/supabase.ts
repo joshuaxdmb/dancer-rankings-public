@@ -44,6 +44,7 @@ export interface Database {
           {
             foreignKeyName: "classes_by_instructor_instructor_id_fkey"
             columns: ["instructor_id"]
+            isOneToOne: false
             referencedRelation: "instructors"
             referencedColumns: ["id"]
           }
@@ -66,6 +67,7 @@ export interface Database {
           {
             foreignKeyName: "customers_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -118,6 +120,7 @@ export interface Database {
           {
             foreignKeyName: "events_event_location_fkey"
             columns: ["event_location"]
+            isOneToOne: false
             referencedRelation: "locations"
             referencedColumns: ["location_id"]
           }
@@ -146,12 +149,14 @@ export interface Database {
           {
             foreignKeyName: "events_votes_event_id_fkey"
             columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "events_votes_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -234,6 +239,7 @@ export interface Database {
           {
             foreignKeyName: "playlist_song_map_playlist_id_fkey"
             columns: ["playlist_id"]
+            isOneToOne: false
             referencedRelation: "playlists"
             referencedColumns: ["playlist_id"]
           }
@@ -298,6 +304,7 @@ export interface Database {
           {
             foreignKeyName: "prices_product_id_fkey"
             columns: ["product_id"]
+            isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["id"]
           }
@@ -389,24 +396,28 @@ export interface Database {
           {
             foreignKeyName: "songs_votes_location_id_fkey"
             columns: ["location_id"]
+            isOneToOne: false
             referencedRelation: "locations"
             referencedColumns: ["location_id"]
           },
           {
             foreignKeyName: "songs_votes_playlist_id_fkey"
             columns: ["playlist_id"]
+            isOneToOne: false
             referencedRelation: "playlists"
             referencedColumns: ["playlist_id"]
           },
           {
             foreignKeyName: "songs_votes_song_spotify_id_fkey"
             columns: ["song_spotify_id"]
+            isOneToOne: false
             referencedRelation: "songs"
             referencedColumns: ["spotify_id"]
           },
           {
             foreignKeyName: "songs_votes_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -468,12 +479,14 @@ export interface Database {
           {
             foreignKeyName: "subscriptions_price_id_fkey"
             columns: ["price_id"]
+            isOneToOne: false
             referencedRelation: "prices"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "subscriptions_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -486,9 +499,13 @@ export interface Database {
           default_location: string
           email: string | null
           email: string | null
+          follow_level: Database["public"]["Enums"]["dance_levels"] | null
           full_name: string | null
+          gender: Database["public"]["Enums"]["genders"] | null
           id: string
+          lead_level: Database["public"]["Enums"]["dance_levels"] | null
           payment_method: Json | null
+          primary_dance_role: Database["public"]["Enums"]["dance_roles"] | null
           username: string | null
         }
         Insert: {
@@ -497,9 +514,13 @@ export interface Database {
           default_location: string
           email?: string | null
           email?: string | null
+          follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
+          gender?: Database["public"]["Enums"]["genders"] | null
           id: string
+          lead_level?: Database["public"]["Enums"]["dance_levels"] | null
           payment_method?: Json | null
+          primary_dance_role?: Database["public"]["Enums"]["dance_roles"] | null
           username?: string | null
         }
         Update: {
@@ -508,15 +529,20 @@ export interface Database {
           default_location?: string
           email?: string | null
           email?: string | null
+          follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
+          gender?: Database["public"]["Enums"]["genders"] | null
           id?: string
+          lead_level?: Database["public"]["Enums"]["dance_levels"] | null
           payment_method?: Json | null
+          primary_dance_role?: Database["public"]["Enums"]["dance_roles"] | null
           username?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "users_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -572,7 +598,8 @@ export interface Database {
         | "intermediate1"
         | "intermediate2"
         | "advanced"
-      dance_roles: "lead" | "follow" | "both"
+      dance_roles: "Lead" | "Follow" | "Both"
+      genders: "Male" | "Female" | "X"
       pricing_plan_interval: "day" | "week" | "month" | "year"
       pricing_type: "one_time" | "recurring"
       subscription_status:

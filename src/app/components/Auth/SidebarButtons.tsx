@@ -65,7 +65,7 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
         <StyledButton
           sparkle={true}
           onClick={() => {}}
-          className="bg-green-500 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
+          className="bg-primary-purple px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
         >
           Premium
         </StyledButton>
@@ -73,7 +73,7 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
         <StyledButton
           sparkle={true}
           onClick={openSubscribe}
-          className="bg-green-400 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
+          className="bg-primary-purple px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2"
         >
           Go Premium
         </StyledButton>

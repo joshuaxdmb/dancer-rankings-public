@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons';
 import useAuthModal from '@/hooks/useAuthModal';
 import { toast } from 'react-hot-toast';
 import {
@@ -21,6 +21,7 @@ import SupabaseWrapper from '@/hooks/useSupabase';
 import { isValidEmail } from '@/utils/songsUtils';
 import { DanceLevelsEnum, DanceRolesEnum } from '@/types/danceClassesTypes';
 import { GendersEnum, UserSignUpType } from '@/types/types';
+import SytledButton from '../SytledButton';
 
 type Props = {};
 
@@ -38,35 +39,19 @@ const AuthModal = ({}: Props) => {
   const [danceLevel, setDanceLevel] = useState(DanceLevelsEnum.beginner1);
   const [gender, setGender] = useState(GendersEnum.Female);
 
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabaseClient.SignInWithProvider('google');
+    console.log('data', data, 'error', error);
+  };
+
+  const signIngWithSpotify = async () => {
+    const { data, error } = await supabaseClient.SignInWithProvider('spotify');
+    console.log('data', data, 'error', error);
+  };
+
   const onChange = (open: boolean) => {
     if (!open) {
       onClose();
-    }
-  };
-
-  const verifyEmailInSupabase = async (
-    userId: any,
-    email: any,
-    userName: string
-  ) => {
-    const { data: existingUser } = await supabaseClient.getUserByEmail(email);
-
-    if ((!existingUser || existingUser.length < 1) && isValidEmail(email)) {
-      const insertData = {
-        email: email,
-        full_name: userName,
-        location: selectedLocation,
-        // other fields can be added here if needed
-      };
-
-      const { error: insertError } = await supabaseClient.updateUser(
-        userId,
-        insertData
-      );
-
-      if (insertError) {
-        console.error('Error inserting user:', insertError);
-      }
     }
   };
 
@@ -78,21 +63,25 @@ const AuthModal = ({}: Props) => {
     }
   }, [session, router, onClose]);
 
+  const supabaseLogin = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabaseClient.signIn(email, password);
+
+    if (error) {
+      console.error(error.message);
+      throw new Error('Unable to log in with those credentials');
+    } else {
+      console.log('User signed in:', user);
+    }
+
+    return user;
+  };
+
   const handleSupabaseAuth = async () => {
     if (authOption === 'login') {
-      const {
-        data: { user },
-        error,
-      } = await supabaseClient.signIn(email, password);
-
-      if (user) verifyEmailInSupabase(user.id, user.email, userName);
-
-      if (error) {
-        console.error(error.message);
-        throw new Error('Unable to log in with those credentials');
-      } else {
-        console.log('User signed in:', user);
-      }
+      await supabaseLogin();
     } else {
       // First, check if the user already exists in the `public.users` table
       const { data: existingUser } = await supabaseClient.getUserByEmail(email);
@@ -114,20 +103,14 @@ const AuthModal = ({}: Props) => {
         password: password,
         gender: gender,
       };
-      const {
-        data: { user },
-        error,
-      } = await supabaseClient.signUp(insertUser);
+
+      console.log('Signing up user', insertUser);
+      const { data, error } = await supabaseClient.signUp(insertUser);
 
       if (error) {
-        setError(error.message);
+        setError('Unable to sign up with those credentials');
         console.error('Error signing up:', error.message);
         throw new Error('Unable to log in with those credentials');
-      }
-
-      if (user) {
-        console.log('User signed up:', user);
-        verifyEmailInSupabase(user.id, email, userName);
       }
     }
   };
@@ -180,153 +163,75 @@ const AuthModal = ({}: Props) => {
     >
       <div className="flex items-center justify-center">
         <div className=" p-8 pt-2 rounded shadow-md w-96">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault;
-            }}
-            className="space-y-4 mb-8"
-          >
-            {authOption !== 'login' && (
-              <>
-                <label
-                  htmlFor="name"
-                  className="text-left block text-sm font-medium text-gray-200"
-                >
-                  How should we call you?:
-                </label>
-                <input
-                  type="name"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  placeholder="Your Name"
-                  className="w-full p-2 border rounded"
-                />
-                <label
-                  htmlFor="dancerole"
-                  className="text-left block text-sm font-medium text-gray-200"
-                >
-                  Your primary dancing role:
-                </label>
-                <select
-                  id="dancerole"
-                  name="dancerole"
-                  className="w-full p-2 border rounded"
-                  value={danceRole}
-                  onChange={(e) => {
-                    setDancerole(e.target.value as DanceRolesEnum);
-                  }}
-                >
-                  {Object.keys(DanceRolesEnum).map((dr) => (
-                    <option key={dr} value={dr}>
-                      {DanceRoleLabels[dr as DanceRolesEnum]}
-                    </option>
-                  ))}
-                </select>
-                <label
-                  htmlFor="dancelevel"
-                  className="text-left block text-sm font-medium text-gray-200"
-                >
-                  Your dancer level (assigned by teachers):
-                </label>
-                <select
-                  id="dancelevel"
-                  name="dancelevel"
-                  className="w-full p-2 border rounded text-gray-400"
-                  value={danceLevel}
-                  onChange={(e) => {
-                    {
-                    }
-                  }}
-                >
-                  {[
-                    <option className="text-gray-400" key={danceLevel}>
-                      {DanceLevelLabels[danceLevel]}
-                    </option>,
-                  ]}
-                </select>
-                <label
-                  htmlFor="dancelevel"
-                  className="text-left block text-sm font-medium text-gray-200"
-                >
-                  Your gender:
-                </label>
-                <select
-                  id="gender"
-                  name="gender"
-                  className="w-full p-2 border rounded text-gray-400"
-                  value={gender}
-                  onChange={(e) => {
-                    {
-                      setGender(e.target.value as GendersEnum);
-                    }
-                  }}
-                  //Note: genders values are the same as keys
-                >
-                  {Object.values(GendersEnum).map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
-            <label
-              htmlFor="email"
-              className="text-left block text-sm font-medium text-gray-200"
-            >
-              Your email:
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="w-full p-2 border rounded"
-            />
-            <label
-              htmlFor="password"
-              className="text-left block text-sm font-medium text-gray-200"
-            >
-              Choose a password:
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full p-2 border rounded"
-            />
-            <label
-              htmlFor="location"
-              className="text-left block text-sm font-medium text-gray-200"
-            >
-              Your community:
-            </label>
-            <select
-              id="location"
-              name="location"
-              className="w-full p-2 border rounded mt-1"
-              value={selectedLocation}
-              onChange={(e) => {
-                setSelectedLocation(e.target.value as LocationIdsEnum);
+          {authOption !== 'login' && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault;
               }}
+              className="space-y-4 mb-8"
             >
-              {Locations.map((location, index) => (
-                <option key={index} value={location.id}>
-                  {location.label}
-                </option>
-              ))}
-            </select>
-          </form>
+              <label
+                htmlFor="name"
+                className="text-left block text-sm font-medium text-gray-200"
+              >
+                How should we call you?:
+              </label>
+              <input
+                type="name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="Your Name"
+                className="w-full p-2 border rounded"
+              />
 
-          <button
-            onClick={handleAuth}
-            type="button"
-            className="w-full p-2 bg-green-500 text-white rounded hover:bg-green-600 items-center justify-center flex"
-          >
-            {authOption === 'login' ? 'Login' : 'Register'}
-            <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
-          </button>
+              <label
+                htmlFor="email"
+                className="text-left block text-sm font-medium text-gray-200"
+              >
+                Your email:
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                className="w-full p-2 border rounded"
+              />
+              <label
+                htmlFor="location"
+                className="text-left block text-sm font-medium text-gray-200"
+              >
+                Your community:
+              </label>
+              <select
+                id="location"
+                name="location"
+                className="w-full p-2 border rounded mt-1"
+                value={selectedLocation}
+                onChange={(e) => {
+                  setSelectedLocation(e.target.value as LocationIdsEnum);
+                }}
+              >
+                {Locations.filter((l) => l.id !== LocationIdsEnum.global).map(
+                  (location, index) => (
+                    <option key={index} value={location.id}>
+                      {location.label}
+                    </option>
+                  )
+                )}
+              </select>
+            </form>
+          )}
+          <div className="gap-y-2 flex flex-col mb-4">
+            <SytledButton onClick={signIngWithSpotify} className="items-center flex justify-center bg-green-500">
+              {authOption === 'login'? 'Login':'Signup'} with Spotify{' '}
+              <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
+            </SytledButton>
+            <SytledButton onClick={signInWithGoogle} className="items-center flex justify-center bg-white">
+            {authOption === 'login'? 'Login':'Signup'} with Google
+              <FontAwesomeIcon icon={faGoogle} className="ml-2 h-6 w-6" />
+            </SytledButton>
+          </div>
           {authOption === 'login' ? (
             <div className="pt-2 text-neutral-400 hover:cursor-pointer hover:text-white">
               <a
@@ -348,7 +253,6 @@ const AuthModal = ({}: Props) => {
               </a>
             </div>
           )}
-
           {error && <p className="text-red-500 mt-4">{error}</p>}
         </div>
       </div>

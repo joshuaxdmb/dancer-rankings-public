@@ -1,14 +1,34 @@
 import { LocationIdsEnum, PlaylistEnum } from "@/content";
 import { EventLocalType, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { Provider } from "@supabase/supabase-js";
 
 class SupabaseWrapper {
-    private client: any; // Using 'any' since the exact type wasn't specified
+    private client: SupabaseClient;
 
     constructor(client: SupabaseClient) {
         this.client = client;
     }
 
+    async SignInWithProvider(provider: Provider) {
+        const { data, error } = await this.client.auth.signInWithOAuth({
+            provider: provider,
+            options: {
+                queryParams: {
+                  access_type: 'offline',
+                  prompt: 'consent',
+                },
+              },
+        })
+
+        //By convention, handle the error at the highest UI level to provide
+        //the best user experience and context.
+        if (error) {
+            throw error
+        }
+
+        return { data, error }
+    }
 
     async getUserByEmail(email: string) {
         return await this.client
@@ -172,32 +192,43 @@ class SupabaseWrapper {
     }
 
     async signUp(user: UserSignUpType) {
-        const { userResult, error } = await this.client.auth.signUp({
+
+        const signUpData = {
             email: user.email,
             password: user.password,
-        })
+            options: {
+                data: {
+                    full_name: user.full_name,
+                    default_location: user.default_location,
+                    gender: user.gender,
+                    primary_dance_role: user.primary_dance_role,
+                    lead_level: user.lead_level,
+                    follow_level: user.follow_level,
+                }
+            }
+
+        }
+        console.log('Singup data', signUpData)
+        const { data, error } = await this.client.auth.signUp(signUpData)
 
         if (error) {
-            console.error('Error signing up:', error);
-            throw error
+            console.error('Failed to signup in Supabase', error)
         }
 
-        const { userData, error2 } = await this.client.from('users').insert([
-            {
-                full_name: user.full_name,
-                email: user.email,
-                default_location: user.default_location,
-                gender: user.gender,
-                primary_dance_role: user.primary_dance_role,
-                lead_level: user.lead_level,
-                follow_level: user.follow_level,
-            }
-        ])
+        return { data, error }
+        // const { data: userData, error: error2 } = await this.client.from('users').insert([
+        //     {
+        //         full_name: user.full_name,
+        //         email: user.email,
+        //         default_location: user.default_location,
+        //         gender: user.gender,
+        //         primary_dance_role: user.primary_dance_role,
+        //         lead_level: user.lead_level,
+        //         follow_level: user.follow_level,
+        //     }
+        // ])
 
-        if (error2) {
-            console.error('Error creating user:', error2);
-            throw error2
-        }
+        // return { userData, error2 }
     }
 
     async getSongBySpotifyId(spotifyId: string) {

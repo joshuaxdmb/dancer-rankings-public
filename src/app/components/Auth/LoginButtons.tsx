@@ -3,6 +3,8 @@ import useAuthModal from '@/hooks/useAuthModal';
 import { signIn } from 'next-auth/react';
 
 import StyledButton from '../SytledButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 
 type Props = {
     isLoading: boolean;
@@ -51,9 +53,9 @@ const LoginButtons = ({isLoading,user,spotifySession}: Props) => {
                 onClick={() => {
                   signIn('spotify', { callbackUrl: '/' });
                 }}
-                className="bg-white px-6 py-2"
+                className=" px-6 py-2 flex items-center justify-center bg-green-400"
               >
-                Log into Spotify
+                Authorize Player <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
               </StyledButton>
             </div>
           </div>

@@ -161,7 +161,7 @@ const Sidebar = ({ children }: Props) => {
         {sidebarContent}
       </div>
       <main
-        className={`h-full flex-1 overflow-y-auto py-2 ${
+        className={`h-full flex-1 overflow-y-auto ${
           visible ? 'md:pl-[300px]' : ''
         }'md:pl-0' w-full`}
       >
