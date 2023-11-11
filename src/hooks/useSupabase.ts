@@ -1,4 +1,4 @@
-import { LocationIdsEnum, PlaylistEnum } from "@/content";
+import { LocationIdsEnum } from "@/content";
 import { EventLocalType, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Provider } from "@supabase/supabase-js";
@@ -85,7 +85,7 @@ class SupabaseWrapper {
         }
     }
 
-    async getVotedSongs(playlist_id: PlaylistEnum, location_id: LocationIdsEnum) {
+    async getVotedSongs(playlist_id: string, location_id: LocationIdsEnum) {
         try {
             const { data, error } = await this.client.rpc('get_voted_songs', { p_playlist_id: playlist_id, p_location_id: location_id });
 
@@ -117,7 +117,7 @@ class SupabaseWrapper {
         }
     }
 
-    async voteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum, playlist_id: PlaylistEnum, vote: number) {
+    async voteSong(songSpotifyId: string, userId: string, location: LocationIdsEnum, playlist_id: string, vote: number) {
         return await this.client
             .from('songs_votes')
             .upsert([

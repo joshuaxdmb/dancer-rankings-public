@@ -1,4 +1,4 @@
-import { DanceLevels, DanceRoles } from "./types/danceClassesTypes";
+import { DanceLevelsEnum, DanceRolesEnum } from "./types/danceClassesTypes";
 import { ActiveLink, Routes } from "./types/types";
 export enum LocationIdsEnum {
     toronto = 'toronto',
@@ -62,7 +62,7 @@ export const LocationLabels:LocationLabelsType = {
 }
 
 type DanceLevelLabelsType = {
-    [key in DanceLevels]: string
+    [key in DanceLevelsEnum]: string
   };    
 
 export const DanceLevelLabels:DanceLevelLabelsType = {
@@ -74,7 +74,7 @@ export const DanceLevelLabels:DanceLevelLabelsType = {
 }
 
 type DanceRoleLabelsType = {
-    [key in DanceRoles]: string
+    [key in DanceRolesEnum]: string
 }
 
 export const DanceRoleLabels:DanceRoleLabelsType = {
@@ -125,7 +125,7 @@ export const EventsThisWeek: Array<any> = [
 export const ActiveLinks: Array<ActiveLink> = [
     {
         href: Routes.Songs,
-        emoji:'🎉',
+        emoji:'🎊',
         label:`Vote Salsa`,
         playlist:PlaylistEnum.salsa
     },
@@ -150,6 +150,11 @@ export const ActiveLinks: Array<ActiveLink> = [
         href: Routes.Classes,
         emoji:'🕺',
         label:'Book Classes',
+    },
+    {
+        href: Routes.HouseParty,
+        emoji:'🎉',
+        label:'House Party',
     },
 ]
 

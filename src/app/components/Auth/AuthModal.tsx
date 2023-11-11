@@ -151,6 +151,7 @@ const AuthModal = ({}: Props) => {
       console.log('User already signed in on Spotify');
       return;
     }
+    console.log('User not signed in on Spotify, signing in');
     signIn('spotify', { callbackUrl: '/' });
   };
 

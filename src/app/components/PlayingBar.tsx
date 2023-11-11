@@ -45,7 +45,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
     if (currentTrack?.spotify_id && player) {
       player.play(currentTrack);
     }
-    const index = songs?.[location]?.[playlist].findIndex((song: SongLocal) => song.spotify_id === currentTrack?.spotify_id);
+    const index = songs?.[location]?.[playlist]?.findIndex((song: SongLocal) => song.spotify_id === currentTrack?.spotify_id);
     setSongIndex(index);
 
     console.log('CURRENTLY PLAYIHG', index, songs, location,playlist, currentTrack?.spotify_id)

@@ -1,4 +1,3 @@
-import { PlaylistEnum } from '@/content';
 import { useSpotify } from '@/hooks/useSpotify';
 import React, { useEffect, useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -20,20 +19,18 @@ import { votesByUserAtom } from '@/atoms/votesByUserAtom';
 import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/songsUtils';
 import { currentTrackAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
-import { playlistAtom } from '@/atoms/playlistAtom';
 import { BeatLoader } from 'react-spinners';
 
 type Props = {
-  playlistFilter?: PlaylistEnum;
+  playlist: string;
 };
 
-const Center = ({}: Props) => {
+const Center = ({playlist}: Props) => {
   const { user } = useUser();
   const { spotifySession, spotifyApi } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [userVotes, setUserVotes] = useRecoilState<VotesMap>(votesByUserAtom);
-  const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom);
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const supabaseClient = new SupabaseWrapper(useSupabaseClient());
   const [isLoading, setIsLoading] = useState(true);

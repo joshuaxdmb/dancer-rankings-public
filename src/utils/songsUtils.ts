@@ -6,7 +6,7 @@ export const isValidEmail = (email: string) => {
     return emailRegex.test(email);
   };
 
- export  const mergeSongs = (currentSongs:any, location:LocationIdsEnum, playlist:PlaylistEnum, newSongs:SongLocal[]) => {
+ export  const mergeSongs = (currentSongs:any, location:LocationIdsEnum, playlist:string, newSongs:SongLocal[]) => {
   const sortedSongs = [...newSongs, ...(currentSongs[location]?.[playlist] || [])]
   if(newSongs.length > 1) sortedSongs.sort((a:SongLocal, b:SongLocal) => b.total_votes - a.total_votes)
   
@@ -48,7 +48,7 @@ export const updateEventsVotes = (currentEvents:any, location:LocationIdsEnum, e
     };
 }
 
-export const updateSongsVotes = (currentSongs:any, location:LocationIdsEnum, playlist:PlaylistEnum, spotify_id:string, vote:number, currentVote:number) => {
+export const updateSongsVotes = (currentSongs:any, location:LocationIdsEnum, playlist:string, spotify_id:string, vote:number, currentVote:number) => {
     const updatedLocation = {
         ...currentSongs[location],
         [playlist]: currentSongs[location]?.[playlist]?.map((s:SongLocal) => {
@@ -69,7 +69,7 @@ export const updateSongsVotes = (currentSongs:any, location:LocationIdsEnum, pla
     };
 }
 
-export const mergeVotes = (currentVotes:any, location:LocationIdsEnum, playlist:PlaylistEnum, spotify_id:string, vote:number) => {
+export const mergeVotes = (currentVotes:any, location:LocationIdsEnum, playlist:string, spotify_id:string, vote:number) => {
   const newVotes = {
     ...currentVotes,
     [location]: {

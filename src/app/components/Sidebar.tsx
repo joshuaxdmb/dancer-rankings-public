@@ -12,17 +12,16 @@ import { useUser } from '@/hooks/useUser';
 import { PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { playlistAtom } from '@/atoms/playlistAtom';
-import { BeatLoader } from 'react-spinners';
 import AuthButtons from './Auth/SidebarButtons';
 
 type Props = { children: React.ReactNode };
+const windowWidth = window?.innerWidth;
 
 const Sidebar = ({ children }: Props) => {
-  const { user, isLoading, isPremium } = useUser();
+  const { user, isPremium } = useUser();
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(windowWidth >= 768);
   const [playlist, setPlaylist] = useRecoilState(playlistAtom);
-
 
   const routes = useMemo(
     () => [
@@ -39,7 +38,7 @@ const Sidebar = ({ children }: Props) => {
         href: Routes.Songs,
       },
       {
-        label: `🎉 Salsa`,
+        label: `🎊 Salsa`,
         active: pathname === Routes.Songs && playlist === PlaylistEnum.salsa,
         href: Routes.Songs,
         onClick: () => setPlaylist(PlaylistEnum.salsa),
@@ -56,12 +55,17 @@ const Sidebar = ({ children }: Props) => {
         href: Routes.Events,
       },
       {
+        label: `🎉 House Party`,
+        active: pathname === Routes.HouseParty,
+        href: Routes.HouseParty,
+      },
+      {
         label: `🕺 Classes`,
         active: pathname === Routes.Classes,
         href: Routes.Classes,
       },
     ],
-    [pathname, playlist]
+    [pathname, playlist] //eslint-disable-line
   );
 
   useEffect(() => {
@@ -129,14 +133,6 @@ const Sidebar = ({ children }: Props) => {
       </Box>
     </div>
   );
-
-  if (isLoading) {
-    return (
-      <Box className="h-full flex items-center justify-center flex-col">
-        <BeatLoader color="#FFFFFF" size={20} />
-      </Box>
-    );
-  }
 
   return (
     <div className="flex h-full relative">

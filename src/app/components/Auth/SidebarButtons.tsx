@@ -27,7 +27,7 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
     const { error } = await supabaseClient.auth.signOut();
     await signOut();
     //Add reset any playing songs
-    router.push('/');
+    //router.push('/');
     if (error) {
       console.log(error);
     }

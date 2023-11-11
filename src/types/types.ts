@@ -41,7 +41,7 @@ export interface SongLocal {
     up_votes: number
     down_votes: number
     location_id: string
-    playlist_id: PlaylistEnum
+    playlist_id: string
     total_votes: number
 }
 
@@ -150,7 +150,8 @@ export enum Routes {
     Home = '/',
     Events = '/events',
     Songs = '/songs',
-    Classes = '/classes'
+    Classes = '/classes',
+    HouseParty='/houseparty'
 }
 
 export type ActiveLink = {

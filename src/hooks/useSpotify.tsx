@@ -114,7 +114,7 @@ export const SpotifyProviderContext = (props: Props) => {
 
   const getSpotifySession = async () => {
     const response = await fetch('/api/auth/session');
-    const session = await response.json();
+    const session = await response.json()
     console.log('Fetched spotify session', session);
     return session;
   };

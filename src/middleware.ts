@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
  
+console.log('Executing middleware')
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
 
