@@ -3,12 +3,11 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback,
 } from 'react';
 import SpotifyWebApi from 'spotify-web-api-node';
 import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
-import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
+import { isPlayingAtom } from '@/atoms/playingSongAtom';
 
 type SpotifyContextType = {
   togglePlay?: () => void;
@@ -30,7 +29,7 @@ export const SpotifyProviderContext = (props: Props) => {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [isPlayerActive, setIsPlayerActive] = useState(false);
   const [spotifyDeviceId, setSpotifyDeviceId] = useState<string>('');
-  const [spotifyApi, setSpotifyApi] = useState<SpotifyWebApi>(new SpotifyWebApi({
+  const [spotifyApi] = useState<SpotifyWebApi>(new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   }));
@@ -151,17 +150,6 @@ export const SpotifyProviderContext = (props: Props) => {
       }
     }
   }, [spotifySession?.user]); //eslint-disable-line
-
-  const togglePlay = useCallback(
-    () => {
-      if (player && player.togglePlay) {
-        player.togglePlay().catch((e: any) => {
-          console.log('Play error',e)})
-        setIsPlaying(!isPlaying);
-      }
-    },
-    [player] //eslint-disable-line
-  );
 
   return (
     <SpotifyContext.Provider

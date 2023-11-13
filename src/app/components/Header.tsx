@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   pageTitle?: string;
   showUserBadge?: boolean;
@@ -55,7 +55,7 @@ const Header: React.FC<Props> = ({
   };
 
   return (
-    <div className={twMerge(`p-4 md:p-6 bg-gradient-to-b from-red-950`, className)}>
+    <div className={twMerge(`p-4 md:p-6 pt-7 bg-gradient-to-b from-red-950`, className)}>
       <div className="w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between">
         <div className="flex gap-x-2 items-center lg:hidden" />
         {visible && pageTitle && (

@@ -15,12 +15,12 @@ import { playlistAtom } from '@/atoms/playlistAtom';
 import AuthButtons from './Auth/SidebarButtons';
 
 type Props = { children: React.ReactNode };
-const windowWidth = window?.innerWidth;
+//const windowWidth = window?.innerWidth
 
 const Sidebar = ({ children }: Props) => {
   const { user, isPremium } = useUser();
   const pathname = usePathname();
-  const [visible, setVisible] = useState(windowWidth >= 768);
+  const [visible, setVisible] = useState(true);
   const [playlist, setPlaylist] = useRecoilState(playlistAtom);
 
   const routes = useMemo(

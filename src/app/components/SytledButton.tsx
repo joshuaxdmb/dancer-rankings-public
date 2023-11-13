@@ -4,10 +4,11 @@ import Sparkles from 'react-sparkle';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   sparkle?: boolean;
+  sparkleWidth?: number;
 }
 
 const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, type = 'button', sparkle, ...props }, ref) => {
+  ({ className, children, disabled, type = 'button', sparkle, sparkleWidth,...props }, ref) => {
     return (
       <button
         type={type}
@@ -18,7 +19,7 @@ const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <div className='absolute w-[150px] h-[10px]'>
+        <div className={`absolute ${sparkleWidth ? 'w-['+sparkleWidth+'px]':'w-[150px]'}  h-[10px]`}>
         {sparkle && <Sparkles count={5} minSize={12} fadeOutSpeed={10} flicker={false} />} {/* Sparkle component */}
         </div>
         {children}

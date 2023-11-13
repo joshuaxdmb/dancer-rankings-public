@@ -1,27 +1,15 @@
-import { LocationIdsEnum, PlaylistEnum } from '@/content';
-import { useSpotify } from '@/hooks/useSpotify';
+import {PlaylistEnum } from '@/content';
 import React, { useEffect, useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import SupabaseWrapper from '@/hooks/useSupabase';
+import SupabaseWrapper from '@/classes/SupabaseWrapper';
 import {
   EventLocalType,
-  Song,
-  SongLocal,
-  SongVoteLocal,
-  SpotifySong,
-  VotesMap,
 } from '@/types/types';
 import { useUser } from '@/hooks/useUser';
 import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
-import { songsAtom } from '@/atoms/songsAtom';
-import SongItem from './SongItem';
-import { votesByUserAtom } from '@/atoms/votesByUserAtom';
-import { mergeSongs, mergeVotes, updateEventsVotes, updateSongsVotes } from '@/utils/songsUtils';
-import { currentTrackAtom } from '@/atoms/playingSongAtom';
-import SearchBar from './SearchBar';
-import { playlistAtom } from '@/atoms/playlistAtom';
+import {updateEventsVotes,} from '@/utils/songsUtils';
 import { BeatLoader } from 'react-spinners';
 import { eventVotesbyUserAtom, eventsAtom } from '@/atoms/eventsAtom';
 import EventItem from './EventItem';

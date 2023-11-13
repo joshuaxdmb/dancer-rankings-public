@@ -1,7 +1,6 @@
 import { useSpotify } from '@/hooks/useSpotify';
 import React, { useEffect, useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import SupabaseWrapper from '@/hooks/useSupabase';
 import {
   Song,
   SongLocal,
@@ -20,6 +19,7 @@ import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/songsUtils';
 import { currentTrackAtom } from '@/atoms/playingSongAtom';
 import SearchBar from './SearchBar';
 import { BeatLoader } from 'react-spinners';
+import { useSupabase } from '@/hooks/useSupabase';
 
 type Props = {
   playlist: string;
@@ -32,7 +32,7 @@ const Center = ({playlist}: Props) => {
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [userVotes, setUserVotes] = useRecoilState<VotesMap>(votesByUserAtom);
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
-  const supabaseClient = new SupabaseWrapper(useSupabaseClient());
+  const supabaseClient = useSupabase()
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -4,7 +4,6 @@ import Center from '../components/SongsCenter';
 import { LocationIdsEnum, LocationLabels, PlaylistEnum, PlaylistLabels } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
-import Script from 'next/script';
 import PlayingBar from '../components/PlayingBar';
 import { playlistAtom } from '@/atoms/playlistAtom';
 
@@ -43,7 +42,7 @@ export default function Home() {
     >
       <Header className='bg-none'pageTitle={`Top ${PlaylistLabels[playlist]} Songs | ${LocationLabels[location]}`}>
       </Header>
-      <Center playlistFilter={PlaylistEnum.bachata}/>
+      <Center playlist={playlist||PlaylistEnum.bachata}/>
       <PlayingBar backGroundColor={themes[playlist].playingBarBackground}/>
     </div>
   );
