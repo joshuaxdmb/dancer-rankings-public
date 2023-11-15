@@ -1,17 +1,16 @@
+"use client"
 import React from 'react';
 import QRCode from 'qrcode.react';
 
 interface QRCodeGeneratorProps {
-    partyId: string;
+    partyId: string | null;
 }
 
 const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({partyId}) => {
     const data = `LatinDancersApp:Party:${partyId}`;
 
     return (
-        <div>
-            <QRCode value={data} />
-        </div>
+            <QRCode size={280} value={data} />
     );
 };
 

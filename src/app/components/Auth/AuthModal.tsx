@@ -10,18 +10,13 @@ import { signIn } from 'next-auth/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons';
 import useAuthModal from '@/hooks/useAuthModal';
-import { toast } from 'react-hot-toast';
 import {
-  DanceLevelLabels,
-  DanceRoleLabels,
   LocationIdsEnum,
   Locations,
 } from '@/content';
 import SupabaseWrapper from '@/classes/SupabaseWrapper';
-import { isValidEmail } from '@/utils/songsUtils';
-import { DanceLevelsEnum, DanceRolesEnum } from '@/types/danceClassesTypes';
-import { GendersEnum, UserSignUpType } from '@/types/types';
 import SytledButton from '../SytledButton';
+import { customSignIn } from '@/lib/api';
 
 type Props = {};
 
@@ -35,9 +30,6 @@ const AuthModal = ({}: Props) => {
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(Locations[0].id);
-  const [danceRole, setDancerole] = useState(DanceRolesEnum.lead);
-  const [danceLevel, setDanceLevel] = useState(DanceLevelsEnum.beginner1);
-  const [gender, setGender] = useState(GendersEnum.Female);
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('google');
@@ -48,7 +40,7 @@ const AuthModal = ({}: Props) => {
   const signIngWithSpotify = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('spotify');
     console.log('data', data, 'error', error);
-    handleSpotifyAuth()
+    //handleSpotifyAuth() //For some reason this logs out of supabase
   };
 
   const onChange = (open: boolean) => {
@@ -65,80 +57,6 @@ const AuthModal = ({}: Props) => {
     }
   }, [session, router, onClose]);
 
-  // const supabaseLogin = async () => {
-  //   const {
-  //     data: { user },
-  //     error,
-  //   } = await supabaseClient.signIn(email, password);
-
-  //   if (error) {
-  //     console.error(error.message);
-  //     throw new Error('Unable to log in with those credentials');
-  //   } else {
-  //     console.log('User signed in:', user);
-  //   }
-
-  //   return user;
-  // };
-
-  // const handleSupabaseAuth = async () => {
-  //   if (authOption === 'login') {
-  //     await supabaseLogin();
-  //   } else {
-  //     // First, check if the user already exists in the `public.users` table
-  //     const { data: existingUser } = await supabaseClient.getUserByEmail(email);
-
-  //     if (existingUser && existingUser.length > 0) {
-  //       setError('User already registered. Please login.');
-  //       throw new Error('User already registered. Please login.');
-  //     }
-
-  //     // If not, then proceed with the signup
-  //     console.log('User not found, proceeding with signup', email);
-  //     const insertUser: UserSignUpType = {
-  //       email: email,
-  //       full_name: userName,
-  //       default_location: selectedLocation,
-  //       primary_dance_role: danceRole,
-  //       lead_level: danceLevel,
-  //       follow_level: danceLevel,
-  //       password: password,
-  //       gender: gender,
-  //     };
-
-  //     console.log('Signing up user', insertUser);
-  //     const { data, error } = await supabaseClient.signUp(insertUser);
-
-  //     if (error) {
-  //       setError('Unable to sign up with those credentials');
-  //       console.error('Error signing up:', error.message);
-  //       throw new Error('Unable to log in with those credentials');
-  //     }
-  //   }
-  // };
-
-  // const handleAuth = async () => {
-  //   if (!isValidEmail(email)) {
-  //     setError('Hmm... your email does not look right');
-  //     return;
-  //   }
-  //   if (password.length < 8) {
-  //     setError('Too easy to hack! Password must be at least 8 characters long');
-  //     return;
-  //   }
-
-  //   try {
-  //     await handleSupabaseAuth();
-  //     if (!error) {
-  //       await handleSpotifyAuth();
-  //       toast.success('Logged in!', { id: 'auth success' });
-  //     }
-  //   } catch (e: any) {
-  //     console.log('Error', e);
-  //     setError(e.message);
-  //   }
-  // };
-
   const handleSpotifyAuth = async () => {
     console.log('Logging in to Spotify');
     const spotifySession = await (await fetch('/api/auth/session')).json();
@@ -154,7 +72,7 @@ const AuthModal = ({}: Props) => {
       return;
     }
     console.log('User not signed in on Spotify, signing in');
-    signIn('spotify', { callbackUrl: '/' });
+    customSignIn('spotify','/')
   };
 
   return (

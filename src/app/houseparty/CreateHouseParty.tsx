@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import {useSupabase} from '@/hooks/useSupabase'
 import { useRecoilState } from 'recoil';
 import { housePartyAtom } from '@/atoms/housePartyAtom';
+import useQrCodeModal from '@/hooks/useQRCodeModal';
 
 type Props = {}
 
@@ -27,7 +28,11 @@ const CreateHouseParty = (props: Props) => {
     if (!isPremium) {
       setError('You need to be a premium member to create a house party');
     }
-  }, [userDetails, isPremium]);
+
+    if(!user?.id){
+        setError('You need to be logged in to create a house party')
+    }
+  }, [userDetails, isPremium, user]);
 
   const createHousePartyHandler = async() =>{
     if(error || !isPremium || !userDetails?.product || !user?.id){

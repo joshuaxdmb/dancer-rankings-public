@@ -10,12 +10,29 @@ class SupabaseWrapper {
         this.client = client;
     }
 
+    async checkPartyExists(partyId: string) {
+        const { data, error } = await this.client
+            .from('playlists')
+            .select('*')
+            .eq('id', partyId)
+
+        if (error) {
+            throw error;
+        }
+
+        if(data?.length > 0){
+            return true
+        } 
+        return false
+    }
+
     async getParty(userId: string) {
         //First check if there was a party created within the last 24 hours
         const recentParty = await this.getRecentParty(userId)
         if(!recentParty){
             return await this.createParty(userId)
         }
+        return recentParty
     }
 
     async getRecentParty(userId: string) {

@@ -12,9 +12,13 @@
     "stripe-login": "stripe login",
     "stripe-forward": "stripe listen --forward-to localhost:3000/api/stripe-webhooks",
     "stripe": "npm run stripe-login && npm run stripe-forward",
-    "stripe-test": "stripe trigger payment_intent.succeeded"
+    "stripe-test": "stripe trigger payment_intent.succeeded",
+    "static": "next build && next export"
   },
   "dependencies": {
+    "@capacitor/android": "^5.5.1",
+    "@capacitor/core": "^5.5.1",
+    "@capacitor/ios": "^5.5.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -55,6 +59,7 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.5.1",
     "@types/node": "latest",
     "@types/qrcode": "^1.5.5",
     "@types/react": "latest",
