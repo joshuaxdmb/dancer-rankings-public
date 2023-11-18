@@ -1,10 +1,8 @@
 import Stripe from 'stripe'
 import { NextResponse } from 'next/server'
-import { headers } from 'next/headers'
-
 import { stripe } from '../../../lib/stripe'
 import {
-    upsertPriceRecrtord, upsertProductRecord, manageSubscriptionStatusChange
+    upsertPriceRecrtord, upsertProductRecord, manageSubscriptionStatusChange, manageNewOrder
 } from '@/lib/supabaseAdmin'
 
 const relevantEvents = new Set([
@@ -63,6 +61,12 @@ export async function POST(
                             subscriptionId as string,
                             session.customer as string,
                             true
+                        )
+                    } else {
+                        await manageNewOrder(
+                            session.id,
+                            session.customer as string,
+                            false
                         )
                     }
                     break

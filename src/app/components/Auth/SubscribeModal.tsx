@@ -13,6 +13,7 @@ import { BeatLoader } from 'react-spinners';
 import FireAnimation from '../../animations/FireLottie';
 import { MdCheckCircle } from 'react-icons/md';
 import { useSupabase } from '@/hooks/useSupabase';
+import { Capacitor } from '@capacitor/core';
 
 const formatPrice = (price: Price) => {
   const priceString = new Intl.NumberFormat('en-US', {
@@ -35,6 +36,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
   const [priceId, setPriceId] = useState<string>();
   const [products, setProducts] = useState<ProductWithPrice[]>([]);
   const supabase = useSupabase()
+  const isNative = Capacitor.isNativePlatform();
 
   const getProducts = async () => {
     try{
@@ -66,7 +68,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
     try {
       const { sessionId } = await postData({
         url: 'api/create-checkout-session',
-        data: { price, user, mode: 'subscription'},
+        data: { price, user, mode: 'subscription', isNative},
       });
       console.log('Got session', sessionId);
       //const stripe = await getStripe();

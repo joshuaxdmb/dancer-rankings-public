@@ -10,8 +10,9 @@ import { ProductWithPrice } from '@/types/types';
 import toast from 'react-hot-toast';
 import { postData } from '@/lib/helpers';
 import { useUser } from '@/hooks/useUser'
+import { Capacitor } from '@capacitor/core';
 
-type Props = {};
+type Props = {}
 
 const PartyOptionsModal = ({}: Props) => {
   const [housePartyId, setHousePartyId] = useRecoilState(housePartyAtom);
@@ -21,6 +22,7 @@ const PartyOptionsModal = ({}: Props) => {
   const supabase = useSupabase()
   const [product, setProduct] = useState<ProductWithPrice>()
   const {user} = useUser()
+  const isNative = Capacitor.isNativePlatform();
 
   const getProducts = async () => {
     try{
@@ -50,7 +52,7 @@ const PartyOptionsModal = ({}: Props) => {
     try {
       const { sessionId } = await postData({
         url: 'api/create-checkout-session',
-        data: { price:product.prices[0], user, mode: 'payment' },
+        data: { price:product.prices[0], user, mode: 'payment', isNative },
       });
       console.log('Got session', sessionId);
       //const stripe = await getStripe();

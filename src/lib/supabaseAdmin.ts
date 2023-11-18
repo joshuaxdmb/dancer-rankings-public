@@ -122,6 +122,43 @@ const copyBillingDetailsToCustomer = async (uuid: string, payment_method: Stripe
     }
 }
 
+export const manageNewOrder = async (sessionId:string, customerId: string,  createAction = false) => {
+    const { data: customerData, error: customerError } = await supabaseAdmin
+        .from('customers')
+        .select('id')
+        .eq('stripe_customer_id', customerId)
+        .single()
+
+    if (customerError) {
+        console.log('Error retrieving customer', customerError)
+        throw customerError
+    }
+
+    const { id: uuid } = customerData
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 1 })
+    const price = lineItems.data[0].price
+    
+    const orderData: Database['public']['Tables']['orders']['Insert'] = {
+        id: sessionId,
+        user_id: uuid,
+        price_id: price.id,
+        metadata: session.metadata,
+        quantity: lineItems.data[0].quantity,
+        consumed_at: null,
+    }
+
+    const { error } = await supabaseAdmin.from('orders').insert([orderData])
+
+    if (error) {
+        console.log('Error upserting subscription', error)
+        throw error
+    }
+
+    console.log('Inserted order', orderData)
+}
+
 const manageSubscriptionStatusChange = async (subscriptionId: string, customerId: string, createAction = false) => {
     const { data: customerData, error: customerError } = await supabaseAdmin
         .from('customers')

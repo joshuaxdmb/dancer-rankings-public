@@ -213,6 +213,51 @@ export interface Database {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          consumed_at: string | null
+          created: string
+          id: string
+          metadata: Json | null
+          price_id: string | null
+          quantity: number | null
+          user_id: string
+        }
+        Insert: {
+          consumed_at?: string | null
+          created?: string
+          id: string
+          metadata?: Json | null
+          price_id?: string | null
+          quantity?: number | null
+          user_id: string
+        }
+        Update: {
+          consumed_at?: string | null
+          created?: string
+          id?: string
+          metadata?: Json | null
+          price_id?: string | null
+          quantity?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_price_id_fkey"
+            columns: ["price_id"]
+            isOneToOne: false
+            referencedRelation: "prices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       playlist_song_map: {
         Row: {
           added_by: string | null
