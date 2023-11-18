@@ -5,24 +5,16 @@ import PlayingBar from '../components/PlayingBar';
 import SongsCenter from '../components/SongsCenter';
 import { housePartyAtom } from '@/atoms/housePartyAtom';
 import CreateHouseParty from './CreateHouseParty';
-import SytledButton from '../components/SytledButton';
-import useQrCodeModal from '@/hooks/useQRCodeModal';
-import useAuthModal from '@/hooks/useAuthModal';
+import HousePartyBadge from './HousePartyBadge';
 
 export default function Home() {
   const [housePartyId] = useRecoilState<string | null>(housePartyAtom);
-  const {onOpen} = useQrCodeModal()
 
   const theme = {
     pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
     playingBarBackground:
       'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900',
   };
-
-  const openQRCodeModal = () => {
-    console.log('Opening modal')
-    onOpen()
-  }
 
   return (
     <div
@@ -33,19 +25,15 @@ export default function Home() {
         w-full 
         overflow-hidden 
         overflow-y-auto
+        scrollbar-hide
         ${theme.pageBackground}
       `}
     >
-      <Header
-        className="bg-none"
-        pageTitle={`What are we dancing to? 🎉`}
-      />
+      <Header className="bg-none" pageTitle={`What are we dancing to? 🎉`} pageBadge={housePartyId ? <HousePartyBadge partyId={housePartyId}/> : undefined} />
       {!housePartyId ? (
         <CreateHouseParty />
       ) : (
-        <div className='h-full'>
-          <div className=' items-center justify-center rounded-full text-sm flex pb-2 flex-row transition cursor-pointer text-neutral-600 gap-1 '><SytledButton onClick={openQRCodeModal} className='w-11/12 sm:w-5/6 lg:w-1/2 bg-green-400'>Invite Friends</SytledButton></div>
-          
+        <div className="h-full">
           <SongsCenter playlist={housePartyId || ''} />
           <PlayingBar backGroundColor={theme.playingBarBackground} />
         </div>

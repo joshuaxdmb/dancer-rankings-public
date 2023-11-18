@@ -39,7 +39,6 @@ export default function Home() {
       window.history.pushState({}, '', '/');
 
     } catch (e){
-      toast.error('Failed to get your Spotify info', {id: 'spotify-login'})
       console.log('Failed to get spotify session', e)
     }
   }

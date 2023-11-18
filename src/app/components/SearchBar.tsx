@@ -8,19 +8,19 @@ import { SpotifySong } from '@/types/types';
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  spotifySession: any;
+  userDetails?: SpotifyApi.CurrentUsersProfileResponse;
   spotifyApi: any;
   handleAddSong: (song: SpotifySong) => void;
 };
 
-const SearchBar = ({spotifyApi,spotifySession, handleAddSong}: Props) => {
+const SearchBar = ({spotifyApi,userDetails, handleAddSong}: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchedSongs, setSearchedSongs] = useState<SpotifySong[]>([]);
   const router = useRouter();
 
   const handleSearch = (query: string) => {
-    if(!spotifySession){
+    if(!userDetails?.display_name){
       toast.error('You must be logged in to spotify to search for a song', {
         id: 'failed-spotify-search',
       });

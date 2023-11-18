@@ -235,30 +235,36 @@ export interface Database {
           playlist_id?: string | null
           song_spotify_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "playlist_song_map_playlist_id_fkey"
-            columns: ["playlist_id"]
-            isOneToOne: false
-            referencedRelation: "playlists"
-            referencedColumns: ["playlist_id"]
-          }
-        ]
+        Relationships: []
       }
       playlists: {
         Row: {
+          created_at: string | null
           id: number
-          playlist_id: string
+          owner_id: string | null
+          playlist_id: string | null
         }
         Insert: {
+          created_at?: string | null
           id?: number
-          playlist_id: string
+          owner_id?: string | null
+          playlist_id?: string | null
         }
         Update: {
+          created_at?: string | null
           id?: number
-          playlist_id?: string
+          owner_id?: string | null
+          playlist_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "playlists_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       prices: {
         Row: {
@@ -401,13 +407,6 @@ export interface Database {
             referencedColumns: ["location_id"]
           },
           {
-            foreignKeyName: "songs_votes_playlist_id_fkey"
-            columns: ["playlist_id"]
-            isOneToOne: false
-            referencedRelation: "playlists"
-            referencedColumns: ["playlist_id"]
-          },
-          {
             foreignKeyName: "songs_votes_song_spotify_id_fkey"
             columns: ["song_spotify_id"]
             isOneToOne: false
@@ -501,11 +500,11 @@ export interface Database {
           email: string | null
           follow_level: Database["public"]["Enums"]["dance_levels"] | null
           full_name: string | null
-          gender: Database["public"]["Enums"]["genders"] | null
+          gender: Database["public"]["Enums"]["genders"]
           id: string
           lead_level: Database["public"]["Enums"]["dance_levels"] | null
           payment_method: Json | null
-          primary_dance_role: Database["public"]["Enums"]["dance_roles"] | null
+          primary_dance_role: Database["public"]["Enums"]["dance_roles"]
           username: string | null
         }
         Insert: {
@@ -516,11 +515,11 @@ export interface Database {
           email?: string | null
           follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
-          gender?: Database["public"]["Enums"]["genders"] | null
+          gender: Database["public"]["Enums"]["genders"]
           id: string
           lead_level?: Database["public"]["Enums"]["dance_levels"] | null
           payment_method?: Json | null
-          primary_dance_role?: Database["public"]["Enums"]["dance_roles"] | null
+          primary_dance_role: Database["public"]["Enums"]["dance_roles"]
           username?: string | null
         }
         Update: {
@@ -531,11 +530,11 @@ export interface Database {
           email?: string | null
           follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
-          gender?: Database["public"]["Enums"]["genders"] | null
+          gender?: Database["public"]["Enums"]["genders"]
           id?: string
           lead_level?: Database["public"]["Enums"]["dance_levels"] | null
           payment_method?: Json | null
-          primary_dance_role?: Database["public"]["Enums"]["dance_roles"] | null
+          primary_dance_role?: Database["public"]["Enums"]["dance_roles"]
           username?: string | null
         }
         Relationships: [

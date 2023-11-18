@@ -4,7 +4,7 @@ import { Price, ProductWithPrice } from '@/types/types';
 import Modal from '../Modal';
 import SytledButton from '../SytledButton';
 import { useUser } from '@/hooks/useUser';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { postData } from '@/lib/helpers';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
@@ -12,6 +12,7 @@ import Box from '../Box';
 import { BeatLoader } from 'react-spinners';
 import FireAnimation from '../../animations/FireLottie';
 import { MdCheckCircle } from 'react-icons/md';
+import { useSupabase } from '@/hooks/useSupabase';
 
 const formatPrice = (price: Price) => {
   const priceString = new Intl.NumberFormat('en-US', {
@@ -23,16 +24,31 @@ const formatPrice = (price: Price) => {
   return priceString;
 };
 interface SubscribeModalProps {
-  products: ProductWithPrice[];
 }
 
-const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
+const SubscribeModal: React.FC<SubscribeModalProps> = () => {
   let content = (
     <div className="text-center">No product selected. Try again?</div>
   );
   const { isOpen, onClose } = useSubscribeModal();
   const { user, isLoading, subscription } = useUser();
   const [priceId, setPriceId] = useState<string>();
+  const [products, setProducts] = useState<ProductWithPrice[]>([]);
+  const supabase = useSupabase()
+
+  const getProducts = async () => {
+    try{
+      const proods = await supabase.getProductsWithPrices()
+      setProducts(proods)
+    } catch (error){
+      console.log(error)
+      toast.error('Could not connect to the database', {id: 'get-products-error'})
+    } 
+  }
+
+  useEffect(()=>{
+    getProducts()
+  },[])
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -50,7 +66,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
     try {
       const { sessionId } = await postData({
         url: 'api/create-checkout-session',
-        data: { price },
+        data: { price, user, mode: 'subscription'},
       });
       console.log('Got session', sessionId);
       //const stripe = await getStripe();

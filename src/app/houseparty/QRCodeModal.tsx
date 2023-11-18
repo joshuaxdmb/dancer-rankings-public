@@ -33,14 +33,15 @@ const QRCodeModal = ({}: Props) => {
     <Modal isOpen={isOpen} onChange={onChange}>
       <div className='flex items-center justify-center flex-col gap-y-4'>
         <QRCode partyId={housePartyId} />
-        <input
+        {/* <input
                 type="name"
                 value={enteredPartyId}
                 onChange={(e) => setEnteredPartyId(e.target.value)}
                 placeholder="Or enter Party ID"
                 className="w-full p-2 mx-2 border rounded text-center"
-              />
-        <SytledButton onClick={handleJoin} className="bg-green-400">Join</SytledButton>
+              /> */}
+        {/* <SytledButton onClick={handleJoin} className="bg-green-400">Join</SytledButton> */}
+        <div>Or enter party id: {housePartyId}</div>
       </div>
     </Modal>
   );

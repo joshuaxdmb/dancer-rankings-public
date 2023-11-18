@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 import {useSupabase} from '@/hooks/useSupabase'
 import { useRecoilState } from 'recoil';
 import { housePartyAtom } from '@/atoms/housePartyAtom';
-import useQrCodeModal from '@/hooks/useQRCodeModal';
 
 type Props = {}
 
@@ -17,6 +16,7 @@ const CreateHouseParty = (props: Props) => {
   const { userDetails } = useSpotify();
   const [error, setError] = useState<string | null>(null);
   const [housePartyId, setHousePartyId] = useRecoilState(housePartyAtom)
+  const [isPartyOwner, setIsPartyOwner] = useState(false)
 
   const supabase = useSupabase()
 
@@ -42,8 +42,9 @@ const CreateHouseParty = (props: Props) => {
 
     try{
         const data = await supabase.getParty(user?.id)
-        console.log(data)
+        console.log('PARTYYYYY',data)
         setHousePartyId(data?.id)
+        setIsPartyOwner(true)
 
     } catch (error){
         console.log(error)

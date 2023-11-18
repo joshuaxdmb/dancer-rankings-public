@@ -1,5 +1,5 @@
 import { LocationIdsEnum } from "@/content";
-import { EventLocalType, Song, SongLocal, UserSignUpType } from "@/types/types";
+import { EventLocalType, ProductWithPrice, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Provider } from "@supabase/supabase-js";
 
@@ -9,6 +9,38 @@ class SupabaseWrapper {
     constructor(client: SupabaseClient) {
         this.client = client;
     }
+
+    async getProductsWithPrices(productName?: string) {
+        let data, error
+        if (!productName) {
+            ({ data, error } = await this.client
+                .from('products')
+                .select('*, prices(*)')
+                .eq('active', true)
+                .eq('prices.active', true)
+                .order('metadata->index')
+                .order('unit_amount', { foreignTable: 'prices' }))
+        } else {
+            ({ data, error } = await this.client
+                .from('products')
+                .select('*, prices(*)')
+                .eq('name', productName) // Added filter for productName
+                .eq('active', true)
+                .eq('prices.active', true)
+                .order('metadata->index')
+                .order('unit_amount', { foreignTable: 'prices' }))
+        }
+
+
+        if (error) {
+            console.log('Error fetching products', error)
+            throw error
+        }
+
+        return data as ProductWithPrice[]
+    }
+
+
 
     async checkPartyExists(partyId: string) {
         const { data, error } = await this.client
@@ -20,22 +52,23 @@ class SupabaseWrapper {
             throw error;
         }
 
-        if(data?.length > 0){
+        if (data?.length > 0) {
             return true
-        } 
+        }
         return false
     }
 
     async getParty(userId: string) {
         //First check if there was a party created within the last 24 hours
         const recentParty = await this.getRecentParty(userId)
-        if(!recentParty){
+        if (!recentParty) {
             return await this.createParty(userId)
         }
         return recentParty
     }
 
     async getRecentParty(userId: string) {
+        console.log('getting recent party')
         const twentyFourHoursAgo = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
 
         let { data, error } = await this.client
@@ -54,20 +87,21 @@ class SupabaseWrapper {
     }
 
     async createParty(userId: string) {
-            const { data, error: error1 } = await this.client.from('playlists').insert([
-                {
-                    owner_id: userId,
-                }
-            ])
-            if (error1) {
-                throw error1
+        console.log('Creating party')
+        const { data, error: error1 } = await this.client.from('playlists').insert([
+            {
+                owner_id: userId,
             }
-            const { data: newParty, error: error2 } = await this.client.from('playlists').select('*').eq('owner_id', userId).order('created_at', { ascending: false }).single()
+        ])
+        if (error1) {
+            throw error1
+        }
+        const { data: newParty, error: error2 } = await this.client.from('playlists').select('*').eq('owner_id', userId).order('created_at', { ascending: false }).single()
 
-            if (error2) {
-                throw error2
-            }
-            return newParty
+        if (error2) {
+            throw error2
+        }
+        return newParty
     }
 
     async signInWithProvider(provider: Provider) {

@@ -5,14 +5,15 @@ import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
 import LoginButtons from './Auth/LoginButtons';
 import { useSpotify } from '@/hooks/useSpotify';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import UserBadge from './UserBadge';
 
 type Props = {
   children?: React.ReactNode;
   className?: string;
   pageTitle?: string;
   showUserBadge?: boolean;
+  pageBadge?: React.ReactNode;
 };
 
 const Header: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Header: React.FC<Props> = ({
   className,
   pageTitle,
   showUserBadge = true,
+  pageBadge,
 }) => {
   const { user, isLoading } = useUser();
   const [visible, setVisible] = useState(true);
@@ -50,10 +52,6 @@ const Header: React.FC<Props> = ({
     };
   }, [visible]);
 
-  const goToAccountPage = () => {
-    router.push('/account')
-  };
-
   return (
     <div className={twMerge(`p-4 md:p-6 pt-7 bg-gradient-to-b from-red-950`, className)}>
       <div className="w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between">
@@ -62,18 +60,9 @@ const Header: React.FC<Props> = ({
           <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}
         <LoginButtons isLoading={isLoading} user={user}/>
-        {user && userDetails && showUserBadge && (
-          <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0">
-            <Image
-              width={25}
-              height={25}
-              className="rounded-full w-10 h-10"
-              src={userDetails?.images?.[0].url || '/assets/icons/spotify.svg'}
-              alt="user-image"
-            />
-            <button onClick={goToAccountPage} className="px-2">{userDetails.display_name}</button>
-          </div>
-        )}
+        {pageBadge? pageBadge : (user && userDetails && showUserBadge && (
+          <UserBadge userDetails={userDetails} />
+        ))}
       </div>
       {!visible && pageTitle && (
         <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>

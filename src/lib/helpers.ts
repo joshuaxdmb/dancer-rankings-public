@@ -1,4 +1,6 @@
 import { Price } from "@/types/types";
+import { User } from '@supabase/auth-helpers-nextjs';
+import Stripe from "stripe";
 
 export const getUrl = () => {
     let url = process.env.NEXT_PUBLIC_SITE_URL ??
@@ -10,7 +12,7 @@ export const getUrl = () => {
     return url
 }
 
-export const postData = async ({ url, data }: { url: string, data?: {price:Price} }) => {
+export const postData = async ({ url, data }: { url: string, data?: {price:Price, user:User, mode:Stripe.Checkout.SessionCreateParams.Mode}}) => {
     const fullUrl = `${getUrl()}${url}`
     console.log('PORT REQUEST', fullUrl, data)
     const res: Response = await fetch(fullUrl, {

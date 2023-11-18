@@ -8,11 +8,7 @@ import ModalProvider from '@/providers/ModalProvider';
 import RecoilProvider from '../providers/RecoilProvider';
 import ToasterProvider from '../providers/ToasterProvider';
 import SpotifyProvider from '../providers/SpotifyProvider';
-import getActiveProductsWithPrices from '@/utils/productUtils';
-import { ProductWithPrice } from '@/types/types';
 import Script from 'next/script';
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
 
 const font = Figtree({ subsets: ['latin'] });
 
@@ -29,7 +25,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const products: ProductWithPrice[] = await getActiveProductsWithPrices();
 
   return (
     <html lang="en">
@@ -40,7 +35,7 @@ export default async function RootLayout({
           <UserProvider>
             <RecoilProvider>
               <SpotifyProvider>
-                <ModalProvider products={products} />
+                <ModalProvider/>
                 <Sidebar>{children}</Sidebar>
               </SpotifyProvider>
             </RecoilProvider>

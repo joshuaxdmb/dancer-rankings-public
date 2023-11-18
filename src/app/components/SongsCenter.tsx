@@ -27,7 +27,7 @@ type Props = {
 
 const Center = ({playlist}: Props) => {
   const { user } = useUser();
-  const { spotifySession, spotifyApi } = useSpotify();
+  const { spotifyApi, userDetails } = useSpotify();
   const [location] = useRecoilState(locationAtom);
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [userVotes, setUserVotes] = useRecoilState<VotesMap>(votesByUserAtom);
@@ -96,7 +96,7 @@ const Center = ({playlist}: Props) => {
       return;
     }
 
-    if (!spotifySession.user) {
+    if (!userDetails?.display_name) {
       toast.error('You log into spotify to add a song', {
         id: 'failed-add-song-spotify',
       });
@@ -108,7 +108,7 @@ const Center = ({playlist}: Props) => {
       .join('');
 
     const insertLocalSong: SongLocal = {
-      added_by: spotifySession.user.username,
+      added_by: userDetails.display_name,
       author: artists,
       image_path: songDetails.album.images[0]?.url || null,
       preview_url: songDetails.preview_url || null,
@@ -122,7 +122,7 @@ const Center = ({playlist}: Props) => {
     };
 
     const insertSong: Song = {
-      added_by: spotifySession.user.username,
+      added_by: userDetails.display_name,
       author: artists,
       image_path: songDetails.album.images[0]?.url || null,
       preview_url: songDetails.preview_url || null,
@@ -210,12 +210,12 @@ const Center = ({playlist}: Props) => {
   };
 
   return (
-    <div className="h-full mb-20">
+    <div className="h-full mb-20 scrollbar-hide">
       <section className="flex items-center justify-center space-x-7 mb-0">
         <SearchBar
           handleAddSong={handleAddSong}
           spotifyApi={spotifyApi}
-          spotifySession={spotifySession}
+          userDetails={userDetails}
         />
       </section>
       <section>

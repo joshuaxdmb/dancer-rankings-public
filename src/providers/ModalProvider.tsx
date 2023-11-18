@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import SubscribeModal from '../app/components/Auth/SubscribeModal';
 import { ProductWithPrice } from '@/types/types';
 import QRCodeModal from '@/app/houseparty/QRCodeModal';
+import PartyOptionsModal from '@/app/houseparty/PartyOptionsModal';
 
 interface ModalProviderProps {
-  products: ProductWithPrice[]
 }
 
 const ModalProvider: React.FC<ModalProviderProps> = ({
-  products
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -25,7 +24,8 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
     <>
     <AuthModal/>
     <QRCodeModal/>
-    <SubscribeModal products={products}/>
+    <SubscribeModal/>
+    <PartyOptionsModal/>
     </>
   );
 };
