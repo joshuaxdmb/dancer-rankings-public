@@ -231,3 +231,50 @@ export type EventLocalType = {
     event_location:LocationIdsEnum,
     total_votes: number,
 }
+
+export type SpotifyTokenResponse = {
+    access_token: string;
+    token_type: string;
+    scope: string;
+    expires_in: number;
+    refresh_token: string;
+};
+
+export type RefreshTokenResponse = {
+    token: SpotifyTokenResponse;
+    user: any,
+    error:any
+}
+
+export type SpotifySession = {
+    token: SpotifyTokenResponse;
+}
+
+export type SpotifyUserProfile = {
+    country: string; // ISO 3166-1 alpha-2 country code
+    display_name: string | null;
+    email: string; // Unverified email address
+    explicit_content: {
+        filter_enabled: boolean;
+        filter_locked: boolean;
+    };
+    external_urls: {
+        spotify: string; // Spotify URL for the user
+    };
+    followers: {
+        href: string | null; // Always null
+        total: number;
+    };
+    href: string; // Link to the Web API endpoint for this user
+    id: string; // Spotify user ID
+    images: Array<{
+        url: string;
+        height: number | null;
+        width: number | null;
+    }>;
+    product: string; // User's Spotify subscription level (e.g., "premium", "free")
+    type: string; // Object type: "user"
+    uri: string; // Spotify URI for the user
+};
+
+

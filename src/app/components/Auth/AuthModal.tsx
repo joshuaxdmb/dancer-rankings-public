@@ -6,17 +6,19 @@ import {
 } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { signIn } from 'next-auth/react';
+import { Capacitor } from '@capacitor/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons';
 import useAuthModal from '@/hooks/useAuthModal';
-import {
-  LocationIdsEnum,
-  Locations,
-} from '@/content';
+import { LocationIdsEnum, Locations } from '@/content';
 import SupabaseWrapper from '@/classes/SupabaseWrapper';
 import SytledButton from '../SytledButton';
-import { customSignIn } from '@/lib/api';
+import { Browser } from '@capacitor/browser';
+import { LOGIN_URL, SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify';
+import { useRecoilState } from 'recoil';
+import { spotifySessionAtom } from '@/atoms/spotifyAtom';
+import { SpotifyTokenResponse } from '@/types/types';
+import toast from 'react-hot-toast';
 
 type Props = {};
 
@@ -30,17 +32,58 @@ const AuthModal = ({}: Props) => {
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(Locations[0].id);
+  const isNative = Capacitor.isNativePlatform();
+  const [spotifySession, setSpotifySession] = useRecoilState(spotifySessionAtom)
+
+  const getSpotifyCode = async () => {
+    console.log(SPOTIFY_LOGIN_URL_WEB)
+    console.log(SPOTIFY_LOGIN_URL_CAPACITOR)
+    return
+    if (isNative) {
+      await Browser.open({ url: SPOTIFY_LOGIN_URL_CAPACITOR });
+    } else {
+      window.location.href = SPOTIFY_LOGIN_URL_WEB;
+    }
+  };
+
+  const refreshSpotifyToken = async (currentToken: SpotifyTokenResponse) => {
+    const res = await fetch('/api/spotify/refresh-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token:currentToken }),
+    })
+
+    const session = await res.json()
+    setSpotifySession(session)
+
+    if(session.error){
+      console.log('Error refreshing token', error)
+      toast.error('Error refreshing Spotify session')
+    }
+  }
+
+  const handleSpotifyLogin = async () => {
+    if(spotifySession?.token) {
+      refreshSpotifyToken(spotifySession.token)
+    } else if(!spotifySession?.token) {
+      getSpotifyCode()
+    }
+  }
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('google');
     console.log('data', data, 'error', error);
-    handleSpotifyAuth()
+    if(spotifySession?.token) {
+      refreshSpotifyToken(spotifySession.token)
+    } 
   };
 
   const signIngWithSpotify = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('spotify');
     console.log('data', data, 'error', error);
-    //handleSpotifyAuth() //For some reason this logs out of supabase
+    handleSpotifyLogin()
   };
 
   const onChange = (open: boolean) => {
@@ -57,23 +100,23 @@ const AuthModal = ({}: Props) => {
     }
   }, [session, router, onClose]);
 
-  const handleSpotifyAuth = async () => {
-    console.log('Logging in to Spotify');
-    const spotifySession = await (await fetch('/api/auth/session')).json();
-    if (spotifySession.token && session?.user?.id) {
-      const insertData = { username: spotifySession.user.username };
-      const { error: insertError } = await supabaseClient.updateUser(
-        session.user.id,
-        insertData
-      );
-      if (insertError)
-        console.log('Failed to add username from Spotify', insertError);
-      console.log('User already signed in on Spotify');
-      return;
-    }
-    console.log('User not signed in on Spotify, signing in');
-    customSignIn('spotify','/')
-  };
+  // const handleSpotifyAuth = async () => {
+  //   console.log('Logging in to Spotify');
+  //   const spotifySession = await (await fetch('/api/spotify/token')).json();
+  //   if (spotifySession.token && session?.user?.id) {
+  //     const insertData = { username: spotifySession.user.username };
+  //     const { error: insertError } = await supabaseClient.updateUser(
+  //       session.user.id,
+  //       insertData
+  //     );
+  //     if (insertError)
+  //       console.log('Failed to add username from Spotify', insertError);
+  //     console.log('User already signed in on Spotify');
+  //     return;
+  //   }
+  //   console.log('User not signed in on Spotify, signing in');
+  //   customSignIn('spotify','/')
+  // };
 
   return (
     <Modal
@@ -144,12 +187,18 @@ const AuthModal = ({}: Props) => {
             </form>
           )}
           <div className="gap-y-2 flex flex-col mb-4">
-            <SytledButton onClick={signIngWithSpotify} className="items-center flex justify-center bg-green-500">
-              {authOption === 'login'? 'Login':'Signup'} with Spotify{' '}
+            <SytledButton
+              onClick={signIngWithSpotify}
+              className="items-center flex justify-center bg-green-500"
+            >
+              {authOption === 'login' ? 'Login' : 'Signup'} with Spotify{' '}
               <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
             </SytledButton>
-            <SytledButton onClick={signInWithGoogle} className="items-center flex justify-center bg-white">
-            {authOption === 'login'? 'Login':'Signup'} with Google
+            <SytledButton
+              onClick={signInWithGoogle}
+              className="items-center flex justify-center bg-white"
+            >
+              {authOption === 'login' ? 'Login' : 'Signup'} with Google
               <FontAwesomeIcon icon={faGoogle} className="ml-2 h-6 w-6" />
             </SytledButton>
           </div>

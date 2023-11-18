@@ -32,16 +32,28 @@ const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI
 })
 
+const SPOTIFY_CLIENT_ID='10b68d8b3e99461586a62425e11a71fe'
+const SPOTIFY_REDIRECT_URI_CAPACITOR='latindancersapp://spotify_callback'
+const SPOTIFY_REDIRECT_URI='http://localhost:3000/'
 
-const client_params = new URLSearchParams({
-    client_id: process.env.SPOTIFY_CLIENT_ID,
+const client_params_web = new URLSearchParams({
+    client_id:SPOTIFY_CLIENT_ID,
     response_type: 'code',
-    redirect_uri: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI,
+    redirect_uri:SPOTIFY_REDIRECT_URI,
+    scope: scopes
+});
+
+const client_params_capacitor = new URLSearchParams({
+    client_id:SPOTIFY_CLIENT_ID,
+    response_type: 'code',
+    redirect_uri:SPOTIFY_REDIRECT_URI_CAPACITOR,
     scope: scopes
 });
 
 
-const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?${client_params.toString()}`;
+
+const SPOTIFY_LOGIN_URL_WEB = `https://accounts.spotify.com/authorize?${client_params_web.toString()}`;
+const SPOTIFY_LOGIN_URL_CAPACITOR = `https://accounts.spotify.com/authorize?${client_params_capacitor.toString()}`;
 
 export default spotifyApi;
-export {SPOTIFY_LOGIN_URL, LOGIN_URL}
+export {SPOTIFY_LOGIN_URL_WEB,SPOTIFY_LOGIN_URL_CAPACITOR, LOGIN_URL}

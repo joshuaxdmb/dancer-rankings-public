@@ -5,14 +5,28 @@ import { signIn } from 'next-auth/react';
 import StyledButton from '../SytledButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { useRecoilState } from 'recoil';
+import { spotifySessionAtom } from '@/atoms/spotifyAtom';
+import { Capacitor } from '@capacitor/core';
+import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify';
+import { Browser } from '@capacitor/browser';
 
 type Props = {
     isLoading: boolean;
     user: any;
-    spotifySession:any
 }
 
-const LoginButtons = ({isLoading,user,spotifySession}: Props) => {
+const LoginButtons = ({isLoading,user}: Props) => {
+  const isNative = Capacitor.isNativePlatform();
+  const [spotifySession] = useRecoilState(spotifySessionAtom)
+
+  const getSpotifyCode = async () => {
+    if (isNative) {
+      await Browser.open({ url: SPOTIFY_LOGIN_URL_CAPACITOR });
+    } else {
+      window.location.href = SPOTIFY_LOGIN_URL_WEB;
+    }
+  };
     
     const authModal = useAuthModal();
 
@@ -45,17 +59,15 @@ const LoginButtons = ({isLoading,user,spotifySession}: Props) => {
             </div>
           </div>
           )
-        } else if(!spotifySession){
+        } else if(!spotifySession?.token){
           return (
             <div className="flex flex-row items-center">
             <div>
               <StyledButton
-                onClick={() => {
-                  signIn('spotify', { callbackUrl: '/' });
-                }}
+                onClick={getSpotifyCode}
                 className=" px-6 py-2 flex items-center justify-center bg-green-400"
               >
-                Authorize Player <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
+                Link Spotify <FontAwesomeIcon icon={faSpotify} className="ml-2 h-6 w-6" />
               </StyledButton>
             </div>
           </div>

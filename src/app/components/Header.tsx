@@ -23,7 +23,7 @@ const Header: React.FC<Props> = ({
 }) => {
   const { user, isLoading } = useUser();
   const [visible, setVisible] = useState(true);
-  const { spotifySession } = useSpotify();
+  const { userDetails } = useSpotify();
   const router = useRouter();
 
   useEffect(() => {
@@ -61,17 +61,17 @@ const Header: React.FC<Props> = ({
         {visible && pageTitle && (
           <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}
-        <LoginButtons isLoading={isLoading} user={user} spotifySession={spotifySession} />
-        {user && spotifySession && showUserBadge && (
+        <LoginButtons isLoading={isLoading} user={user}/>
+        {user && userDetails && showUserBadge && (
           <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0">
             <Image
               width={25}
               height={25}
               className="rounded-full w-10 h-10"
-              src={spotifySession?.user?.image || '/assets/icons/spotify.svg'}
+              src={userDetails?.images?.[0].url || '/assets/icons/spotify.svg'}
               alt="user-image"
             />
-            <button onClick={goToAccountPage} className="px-2">{spotifySession?.user?.name}</button>
+            <button onClick={goToAccountPage} className="px-2">{userDetails.display_name}</button>
           </div>
         )}
       </div>

@@ -11,6 +11,8 @@ import SpotifyProvider from '../providers/SpotifyProvider';
 import getActiveProductsWithPrices from '@/utils/productUtils';
 import { ProductWithPrice } from '@/types/types';
 import Script from 'next/script';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const font = Figtree({ subsets: ['latin'] });
 
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
   description: 'The best music and events ranked by dancers',
   icons: {
     icon: 'icon.svg',
-  }
+  },
 };
 
 export default async function RootLayout({
@@ -27,8 +29,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-  const products:ProductWithPrice[] = await getActiveProductsWithPrices()
+  const products: ProductWithPrice[] = await getActiveProductsWithPrices();
 
   return (
     <html lang="en">
@@ -39,7 +40,7 @@ export default async function RootLayout({
           <UserProvider>
             <RecoilProvider>
               <SpotifyProvider>
-                <ModalProvider products={products}/>
+                <ModalProvider products={products} />
                 <Sidebar>{children}</Sidebar>
               </SpotifyProvider>
             </RecoilProvider>
