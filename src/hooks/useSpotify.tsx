@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import { isPlayingAtom } from '@/atoms/playingSongAtom';
 import { spotifySessionAtom } from '@/atoms/spotifyAtom';
+import { usePersistentRecoilState } from './usePersistentState';
 
 type SpotifyContextType = {
   togglePlay?: () => void;
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export const SpotifyProviderContext = (props: Props) => {
-  const [spotifySession, setSpotifySession] = useRecoilState(spotifySessionAtom);
+  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom);
   const [player, setPlayer] = useState<any | null>(null);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [isPlayerActive, setIsPlayerActive] = useState(false);

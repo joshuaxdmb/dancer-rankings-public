@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { App } from '@capacitor/app';
 import toast from 'react-hot-toast';
-import { useRecoilState } from 'recoil';
+import { usePersistentRecoilState } from '@/hooks/usePersistentState';
 
 
 export default function Home() {
@@ -18,9 +18,9 @@ export default function Home() {
   const [showMessahe, setShowMessage] = useState(false); // New state for showing buttons
   const [topMargin, setTopMargin] = useState(true);
   const pathname = usePathname();
-  const [playlist, setPlaylist] = useRecoilState(playlistAtom)
+  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
   const isNative = Capacitor.isNativePlatform();
-  const [spotifySession, setSpotifySession] = useRecoilState(spotifySessionAtom)
+  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
   const fetchSpotifySession = async (authCode:any) => {
     toast.success('Almost done...', {id: 'spotify-login'})
