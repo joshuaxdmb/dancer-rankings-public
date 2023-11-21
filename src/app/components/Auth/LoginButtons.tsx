@@ -5,20 +5,21 @@ import { signIn } from 'next-auth/react';
 import StyledButton from '../SytledButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
-import { useRecoilState } from 'recoil';
 import { spotifySessionAtom } from '@/atoms/spotifyAtom';
 import { Capacitor } from '@capacitor/core';
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify';
 import { Browser } from '@capacitor/browser';
+import { usePersistentRecoilState } from '@/hooks/usePersistentState';
+import { SpotifyProfile } from 'next-auth/providers/spotify';
 
 type Props = {
     isLoading: boolean;
     user: any;
+    spotifySession: SpotifyProfile;
 }
 
-const LoginButtons = ({isLoading,user}: Props) => {
+const LoginButtons = ({isLoading,user, spotifySession}: Props) => {
   const isNative = Capacitor.isNativePlatform();
-  const [spotifySession] = useRecoilState(spotifySessionAtom)
 
   const getSpotifyCode = async () => {
     if (isNative) {
@@ -59,7 +60,7 @@ const LoginButtons = ({isLoading,user}: Props) => {
             </div>
           </div>
           )
-        } else if(!spotifySession?.token){
+        } else if(!spotifySession){
           return (
             <div className="flex flex-row items-center">
             <div>

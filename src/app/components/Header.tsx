@@ -7,6 +7,8 @@ import LoginButtons from './Auth/LoginButtons';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useRouter } from 'next/navigation';
 import UserBadge from './UserBadge';
+import { usePersistentRecoilState } from '@/hooks/usePersistentState';
+import { spotifySessionAtom } from '@/atoms/spotifyAtom';
 
 type Props = {
   children?: React.ReactNode;
@@ -27,6 +29,7 @@ const Header: React.FC<Props> = ({
   const [visible, setVisible] = useState(true);
   const { userDetails } = useSpotify();
   const router = useRouter();
+  const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
   useEffect(() => {
     setVisible(window.innerWidth >= 768);
@@ -59,7 +62,7 @@ const Header: React.FC<Props> = ({
         {visible && pageTitle && (
           <h1 className="ml-4 text-2xl font-semibold">{pageTitle}</h1>
         )}
-        <LoginButtons isLoading={isLoading} user={user}/>
+        <LoginButtons isLoading={isLoading} user={user} spotifySession={spotifySession}/>
         {pageBadge? pageBadge : (user && userDetails && showUserBadge && (
           <UserBadge userDetails={userDetails} />
         ))}

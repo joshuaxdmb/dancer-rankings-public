@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Header from '@/app/components/Header';
 import MainLinkItem from '@/app/components/MainLinkItem';
 import { playlistAtom } from '@/atoms/playlistAtom';
@@ -12,19 +12,25 @@ import { App } from '@capacitor/app';
 import toast from 'react-hot-toast';
 import { usePersistentRecoilState } from '@/hooks/usePersistentState';
 
-
 export default function Home() {
-  const { user, userDetails} = useUser();
-  const [showMessahe, setShowMessage] = useState(false); // New state for showing buttons
+  const { user, userDetails } = useUser();
+  const [showMessage, setShowMessage] = useState(false); // New state for showing buttons
   const [topMargin, setTopMargin] = useState(true);
   const pathname = usePathname();
-  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
+  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom);
   const isNative = Capacitor.isNativePlatform();
-  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  const [spotifySession, setSpotifySession] =
+    usePersistentRecoilState(spotifySessionAtom);
 
-  const fetchSpotifySession = async (authCode:any) => {
-    toast.success('Almost done...', {id: 'spotify-login'})
-    try{
+  const fetchSpotifySession = async (authCode: any) => {
+    toast.success('Almost done...', { id: 'spotify-login' });
+    if (
+      spotifySession?.token &&
+      spotifySession?.token?.expires_at > Date.now()
+    ) {
+      return;
+    }
+    try {
       const res = await fetch('/api/spotify/session', {
         method: 'POST',
         headers: {
@@ -33,66 +39,65 @@ export default function Home() {
         body: JSON.stringify({ code: authCode, isNative }),
       });
       const session = await res.json();
-
-      if(session.error) throw new Error(session.error)
+      console.log('Spotify session response', session);
+      if (session.error) throw new Error(session.error);
       setSpotifySession(session);
       window.history.pushState({}, '', '/');
-
-    } catch (e){
-      console.log('Failed to get spotify session', e)
+    } catch (e) {
+      console.log('Failed to get spotify session', e);
     }
-  }
+  };
 
   //Handle Spotify callback on mobile
   useEffect(() => {
+    if (isNative) {
       App.addListener('appUrlOpen', (event) => {
-      const url = new URL(event.url);
-      if (url.pathname === '/spotify_callback') {
-        const authCode = url.searchParams.get('code')
-        if(authCode) {
-          fetchSpotifySession(authCode)
+        const url = new URL(event.url);
+        if (url.pathname === '/spotify_callback') {
+          const authCode = url.searchParams.get('code');
+          if (authCode) {
+            fetchSpotifySession(authCode);
+          }
         }
-      }
-    })
+      });
 
-    return () => {
-      App.removeAllListeners()
-    }
-  })
-
-  //Handle Spotify callback on web
-  useEffect(() => {
-    const handleAuthCode = async () => {
-      const url = window.location.href;
-      console.log('Looking for auth code in url', url)
-      const hasCode = url.includes('?code=');
-      if (hasCode) {
-        const newUrl = new URL(url);
-        const authCode = newUrl.searchParams.get('code');
-        if(authCode) {
-          fetchSpotifySession(authCode)
+      return () => {
+        App.removeAllListeners();
+      };
+    } else {
+      const handleAuthCode = async () => {
+        const url = window.location.href;
+        const hasCode = url.includes('?code=');
+        if (hasCode) {
+          const newUrl = new URL(url);
+          const authCode = newUrl.searchParams.get('code');
+          console.log('Got spotify code', authCode);
+          if (authCode) {
+            fetchSpotifySession(authCode);
+          }
         }
+      };
+      if (!isNative) {
+        handleAuthCode();
       }
-    };
-    if (!isNative) {
-      handleAuthCode();
     }
-  }, []);
+  });
 
   const routes = useMemo(
-    () => 
-      ActiveLinks.map((link)=>(
-        {
-          label: link.label,
-          active: pathname === link.href,
-          href: link.href,
-          icon: link.icon ? link.icon : null,
-          onClick: link.playlist ? () => setPlaylist(link.playlist as PlaylistEnum) : null,
-          emoji: link.emoji ? link.emoji : null,
-        }
-      ))
-    ,[pathname, playlist])//eslint-disable-line
-    
+    () =>
+      ActiveLinks.map((link) => ({
+        label: link.label,
+        active: pathname === link.href,
+        href: link.href,
+        icon: link.icon ? link.icon : null,
+        onClick: link.playlist
+          ? () => setPlaylist(link.playlist as PlaylistEnum)
+          : null,
+        emoji: link.emoji ? link.emoji : null,
+      })),
+    [pathname, playlist]
+  ); //eslint-disable-line
+
   useEffect(() => {
     setTopMargin(window.innerWidth <= 768);
   }, []);
@@ -136,14 +141,27 @@ export default function Home() {
         overflow-y-auto
       "
     >
-      <Header className='' pageTitle={userDetails? `Hi ${userDetails.first_name || userDetails.full_name || 'there'} 👋! `:`If you're not a dancer, kindly close your browser 💃 🕺`}>
-        
-      </Header>
-      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4'>
-          {routes.map((al)=>(
-            <MainLinkItem key={al.label} name={al.label} emoji={al.emoji} href={al.href} onClick={al.onClick}/>
-          ))}
-        </div>
+      <Header
+        className=""
+        pageTitle={
+          userDetails
+            ? `Hi ${
+                userDetails.first_name || userDetails.full_name || 'there'
+              } 👋! `
+            : `If you're not a dancer, kindly close your browser 💃 🕺`
+        }
+      ></Header>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4">
+        {routes.map((al) => (
+          <MainLinkItem
+            key={al.label}
+            name={al.label}
+            emoji={al.emoji}
+            href={al.href}
+            onClick={al.onClick}
+          />
+        ))}
+      </div>
     </div>
   );
 }

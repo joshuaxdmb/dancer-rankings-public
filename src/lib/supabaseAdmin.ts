@@ -147,6 +147,7 @@ export const manageNewOrder = async (sessionId:string, customerId: string,  crea
         metadata: session.metadata,
         quantity: lineItems.data[0].quantity,
         consumed_at: null,
+        product_name: lineItems.data[0].description
     }
 
     const { error } = await supabaseAdmin.from('orders').insert([orderData])

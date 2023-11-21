@@ -14,6 +14,7 @@ type UserContextType = {
   isLoading: boolean;
   subscription: SubscriptionType | null;
   isPremium: boolean;
+  userOrders: any[];
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -33,9 +34,15 @@ export const MyUserContextProvider = (props: Props) => {
   const accessToken = session?.access_token ?? null;
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetailsType | null>(null);
+  const [userOrders, setUserOrders] = useState<any[]>([]);
   const [subscription, setSubscription] = useState<SubscriptionType | null>(
     null
-  );
+  )
+
+  const getOrders = () => supabase.
+  from('orders')
+  .select('*')
+  .eq('user_id', user?.id)
 
   const getUserDetails = () => supabase
   .from('users')
@@ -51,16 +58,21 @@ export const MyUserContextProvider = (props: Props) => {
   useEffect(() => {
     if (!userDetails && !isLoadingData && user?.id) {
       setIsLoadingData(true);
-      Promise.allSettled([getUserDetails(), getSubscription()])
+      Promise.allSettled([getUserDetails(), getSubscription(), getOrders()])
         .then((results) => {
           const userDetailsResult = results[0];
           const subscriptionResult = results[1];
+          const ordersResults = results[2];
           if (userDetailsResult.status === 'fulfilled' && userDetailsResult.value.data?.length) {
             setUserDetails(userDetailsResult.value.data[0] as UserDetailsType);
           }
 
           if (subscriptionResult.status === 'fulfilled' && subscriptionResult.value.data?.length) {
             setSubscription(subscriptionResult.value.data[0] as SubscriptionType);
+          }
+
+          if (ordersResults.status === 'fulfilled' && ordersResults.value.data?.length) {
+            setUserOrders(ordersResults.value.data);
           }
 
           setIsLoadingData(false);
@@ -80,7 +92,8 @@ export const MyUserContextProvider = (props: Props) => {
     userDetails,
     isLoading: isLoadingData || isLoadingUser,
     subscription,
-    isPremium: ['active','trialing'].includes(subscription?.status || 'null')
+    isPremium: ['active','trialing'].includes(subscription?.status || 'null'),
+    userOrders
   };
 
   return <UserContext.Provider value={value} {...props} />;

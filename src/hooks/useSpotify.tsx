@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { isPlayingAtom } from '@/atoms/playingSongAtom';
 import { spotifySessionAtom } from '@/atoms/spotifyAtom';
 import { usePersistentRecoilState } from './usePersistentState';
+import { SpotifySession, SpotifyTokenResponse } from '@/types/types';
 
 type SpotifyContextType = {
   togglePlay?: () => void;
@@ -20,7 +21,8 @@ interface Props {
 }
 
 export const SpotifyProviderContext = (props: Props) => {
-  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom);
+  const [spotifySession, setSpotifySession] =
+    usePersistentRecoilState(spotifySessionAtom);
   const [player, setPlayer] = useState<any | null>(null);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [isPlayerActive, setIsPlayerActive] = useState(false);
@@ -31,7 +33,9 @@ export const SpotifyProviderContext = (props: Props) => {
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     })
   );
-  const [userDetails, setUserDetails] = useState<SpotifyApi.CurrentUsersProfileResponse | undefined>(undefined);
+  const [userDetails, setUserDetails] = useState<
+    SpotifyApi.CurrentUsersProfileResponse | undefined
+  >(undefined);
 
   const initializeSpotifyPlayer = (sessionToken: any) => {
     const existingScript = document.querySelector(
@@ -112,14 +116,48 @@ export const SpotifyProviderContext = (props: Props) => {
     };
   };
 
-  const initializeApi = async (token: any) => {
-    spotifyApi.setAccessToken(token);
+  const initializeApi = async (access_token: any) => {
+    spotifyApi.setAccessToken(access_token);
     const userDetails = await spotifyApi.getMe();
     setUserDetails(userDetails.body);
   };
 
+  const refreshToken = async (session: SpotifySession) => {
+    try {
+      const res = await fetch('/api/spotify/refresh-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: session.token }),
+      });
+      const sessionResponse = await res.json();
+      console.log('Spotify session response from refreshToken', sessionResponse);
+      if (sessionResponse.error) throw new Error(sessionResponse.error);
+      const newSession = {
+        ...session,
+        token: {
+          ...session.token,
+          ...sessionResponse.token
+        },
+      };
+
+      setSpotifySession(newSession);
+      console.log('Refreshed spotify token', newSession);
+    } catch (e) {
+      console.error('Failed to refresh spotify token', e);
+    } 
+  };
+
   useEffect(() => {
-    if (!spotifySession?.token) return;
+    if (spotifySession?.token?.expires_at < (Date.now() - 600 * 1000)) {
+      refreshToken(spotifySession);
+    }
+
+    if (!spotifySession?.token) {
+      return;
+    }
+
     if (!player) initializeSpotifyPlayer(spotifySession.token.access_token);
     initializeApi(spotifySession.token.access_token);
     toast.success('Linked Spotify', { id: 'spotify-login' });

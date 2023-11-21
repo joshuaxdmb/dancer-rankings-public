@@ -238,6 +238,7 @@ export type SpotifyTokenResponse = {
     scope: string;
     expires_in: number;
     refresh_token: string;
+    expires_at?: number;
 };
 
 export type RefreshTokenResponse = {
@@ -276,5 +277,10 @@ export type SpotifyUserProfile = {
     type: string; // Object type: "user"
     uri: string; // Spotify URI for the user
 };
+
+export type UserAccountData = {
+    orders: any[],
+    
+}
 
 

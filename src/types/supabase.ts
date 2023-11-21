@@ -220,6 +220,7 @@ export interface Database {
           id: string
           metadata: Json | null
           price_id: string | null
+          product_name: string | null
           quantity: number | null
           user_id: string
         }
@@ -229,6 +230,7 @@ export interface Database {
           id: string
           metadata?: Json | null
           price_id?: string | null
+          product_name?: string | null
           quantity?: number | null
           user_id: string
         }
@@ -238,6 +240,7 @@ export interface Database {
           id?: string
           metadata?: Json | null
           price_id?: string | null
+          product_name?: string | null
           quantity?: number | null
           user_id?: string
         }

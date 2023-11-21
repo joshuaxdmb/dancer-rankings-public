@@ -95,7 +95,7 @@ const Sidebar = ({ children }: Props) => {
   // Sidebar content for code reuse
   const sidebarContent = (
     <div
-      className={`flex flex-col gap-y-2 h-full w-[300px] md:p-2 transition-transform duration-300 overflow-y-scroll scrollbar-hide ${
+      className={`flex flex-col gap-y-2 h-full w-[300px] pr-2 transition-transform duration-300 overflow-y-scroll scrollbar-hide ${
         !visible ? '-translate-x-full' : ''
       }`}
     >

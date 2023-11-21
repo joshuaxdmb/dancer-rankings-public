@@ -10,6 +10,45 @@ class SupabaseWrapper {
         this.client = client;
     }
 
+    async vote10x (songSpotifyId: string, userId: string, partyId: string) {
+        //First check if user has 10x votes not consumer
+        const {data: orders, error} = await this.client
+        .from('orders')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('consumed_at', null)
+        .eq('product_name','Vote Booster 10x')
+
+        if(error){
+            console.error('Error fetching orders', error)
+            throw error
+        }
+
+        if(orders.length < 1){
+            return {error: 'Not vote boosters available'}
+        }
+
+        //Then add 10x votes to song
+        const {data:vote, error:voteError} = await this.voteSong(songSpotifyId, userId, LocationIdsEnum.global, partyId, 10)
+
+        if(voteError){
+            console.error('Error voting song', voteError)
+            throw voteError
+        }
+        //Then consume 10x vote
+        const {data: consume, error: consumeError} = await this.client
+        .from('orders')
+        .upsert([{
+            id: orders[0].id,
+            consumed_at: new Date().toISOString()
+        }])
+
+        if(consumeError){
+            console.error('Error consuming vote', consumeError)
+            throw consumeError
+        }
+    }
+
     async getProductsWithPrices(productName?: string) {
         let data, error
         if (!productName) {

@@ -8,6 +8,7 @@ export type SpotifyTokenResponse = {
     refresh_token: string;
     error?: string;
     error_description?: string;
+    expires_at?: number;
 };
 
 export async function POST(req: Request) {
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
         });
     
         const token = await tokenResponse.json() as SpotifyTokenResponse
+        token.expires_at = Date.now() + token.expires_in * 1000
         if(token.error){
             throw new Error(token.error_description || token.error)
         }
