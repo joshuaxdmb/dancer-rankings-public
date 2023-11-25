@@ -1,19 +1,18 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import {cookies} from 'next/headers'
-import { NextResponse} from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+import { cookies } from 'next/headers'
+import { NextResponse } from "next/server"
+import { stripe } from '@/lib/stripe'
+import { getUrl } from '@/lib/helpers'
+import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin"
 
-import {stripe} from '@/lib/stripe'
-import {getUrl} from '@/lib/helpers'
-import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin";
-
-export async function POST(){
-    try{
+export async function POST() {
+    try {
         const supabase = createRouteHandlerClient({
             cookies,
         })
 
-        const {data:{user}} = await supabase.auth.getUser()
-        if(!user){
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
             throw new Error('User not found')
         }
 
@@ -22,22 +21,22 @@ export async function POST(){
             email: user?.email || ''
         })
 
-        if(!customer){
+        if (!customer) {
             throw new Error('Customer not found')
         }
 
-        const {url} = await stripe.billingPortal.sessions.create({
+        const { url } = await stripe.billingPortal.sessions.create({
             customer,
             return_url: `${getUrl()}/account`,
         })
 
-        return NextResponse.json({url})
+        return NextResponse.json({ url })
 
-    } catch (err: any){
+    } catch (err: any) {
         console.log('Error creating checkout session', err.message)
         return new NextResponse(
             'Internal Error',
-            {status: 500}
+            { status: 500 }
         )
     }
 }

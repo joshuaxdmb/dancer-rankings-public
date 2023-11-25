@@ -1,10 +1,10 @@
 'use client';
-import Header from '@/app/components/Header';
+import Header from '@/app/components/layout/Header';
 import { useRecoilState } from 'recoil';
 import PlayingBar from '../components/PlayingBar';
-import SongsCenter from '../components/SongsCenter';
+import SongsCenter from '../components/layout/SongsCenter';
 import { housePartyAtom } from '@/atoms/housePartyAtom';
-import CreateHouseParty from './CreateHouseParty';
+import CreateHouseParty from './components/CreateHouseParty';
 import HousePartyBadge from './HousePartyBadge';
 
 export default function Home() {

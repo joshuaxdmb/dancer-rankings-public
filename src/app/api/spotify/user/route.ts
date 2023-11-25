@@ -10,6 +10,6 @@ export default async function handler(req: Request) {
     });
 
     const data = await userResponse.json();
-    
+
     Response.json(data);
 }

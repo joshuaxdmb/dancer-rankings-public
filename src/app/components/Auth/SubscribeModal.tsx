@@ -1,14 +1,14 @@
 'use client';
 
 import { Price, ProductWithPrice } from '@/types/types';
-import Modal from '../Modal';
-import SytledButton from '../SytledButton';
+import Modal from '../layout/Modal';
+import SytledButton from '../global/SytledButton';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { postData } from '@/lib/helpers';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
-import Box from '../Box';
+import Box from '../global/Box';
 import { BeatLoader } from 'react-spinners';
 import FireAnimation from '../../animations/FireLottie';
 import { MdCheckCircle } from 'react-icons/md';

@@ -12,12 +12,12 @@ export type SpotifyTokenResponse = {
 };
 
 export async function POST(req: Request) {
-    try{
+    try {
         const { code, isNative } = await req.json();
-        if(!code) throw new Error('No code provided')
+        if (!code) throw new Error('No code provided')
 
-        const redirect_uri = (isNative? process.env.SPOTIFY_REDIRECT_URI_NATIVE : process.env.SPOTIFY_REDIRECT_URI_WEB ) || 'latindancersapp.com'
-    
+        const redirect_uri = (isNative ? process.env.SPOTIFY_REDIRECT_URI_NATIVE : process.env.SPOTIFY_REDIRECT_URI_WEB) || 'latindancersapp.com'
+
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -30,27 +30,19 @@ export async function POST(req: Request) {
                 redirect_uri
             }),
         });
-    
+
         const token = await tokenResponse.json() as SpotifyTokenResponse
         token.expires_at = Date.now() + token.expires_in * 1000
-        if(token.error){
+        if (token.error) {
             throw new Error(token.error_description || token.error)
         }
-        // const userResponse = await fetch('https://api.spotify.com/v1/me', {
-        //     headers: {
-        //         'Authorization': `Bearer ${token.access_token}`,
-        //     },
-        // });
-    
-        // const user = await userResponse.json();
-    
         return Response.json({
             token,
         });
     } catch (error) {
         let e = (error as any)?.message || error
         return Response.json({
-            error:e
+            error: e
         });
     }
 }

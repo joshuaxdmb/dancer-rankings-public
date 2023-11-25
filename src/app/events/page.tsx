@@ -1,5 +1,5 @@
 'use client'
-import Header from '@/app/components/Header';
+import Header from '@/app/components/layout/Header';
 import { LocationIdsEnum, LocationLabels, PlaylistEnum, PlaylistLabels } from '@/content';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';

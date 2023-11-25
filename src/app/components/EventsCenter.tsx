@@ -9,10 +9,10 @@ import { useUser } from '@/hooks/useUser';
 import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
-import {updateEventsVotes,} from '@/utils/songsUtils';
+import {updateEventsVotes,} from '@/app/songs/songsUtils';
 import { BeatLoader } from 'react-spinners';
 import { eventVotesbyUserAtom, eventsAtom } from '@/atoms/eventsAtom';
-import EventItem from './EventItem';
+import EventItem from '../events/components/EventItem';
 
 type Props = {
   playlistFilter?: PlaylistEnum;

@@ -1,8 +1,8 @@
 import { useSpotify } from '@/hooks/useSpotify';
 import { useUser } from '@/hooks/useUser';
 import React, { useEffect, useState } from 'react';
-import Loading from '../components/Loading';
-import SytledButton from '../components/SytledButton';
+import Loading from '../../components/Loading';
+import SytledButton from '../../components/global/SytledButton';
 import toast from 'react-hot-toast';
 import {useSupabase} from '@/hooks/useSupabase'
 import { useRecoilState } from 'recoil';

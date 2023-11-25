@@ -543,9 +543,9 @@ export interface Database {
         Row: {
           avatar_url: string | null
           billing_address: Json | null
+          birthdate: string | null
           default_location: string
-          email: string | null
-          email: string | null
+          email: string
           follow_level: Database["public"]["Enums"]["dance_levels"] | null
           full_name: string | null
           gender: Database["public"]["Enums"]["genders"]
@@ -558,9 +558,9 @@ export interface Database {
         Insert: {
           avatar_url?: string | null
           billing_address?: Json | null
+          birthdate?: string | null
           default_location: string
-          email?: string | null
-          email?: string | null
+          email: string
           follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
           gender: Database["public"]["Enums"]["genders"]
@@ -573,9 +573,9 @@ export interface Database {
         Update: {
           avatar_url?: string | null
           billing_address?: Json | null
+          birthdate?: string | null
           default_location?: string
-          email?: string | null
-          email?: string | null
+          email?: string
           follow_level?: Database["public"]["Enums"]["dance_levels"] | null
           full_name?: string | null
           gender?: Database["public"]["Enums"]["genders"]

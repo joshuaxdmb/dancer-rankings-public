@@ -5,19 +5,18 @@ import { ClassOfferedByInstructor, DanceLevelsEnum, DanceRolesEnum } from "./dan
 //Music
 export interface UserDetailsType {
     id: string;
-    first_name: string;
-    last_name: string;
     full_name?: string;
-    avatar_url?: Stripe.Address;
-    payment_meethod?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
-    email?: string;
-    payment_method:null
-    votes_bachata_songs?:string
-    votes_events?:string
-    votes_salsa_songs?:string
-    votes_zouk_songs?:string
+    avatar_url?: string
     billing_address?: Stripe.Address;
-    default_location?:string
+    email?: string;
+    payment_method: any;
+    username?: string;
+    default_location?: string;
+    primary_dance_role?: DanceRolesEnum;
+    gender?: GendersEnum;
+    lead_level?: DanceLevelsEnum;
+    follow_level?: DanceLevelsEnum;
+    birthdate?: string;
 
 }
 
@@ -61,7 +60,7 @@ export interface VotesMap {
     };
 };
 
-export interface SpotifySong{
+export interface SpotifySong {
     album: any;
     artists: any[];
     available_markets: string[];
@@ -151,7 +150,7 @@ export enum Routes {
     Events = '/events',
     Songs = '/songs',
     Classes = '/classes',
-    HouseParty='/houseparty'
+    HouseParty = '/houseparty'
 }
 
 export type ActiveLink = {
@@ -181,19 +180,19 @@ export type User = {
 }
 
 export enum GendersEnum {
-    Male='Male',
-    Female='Female',
-    X='X'
+    Male = 'Male',
+    Female = 'Female',
+    X = 'X'
 }
 
-export type UserSignUpType ={
+export type UserSignUpType = {
     email: string,
     default_location: LocationIdsEnum,
     password: string,
     gender: GendersEnum,
     primary_dance_role: DanceRolesEnum,
-    lead_level:DanceLevelsEnum,
-    follow_level:DanceLevelsEnum,
+    lead_level: DanceLevelsEnum,
+    follow_level: DanceLevelsEnum,
     full_name: string,
 }
 
@@ -209,12 +208,12 @@ export type EventType = {
     label: string,
     venue: string,
     location_link?: string,
-    event_site?:string,
+    event_site?: string,
     start_time: any,
     classes_included?: ClassOfferedByInstructor[],
     instructors: string,
     end_time: any,
-    event_location:LocationIdsEnum
+    event_location: LocationIdsEnum
 }
 
 export type EventLocalType = {
@@ -223,12 +222,12 @@ export type EventLocalType = {
     venue: string,
     location_link?: string,
     image_path?: string,
-    event_site?:string,
+    event_site?: string,
     start_time: any,
     classes_included?: string,
     instructors: string,
     end_time: any,
-    event_location:LocationIdsEnum,
+    event_location: LocationIdsEnum,
     total_votes: number,
 }
 
@@ -244,7 +243,7 @@ export type SpotifyTokenResponse = {
 export type RefreshTokenResponse = {
     token: SpotifyTokenResponse;
     user: any,
-    error:any
+    error: any
 }
 
 export type SpotifySession = {
@@ -280,7 +279,18 @@ export type SpotifyUserProfile = {
 
 export type UserAccountData = {
     orders: any[],
-    
+
+}
+
+export type UserOrder = {
+    id: string,
+    user_id: string,
+    metadata: any,
+    price_id: string,
+    quantity: number,
+    created: string,
+    consumed_at: string,
+    product_name: string,
 }
 
 

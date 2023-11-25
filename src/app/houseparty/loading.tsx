@@ -2,7 +2,7 @@
 
 import { BeatLoader } from 'react-spinners';
 
-import Box from "../components/Box"
+import Box from "../components/global/Box"
 
 const Loading = () =>{
     return (

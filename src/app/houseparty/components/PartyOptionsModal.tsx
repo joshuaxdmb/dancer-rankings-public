@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Modal from '../components/Modal';
+import Modal from '../../components/layout/Modal';
 import { useRecoilState } from 'recoil';
 import { housePartyAtom, isPartyOwnerAtom } from '@/atoms/housePartyAtom';
-import SytledButton from '../components/SytledButton';
+import SytledButton from '../../components/global/SytledButton';
 import { useSupabase } from '@/hooks/useSupabase';
 import usePartyOptionsModal from '@/hooks/usePartyOptionsModal';
 import useQrCodeModal from '@/hooks/useQRCodeModal';

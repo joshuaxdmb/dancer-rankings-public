@@ -1,34 +1,34 @@
-'use client';
-import Header from '@/app/components/Header';
-import MainLinkItem from '@/app/components/MainLinkItem';
-import { playlistAtom } from '@/atoms/playlistAtom';
-import { spotifySessionAtom } from '@/atoms/spotifyAtom';
-import { PlaylistEnum, ActiveLinks } from '@/content';
-import { useUser } from '@/hooks/useUser';
-import { Capacitor } from '@capacitor/core';
-import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
-import { App } from '@capacitor/app';
-import toast from 'react-hot-toast';
-import { usePersistentRecoilState } from '@/hooks/usePersistentState';
+/*
+The Home component is the main page of our web application, primarily handling user authentication and Spotify session integration. 
+It leverages React hooks for state management and dynamically generates navigation links, adapting to both web and native mobile environments.
+*/
+'use client'
+import Header from '@/app/components/layout/Header'
+import MainLinkItem from '@/app/components/MainLinkItem'
+import { playlistAtom } from '@/atoms/playlistAtom'
+import { spotifySessionAtom } from '@/atoms/spotifyAtom'
+import { PlaylistEnum, ActiveLinks } from '@/content'
+import { useUser } from '@/hooks/useUser'
+import { Capacitor } from '@capacitor/core'
+import { usePathname } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
+import { App } from '@capacitor/app'
+import toast from 'react-hot-toast'
+import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 
 export default function Home() {
-  const { user, userDetails } = useUser();
-  const [showMessage, setShowMessage] = useState(false); // New state for showing buttons
-  const [topMargin, setTopMargin] = useState(true);
-  const pathname = usePathname();
-  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom);
-  const isNative = Capacitor.isNativePlatform();
-  const [spotifySession, setSpotifySession] =
-    usePersistentRecoilState(spotifySessionAtom);
+  const { user, userDetails } = useUser()
+  const [showMessage, setShowMessage] = useState(false) // New state for showing buttons
+  const [topMargin, setTopMargin] = useState(true)
+  const pathname = usePathname()
+  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
+  const isNative = Capacitor.isNativePlatform()
+  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
   const fetchSpotifySession = async (authCode: any) => {
-    toast.success('Almost done...', { id: 'spotify-login' });
-    if (
-      spotifySession?.token &&
-      spotifySession?.token?.expires_at > Date.now()
-    ) {
-      return;
+    toast.success('Almost done...', { id: 'spotify-login' })
+    if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
+      return
     }
     try {
       const res = await fetch('/api/spotify/session', {
@@ -37,51 +37,51 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ code: authCode, isNative }),
-      });
-      const session = await res.json();
-      console.log('Spotify session response', session);
-      if (session.error) throw new Error(session.error);
-      setSpotifySession(session);
-      window.history.pushState({}, '', '/');
+      })
+      const session = await res.json()
+      console.log('Spotify session response', session)
+      if (session.error) throw new Error(session.error)
+      setSpotifySession(session)
+      window.history.pushState({}, '', '/')
     } catch (e) {
-      console.log('Failed to get spotify session', e);
+      console.log('Failed to get spotify session', e)
     }
-  };
+  }
 
   //Handle Spotify callback on mobile
   useEffect(() => {
     if (isNative) {
       App.addListener('appUrlOpen', (event) => {
-        const url = new URL(event.url);
+        const url = new URL(event.url)
         if (url.pathname === '/spotify_callback') {
-          const authCode = url.searchParams.get('code');
+          const authCode = url.searchParams.get('code')
           if (authCode) {
-            fetchSpotifySession(authCode);
+            fetchSpotifySession(authCode)
           }
         }
-      });
+      })
 
       return () => {
-        App.removeAllListeners();
-      };
+        App.removeAllListeners()
+      }
     } else {
       const handleAuthCode = async () => {
-        const url = window.location.href;
-        const hasCode = url.includes('?code=');
+        const url = window.location.href
+        const hasCode = url.includes('?code=')
         if (hasCode) {
-          const newUrl = new URL(url);
-          const authCode = newUrl.searchParams.get('code');
-          console.log('Got spotify code', authCode);
+          const newUrl = new URL(url)
+          const authCode = newUrl.searchParams.get('code')
+          console.log('Got spotify code', authCode)
           if (authCode) {
-            fetchSpotifySession(authCode);
+            fetchSpotifySession(authCode)
           }
         }
-      };
+      }
       if (!isNative) {
-        handleAuthCode();
+        handleAuthCode()
       }
     }
-  });
+  })
 
   const routes = useMemo(
     () =>
@@ -90,68 +90,63 @@ export default function Home() {
         active: pathname === link.href,
         href: link.href,
         icon: link.icon ? link.icon : null,
-        onClick: link.playlist
-          ? () => setPlaylist(link.playlist as PlaylistEnum)
-          : null,
+        onClick: link.playlist ? () => setPlaylist(link.playlist as PlaylistEnum) : null,
         emoji: link.emoji ? link.emoji : null,
       })),
     [pathname, playlist]
-  ); //eslint-disable-line
+  ) //eslint-disable-line
 
   useEffect(() => {
-    setTopMargin(window.innerWidth <= 768);
-  }, []);
+    setTopMargin(window.innerWidth <= 768)
+  }, [])
 
   useEffect(() => {
     // Function to handle the resize event
     const handleResize = () => {
       if (window.innerWidth <= 768 && !topMargin) {
         // If window width is greater than or equal to 768px and sidebar is hidden, show the sidebar
-        setTopMargin(true);
+        setTopMargin(true)
       } else if (window.innerWidth > 768 && topMargin) {
-        setTopMargin(false);
+        setTopMargin(false)
       }
-    };
+    }
 
     // Attach the resize event listener
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize)
 
     // Cleanup: remove the event listener when the component is unmounted
     return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [topMargin]);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [topMargin])
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowMessage(true);
-    }, 1000); // 2-second delay
+      setShowMessage(true)
+    }, 1000) // 2-second delay
 
-    return () => clearTimeout(timer); // Clear the timer on component unmount
-  }, []);
+    return () => clearTimeout(timer) // Clear the timer on component unmount
+  }, [])
 
   return (
     <div
-      className="
+      className='
         bg-neutral-900 
         rounded-lg 
         h-full 
         w-full 
         overflow-hidden 
         overflow-y-auto
-      "
-    >
+        scrollbar-hide
+      '>
       <Header
-        className=""
+        className=''
         pageTitle={
           userDetails
-            ? `Hi ${
-                userDetails.first_name || userDetails.full_name || 'there'
-              } 👋! `
+            ? `Hi ${userDetails.full_name || 'there'} 👋! `
             : `If you're not a dancer, kindly close your browser 💃 🕺`
-        }
-      ></Header>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4">
+        }></Header>
+      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4'>
         {routes.map((al) => (
           <MainLinkItem
             key={al.label}
@@ -163,5 +158,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  );
+  )
 }

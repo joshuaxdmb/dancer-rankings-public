@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"
 import { stripe } from '@/lib/stripe'
-import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin";
+import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin"
 
 export async function POST(request: Request) {
     const { price, user, mode, isNative, quantity = 1, metadata = {} } = await request.json()

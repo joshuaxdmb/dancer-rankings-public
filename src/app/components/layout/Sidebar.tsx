@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Routes } from '@/types/types';
 import { HiHome } from 'react-icons/hi';
-import Box from './Box';
+import Box from '../global/Box';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { HiMiniXMark } from 'react-icons/hi2';
@@ -12,7 +12,7 @@ import { useUser } from '@/hooks/useUser';
 import { PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { playlistAtom } from '@/atoms/playlistAtom';
-import AuthButtons from './Auth/SidebarButtons';
+import AuthButtons from '../auth/SidebarButtons';
 
 type Props = { children: React.ReactNode };
 //const windowWidth = window?.innerWidth
@@ -99,7 +99,7 @@ const Sidebar = ({ children }: Props) => {
         !visible ? '-translate-x-full' : ''
       }`}
     >
-      <Box className="overflow-y-auto h-full">
+      <Box className="overflow-y-auto h-full scrollbar-hide">
         <button
           onClick={() => {
             setVisible(false);
@@ -135,7 +135,7 @@ const Sidebar = ({ children }: Props) => {
   );
 
   return (
-    <div className="flex h-full relative">
+    <div className="flex h-full relative scrollbar-hide">
       {visible ? null : (
         <button
           onClick={() => {

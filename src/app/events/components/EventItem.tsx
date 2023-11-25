@@ -11,7 +11,7 @@ import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
 import ChevronUpIcon from '@heroicons/react/24/outline/ChevronUpIcon';
 import { HiMapPin } from 'react-icons/hi2';
 import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
-import SytledButton from './SytledButton';
+import SytledButton from '../../components/global/SytledButton';
 import { useRouter } from 'next/navigation';
 
 

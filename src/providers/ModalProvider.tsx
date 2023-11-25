@@ -1,10 +1,10 @@
 'use client';
-import AuthModal from '@/app/components/Auth/AuthModal';
+import AuthModal from '@/app/components/auth/AuthModal';
 import { useEffect, useState } from 'react';
-import SubscribeModal from '../app/components/Auth/SubscribeModal';
+import SubscribeModal from '../app/components/auth/SubscribeModal';
 import { ProductWithPrice } from '@/types/types';
-import QRCodeModal from '@/app/houseparty/QRCodeModal';
-import PartyOptionsModal from '@/app/houseparty/PartyOptionsModal';
+import QRCodeModal from '@/app/houseparty/components/QRCodeModal';
+import PartyOptionsModal from '@/app/houseparty/components/PartyOptionsModal';
 
 interface ModalProviderProps {
 }

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-export default async function handler(req:Request) {
+export default async function handler(req: Request) {
     const { code } = await req.json();
     console.log(`Basic ${Buffer.from(process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID + ':' + process.env.NEXT_SPOTIFY_CLIENT_SECRET).toString('base64')}`)
 
@@ -17,7 +17,7 @@ export default async function handler(req:Request) {
         }),
     });
 
-    const data:any = await tokenResponse.json();
+    const data: any = await tokenResponse.json();
 
     return Response.json({
         accessToken: data.access_token,

@@ -13,11 +13,11 @@ import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
 import { songsAtom } from '@/atoms/songsAtom';
-import SongItem from './SongItem';
+import SongItem from '../SongItem';
 import { votesByUserAtom } from '@/atoms/votesByUserAtom';
-import { mergeSongs, mergeVotes, updateSongsVotes } from '@/utils/songsUtils';
+import { mergeSongs, mergeVotes, updateSongsVotes } from '@/app/songs/songsUtils';
 import { currentTrackAtom } from '@/atoms/playingSongAtom';
-import SearchBar from './SearchBar';
+import SearchBar from '../SearchBar';
 import { BeatLoader } from 'react-spinners';
 import { useSupabase } from '@/hooks/useSupabase';
 

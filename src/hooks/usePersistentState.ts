@@ -5,7 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences'
 
 
-export const usePersistentRecoilState = (atom:RecoilState<any>,) => {
+export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
     const cookieName = 'latindancers' + atom.key;
     const isNative = Capacitor.isNativePlatform();
     const [state, setState] = useRecoilState(atom);

@@ -1,5 +1,5 @@
 import React from 'react';
-import StyledButton from '../SytledButton';
+import StyledButton from '../global/SytledButton';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { LocationIdsEnum, Locations } from '@/content';
 import { useRecoilState } from 'recoil';
