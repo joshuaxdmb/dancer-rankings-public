@@ -12,7 +12,7 @@ import { useUser } from '@/hooks/useUser';
 import { PlaylistEnum } from '@/content';
 import { useRecoilState } from 'recoil';
 import { playlistAtom } from '@/atoms/playlistAtom';
-import AuthButtons from '../auth/SidebarButtons';
+import AuthButtons from '../authentication/SidebarButtons';
 
 type Props = { children: React.ReactNode };
 //const windowWidth = window?.innerWidth

@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Latin Dancers App
 
-## Getting Started
+## Your hobby's hub 🤩
 
-First, run the development server:
+This is the central hub for all those latin dancing aficionados and pros. 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Your local DJs suck or can improve? Let them know what you like 🎵
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This app allows you to vote for songs and decide what's being played at parties.
+You can vote by category: salsa, bachata and zouk (more coming soon)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Really good parties 🎉
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You can also host parties and allow your invitees to vote for what song they want up next - don't worry, we're not repeating songs, unless you ask. 
 
-## Learn More
+## Vote for events 🌶️
 
-To learn more about Next.js, take a look at the following resources:
+Wondering wha social is going to be good this weekend? Check out the events people are voting for and don't miss out on the best socials
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## More features coming soon 🤩
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Smooth privates searching and booking
 
-## Deploy on Vercel
+We are working with instructors to figure out a way to let you book privates - simply, and easily - from the app. You will be able to check the instructors
+availability and find a time that works best for you.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Keep track of your progress 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+We will work with instructors so they can give you feedback and assign you a 'level', so you know exactly where you stand as a
+leader or a follower
+
+### Buy tickets for events 🤞
+
+We will offer event organizers options to let you pay for tickets from the app. How will this help you? No more going to the ATM. No more carrying cash with you if you don't want to. Plus, you will be able to keep track of all the socials you go to and see how much practice you're getting (or just go down memory lane from time to time)

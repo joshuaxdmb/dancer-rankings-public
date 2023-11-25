@@ -1,7 +1,7 @@
 'use client';
-import AuthModal from '@/app/components/auth/AuthModal';
+import AuthModal from '@/app/components/authentication/AuthModal';
 import { useEffect, useState } from 'react';
-import SubscribeModal from '../app/components/auth/SubscribeModal';
+import SubscribeModal from '../app/components/authentication/SubscribeModal';
 import { ProductWithPrice } from '@/types/types';
 import QRCodeModal from '@/app/houseparty/components/QRCodeModal';
 import PartyOptionsModal from '@/app/houseparty/components/PartyOptionsModal';

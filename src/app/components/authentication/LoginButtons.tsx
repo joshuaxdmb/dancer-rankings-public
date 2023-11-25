@@ -1,15 +1,12 @@
 import React from 'react'
 import useAuthModal from '@/hooks/useAuthModal'
-import { signIn } from 'next-auth/react'
 
 import StyledButton from '../global/SytledButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpotify } from '@fortawesome/free-brands-svg-icons'
-import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { Capacitor } from '@capacitor/core'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
 import { Browser } from '@capacitor/browser'
-import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { SpotifyProfile } from 'next-auth/providers/spotify'
 
 type Props = {

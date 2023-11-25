@@ -13,7 +13,7 @@ import Script from 'next/script'
 const font = Figtree({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '💃🕺 Dancers Rankings App',
+  title: '💃🕺 Latin Dancers App',
   description: 'The best music and events ranked by dancers',
   icons: {
     icon: 'icon.svg',

@@ -102,7 +102,7 @@ const Center = ({playlist}: Props) => {
     }
 
     if (!userDetails?.display_name) {
-      toast.error('You log into spotify to add a song', {
+      toast.error('You must log into spotify to add a song', {
         id: 'failed-add-song-spotify',
       });
       return;
@@ -177,7 +177,7 @@ const Center = ({playlist}: Props) => {
 
   const handleVote = async (song: SongLocal, vote: number) => {
     if (!user) {
-      toast.error('You log in to upvote a song', {
+      toast.error('You must log in to upvote a song', {
         id: 'failed-upvote-song-supabase',
       });
       return;
