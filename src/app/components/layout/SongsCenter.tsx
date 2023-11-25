@@ -16,7 +16,7 @@ import { songsAtom } from '@/atoms/songsAtom';
 import SongItem from '../SongItem';
 import { votesByUserAtom } from '@/atoms/votesByUserAtom';
 import { mergeSongs, mergeVotes, updateSongsVotes } from '@/app/songs/songsUtils';
-import { currentTrackAtom } from '@/atoms/playingSongAtom';
+import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
 import SearchBar from '../SearchBar';
 import { BeatLoader } from 'react-spinners';
 import { useSupabase } from '@/hooks/useSupabase';
@@ -34,6 +34,7 @@ const Center = ({playlist}: Props) => {
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
   const supabaseClient = useSupabase()
   const [isLoading, setIsLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
 
   useEffect(() => {
     !isLoading && setIsLoading(true);
@@ -85,7 +86,11 @@ const Center = ({playlist}: Props) => {
   }, [user, playlist, location]); //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {
+    if(song !== currentTrack){
+      setIsPlaying(true)
+    }
     setCurrentTrack(song);
+
   };
 
   const handleAddSong = async (songDetails: SpotifySong) => {

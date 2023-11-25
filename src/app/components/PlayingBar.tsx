@@ -23,7 +23,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [location] = useRecoilState<any>(locationAtom)
   const [songs] = useRecoilState<any>(songsAtom);
-  const [isPlaying] = useRecoilState(isPlayingAtom);
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const [songIndex, setSongIndex] = useState<number | null>(null);
   const { userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
   const [player, setPlayer] = useState<Player | undefined>();
@@ -58,9 +58,15 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
     }
     if (isPlaying) {
       player?.pause();
+      if(player instanceof NonPremiumPlayer){
+        setIsPlaying(false) //non premium player doesn't automatically set this
+      }
     } else {
       try{
         player?.play(currentTrack)
+        if(player instanceof NonPremiumPlayer){
+          setIsPlaying(true) //non premium player doesn't automatically set this
+        }
       }
       catch(err: any) {
         console.error('ERROR', err);

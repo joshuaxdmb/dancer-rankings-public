@@ -1,4 +1,4 @@
-import { DanceLevels, DanceRoles } from '@/types/danceClassesTypes';
+import { DanceLevelsEnum, DanceRolesEnum } from '@/types/danceClassesTypes';
 import { EventLocalType } from '@/types/types';
 import { toBeautifulDateTime } from '@/utils/utils';
 import Image from 'next/image';
@@ -22,34 +22,34 @@ type Props = {
   userVote: boolean;
 };
 
-const getRolesTitle = (role: DanceRoles) => {
+const getRolesTitle = (role: DanceRolesEnum) => {
   switch (role) {
-    case DanceRoles.follow:
+    case DanceRolesEnum.follow:
       return 'for followers';
-    case DanceRoles.lead:
+    case DanceRolesEnum.lead:
       return 'for leaders';
-    case DanceRoles.both:
+    case DanceRolesEnum.both:
       return 'partnerwork';
   }
 };
 
-const getBroadCategory = (level: DanceLevels): string => {
+const getBroadCategory = (level: DanceLevelsEnum): string => {
   switch (level) {
-    case DanceLevels.beginner1:
-    case DanceLevels.beginner2:
+    case DanceLevelsEnum.beginner1:
+    case DanceLevelsEnum.beginner2:
       return 'Beginner';
-    case DanceLevels.intermediate1:
-    case DanceLevels.intermediate2:
+    case DanceLevelsEnum.intermediate1:
+    case DanceLevelsEnum.intermediate2:
       return 'Intermediate';
-    case DanceLevels.advanced:
+    case DanceLevelsEnum.advanced:
       return 'Advanced';
     default:
       return '';
   }
 };
 
-const getLevelsTitle = (levels: DanceLevels[]): string => {
-  const allLevels = Object.values(DanceLevels);
+const getLevelsTitle = (levels: DanceLevelsEnum[]): string => {
+  const allLevels = Object.values(DanceLevelsEnum);
 
   // Convert the input levels into their corresponding index values
   const levelIndices = levels.map((level) => allLevels.indexOf(level));

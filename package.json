@@ -13,7 +13,7 @@
     "stripe-forward": "stripe listen --forward-to localhost:3000/api/stripe-webhooks",
     "stripe": "npm run stripe-login && npm run stripe-forward",
     "stripe-test": "stripe trigger payment_intent.succeeded",
-    "static": "next build && next export"
+    "static": "NODE_ENV=production next build && next export"
   },
   "dependencies": {
     "@capacitor/android": "^5.5.1",

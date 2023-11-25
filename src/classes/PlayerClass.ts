@@ -48,6 +48,10 @@ export class NonPremiumPlayer extends Player {
             toast.error('No preview available for this song. Spotify Premium needed');
             return
         }
+        if(this.audioInstance){ 
+            this.audioInstance.pause()
+            this.audioInstance.remove()
+        }
         this.audioInstance = new Audio(song?.preview_url || '');
         this.audioInstance.play();
     }
