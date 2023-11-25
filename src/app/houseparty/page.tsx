@@ -5,7 +5,7 @@ import PlayingBar from '../components/PlayingBar';
 import SongsCenter from '../components/layout/SongsCenter';
 import { housePartyAtom } from '@/atoms/housePartyAtom';
 import CreateHouseParty from './components/CreateHouseParty';
-import HousePartyBadge from './HousePartyBadge';
+import HousePartyBadge from './components/HousePartyBadge';
 
 export default function Home() {
   const [housePartyId] = useRecoilState<string | null>(housePartyAtom);

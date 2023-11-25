@@ -2,7 +2,7 @@
 import { signIn } from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(
+export async function GET(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

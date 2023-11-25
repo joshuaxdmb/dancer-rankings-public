@@ -1,7 +1,6 @@
 import { useUser } from '@/hooks/useUser'
 import React, { useEffect, useState } from 'react'
 import Box from '../../components/global/Box'
-import dayjs, { Dayjs } from 'dayjs'
 import {
   DanceLevelLabels,
   DanceRoleLabels,
@@ -16,7 +15,7 @@ import { useSpotify } from '@/hooks/useSpotify'
 import { FaEdit } from 'react-icons/fa'
 import StyledButton from '@/app/components/global/SytledButton'
 import BirthdayInputField from './BirthDayInput'
-import { shouldUpdateFromSpotify, shouldUpdateUser } from '../utils'
+import { shouldUpdateFromSpotify, shouldUpdateUser } from '../accountUtils'
 import { GendersEnum, UserDetailsType } from '@/types/types'
 import StyledTextInput from '../../components/StyledTextInput'
 import toast from 'react-hot-toast'
