@@ -1,5 +1,5 @@
-
 import SpotifyWebApi from "spotify-web-api-node";
+import { getUrl } from "./helpers"
 
 const scopes = [
     'user-read-email',
@@ -34,7 +34,7 @@ const spotifyApi = new SpotifyWebApi({
 
 const SPOTIFY_CLIENT_ID='10b68d8b3e99461586a62425e11a71fe'
 const SPOTIFY_REDIRECT_URI_CAPACITOR='latindancersapp://spotify_callback'
-const SPOTIFY_REDIRECT_URI='http://localhost:3000/'
+const SPOTIFY_REDIRECT_URI=getUrl()
 
 const client_params_web = new URLSearchParams({
     client_id:SPOTIFY_CLIENT_ID,

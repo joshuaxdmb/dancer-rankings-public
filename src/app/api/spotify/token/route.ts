@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 export async function POST(req: Request) {
     const { code } = await req.json();
-    console.log(`Basic ${Buffer.from(process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID + ':' + process.env.NEXT_SPOTIFY_CLIENT_SECRET).toString('base64')}`)
+    console.log(`Basic ${Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')}`)
 
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         body: new URLSearchParams({
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: process.env.NECT_PUBLIC_SPOTIFY_REDIRECT_URI || '',
+            redirect_uri: process.env.SPOTIFY_REDIRECT_URI || '',
         }),
     });
 
