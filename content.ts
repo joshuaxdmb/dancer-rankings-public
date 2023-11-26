@@ -1,5 +1,5 @@
-import { DanceLevelsEnum, DanceRolesEnum } from "./types/danceClassesTypes";
-import { ActiveLink, Routes } from "./types/types";
+import { DanceLevelsEnum, DanceRolesEnum } from "./src/types/danceClassesTypes";
+import { ActiveLink, Routes } from "./src/types/types";
 
 export enum LocationIdsEnum {
     toronto = 'toronto',

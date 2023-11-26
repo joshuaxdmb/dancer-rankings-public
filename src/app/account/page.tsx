@@ -5,7 +5,7 @@ Allows the user to edit their details and also to cancel their subscription (red
 'use client'
 import Header from '@/app/components/layout/Header'
 import { playlistAtom } from '@/atoms/playlistAtom'
-import { PlaylistEnum, ActiveLinks } from '@/content'
+import { PlaylistEnum, ActiveLinks } from '../../../content'
 import { useUser } from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'

@@ -7,7 +7,7 @@ import { NonPremiumPlayer, Player, PremiumPlayer } from '@/classes/PlayerClass';
 import toast from 'react-hot-toast';
 import {IoPlaySkipBackSharp, IoPlaySkipForwardSharp, IoPlayCircle} from 'react-icons/io5';
 import PlayingSong from './PlayingSong';
-import { PlaylistEnum } from '@/content';
+import { PlaylistEnum } from '../../../content';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import { songsAtom } from '@/atoms/songsAtom';
 import { locationAtom } from '@/atoms/locationAtom';

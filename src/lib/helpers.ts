@@ -1,8 +1,12 @@
 import { Price } from "@/types/types";
 import { User } from '@supabase/auth-helpers-nextjs';
 import Stripe from "stripe";
+import { Capacitor } from '@capacitor/core'
 
 export const getUrl = () => {
+    if(Capacitor.isNativePlatform()){
+        return process.env.SPOTIFY_REDIRECT_URI_NATIVE || 'latindancersapp://'
+    }
     let url = process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.NEXT_PUBLIC_VERCEL_URL ??
         'http://localhost:3000'

@@ -9,7 +9,7 @@ import { twMerge } from 'tailwind-merge';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useUser } from '@/hooks/useUser';
-import { PlaylistEnum } from '@/content';
+import { PlaylistEnum } from '../../../../content';
 import { useRecoilState } from 'recoil';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import AuthButtons from '../authentication/SidebarButtons';

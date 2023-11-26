@@ -1,4 +1,4 @@
-import { PlaylistEnum } from "@/content";
+import { PlaylistEnum } from "../../content";
 import { atom } from "recoil";
 
 export const playlistAtom = atom({
