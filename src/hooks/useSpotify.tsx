@@ -6,6 +6,7 @@ import { isPlayingAtom } from '@/atoms/playingSongAtom'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { usePersistentRecoilState } from './usePersistentState'
 import { SpotifySession } from '@/types/types'
+import { getUrl } from '@/lib/helpers'
 
 type SpotifyContextType = {
   togglePlay?: () => void
@@ -107,15 +108,20 @@ export const SpotifyProviderContext = (props: Props) => {
   }
 
   const initializeApi = async (access_token: any) => {
-    spotifyApi.setAccessToken(access_token)
-    const userDetails = await spotifyApi.getMe()
-    setUserDetails(userDetails.body)
-    toast.success('Linked Spotify', { id: 'spotify-login' })
+    try{
+      spotifyApi.setAccessToken(access_token)
+      const userDetails = await spotifyApi.getMe()
+      setUserDetails(userDetails.body)
+      toast.success('Linked Spotify', { id: 'spotify-login' })
+    } catch (e){
+      console.error('Failed to fetch Spotify user details', e)
+    }
+    
   }
 
   const refreshToken = async (session: SpotifySession) => {
     try {
-      const res = await fetch('/api/spotify/refresh-session', {
+      const res = await fetch(getUrl()+'api/spotify/refresh-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

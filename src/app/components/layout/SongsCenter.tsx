@@ -215,7 +215,8 @@ const Center = ({playlist}: Props) => {
   };
 
   return (
-    <div className="h-full mb-20 scrollbar-hide">
+    //TODO:check overscroll
+    <div className="overscroll-y-contain h-full mb-20 scrollbar-hide">
       <section className="flex items-center justify-center space-x-7 mb-0">
         <SearchBar
           handleAddSong={handleAddSong}

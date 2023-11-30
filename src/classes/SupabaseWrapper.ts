@@ -144,7 +144,8 @@ class SupabaseWrapper {
         return newParty
     }
 
-    async signInWithProvider(provider: Provider) {
+    async signInWithProvider(provider: Provider, isNewUser: boolean) {
+        const redirectUrl = isNewUser ? getUrl() + 'account' : getUrl()
         const { data, error } = await this.client.auth.signInWithOAuth({
             provider: provider,
             options: {
@@ -152,7 +153,7 @@ class SupabaseWrapper {
                     access_type: 'offline',
                     prompt: 'consent',
                 },
-                redirectTo: getUrl()
+                redirectTo: redirectUrl
             },
         })
 
@@ -161,7 +162,6 @@ class SupabaseWrapper {
         if (error) {
             throw error
         }
-
         return { data, error }
     }
 

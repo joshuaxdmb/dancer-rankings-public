@@ -79,9 +79,9 @@ type DanceRoleLabelsType = {
 }
 
 export const DanceRoleLabels:DanceRoleLabelsType = {
-    "lead":'Lead',
-    "follow":'Follow',
-    "both":'Both'
+    "Lead":'Lead',
+    "Follow":'Follow',
+    "Both":'Both'
 }
 
 export const PlaylistLabels = {

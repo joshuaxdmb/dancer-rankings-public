@@ -5,10 +5,12 @@ import { useUser } from '@/hooks/useUser'
 import { useEffect, useState } from 'react'
 import LoginButtons from '../authentication/LoginButtons'
 import { useSpotify } from '@/hooks/useSpotify'
-import { useRouter } from 'next/navigation'
 import UserBadge from '../UserBadge'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
+import { getPaddingTop } from './StatusBarSpacing'
+import { useRecoilState } from 'recoil'
+import { deviceDimensionsAtom } from '@/atoms/deviceDimensionsAtom'
 
 type Props = {
   children?: React.ReactNode
@@ -28,11 +30,18 @@ const Header: React.FC<Props> = ({
   const { user, isLoading } = useUser()
   const [visible, setVisible] = useState(true)
   const { userDetails } = useSpotify()
-  const router = useRouter()
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  const [paddingTop, setPaddingTop] = useState(20)
+  const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
+
+  async function setDeviceClasses() {
+    const padding = await getPaddingTop(5, deviceDimensions?.statusBarHeight)
+    setPaddingTop(padding)
+  }
 
   useEffect(() => {
     setVisible(window.innerWidth >= 768)
+    setDeviceClasses()
   }, [])
 
   useEffect(() => {
@@ -56,7 +65,7 @@ const Header: React.FC<Props> = ({
   }, [visible])
 
   return (
-    <div className={twMerge(`p-4 md:p-6 pt-7 bg-gradient-to-b from-purple-950`, className)}>
+    <div style={{paddingTop}} className={twMerge(`p-4 md:p-6 bg-gradient-to-b from-purple-950`, className)}>
       <div className='w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between'>
         <div className='flex gap-x-2 items-center lg:hidden' />
         {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}

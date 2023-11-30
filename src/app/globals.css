@@ -9,3 +9,11 @@ body,
   background-color: black;
   color-scheme: dark;
 }
+
+.page-padding {
+  padding-top:max(env(safe-area-inset-top),2.5rem);
+}
+
+.page-margin {
+  margin-top:max(env(safe-area-inset-top),2.5rem);
+}

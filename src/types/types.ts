@@ -17,6 +17,7 @@ export interface UserDetailsType {
     lead_level?: DanceLevelsEnum;
     follow_level?: DanceLevelsEnum;
     birthdate?: string;
+    
 
 }
 

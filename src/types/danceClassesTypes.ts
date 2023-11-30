@@ -9,9 +9,9 @@ export type Instructor = {
 }
 
 export enum DanceRolesEnum {
-    lead = 'lead',
-    follow = 'follow',
-    both = 'both'
+    Lead = 'Lead',
+    Follow = 'Follow',
+    Both = 'Both'
 }
 
 export type ClassOfferedByInstructor = {

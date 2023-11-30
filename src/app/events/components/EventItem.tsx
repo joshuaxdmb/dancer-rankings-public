@@ -24,11 +24,11 @@ type Props = {
 
 const getRolesTitle = (role: DanceRolesEnum) => {
   switch (role) {
-    case DanceRolesEnum.follow:
+    case DanceRolesEnum.Follow:
       return 'for followers';
-    case DanceRolesEnum.lead:
+    case DanceRolesEnum.Lead:
       return 'for leaders';
-    case DanceRolesEnum.both:
+    case DanceRolesEnum.Both:
       return 'partnerwork';
   }
 };

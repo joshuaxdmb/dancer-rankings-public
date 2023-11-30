@@ -38,11 +38,9 @@ const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         onClick={handlePress}
       >
-        <div className={`absolute mb-0 ${sparkleWidth ? 'w-['+sparkleWidth+'px]':'w-[150px]'}  h-[10px]`}>
-        {sparkle && <Sparkles count={5} minSize={12} fadeOutSpeed={10} flicker={false} />} {/* Sparkle component */}
+        <div className={`relative mb-0 ${sparkleWidth ? 'max-w-['+sparkleWidth+'px]':'max-w-[200px]'}  py-0`}>
+        <p className='flex flex-row items-center justify-center gap-1'>{isLoading && <BeatLoader color="#FFFFFF" size={5} />}{children} {sparkle &&  <Sparkles count={5} minSize={12} fadeOutSpeed={10} flicker={false} />}</p>
         </div>
-        {isLoading && <BeatLoader color="#FFFFFF" size={5} />}
-        {children}
       </button>
     );
   }
@@ -51,3 +49,10 @@ const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
 SytledButton.displayName = 'StyledButton';
 
 export default SytledButton;
+
+<div className='relative h-12 mt-2 text-center max-w-[300px]'>
+            <p>
+              You are on the <b>premium dancers</b> plan
+              <Sparkles count={5} minSize={5} fadeOutSpeed={10} flicker={false} />
+            </p>
+          </div>

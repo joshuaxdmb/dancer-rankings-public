@@ -39,7 +39,7 @@ const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
               authModal.setAuthOption('signup')
               authModal.onOpen()
             }}
-            className='bg-transparent text-neutral-200 font-medium'>
+            className='bg-transparent text-neutral-200 font-medium min-w-[100px]'>
             Sign Up
           </StyledButton>
         </div>
@@ -49,7 +49,7 @@ const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
               authModal.setAuthOption('login')
               authModal.onOpen()
             }}
-            className='bg-white px-6 py-2'>
+            className='bg-white px-6 py-2 min-w-[100px]'>
             Log In
           </StyledButton>
         </div>

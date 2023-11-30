@@ -36,6 +36,7 @@ export default function Home() {
         overflow-hidden 
         overflow-y-auto
         scrollbar-hide
+        overscroll-y-contain
         ${themes[playlist].pageBackground}
       `}>
       <Header

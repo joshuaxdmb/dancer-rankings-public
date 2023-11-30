@@ -109,7 +109,8 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   }
 
   return (
-    <div className={`flex h-20 w-full sticky bottom-0 pt-4 px-4 flex-row items-center justify-center ${backGroundColor || 'bg-black'} `}>
+    //TODO:CHECK overscroll
+    <div className={`overscroll-y-contain flex h-20 w-full sticky bottom-0 pt-4 px-4 pb-4 flex-row items-center justify-center ${backGroundColor || 'bg-black'} `}>
       <IoPlaySkipBackSharp onClick={handlePrevious} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
         <button className='mx-4 lg:mx-10 cursor-pointer' onClick={handlePlayPause}>
           {currentTrack? <PlayingSong isPlaying={isPlaying} song={currentTrack}/>

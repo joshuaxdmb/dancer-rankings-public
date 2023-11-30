@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import useSubscribeModal from '@/hooks/useSubscribeModal'
 import { useUser } from '@/hooks/useUser'
 import { useEffect, useState } from 'react'
-import { postData } from '@/lib/helpers'
+import { getUrl, postData } from '@/lib/helpers'
 import Sparkles from 'react-sparkle'
 import toast from 'react-hot-toast'
 import SytledButton from '../../components/global/SytledButton'
@@ -28,7 +28,7 @@ const AccountContent = () => {
     setLoading(true)
     try {
       const { url } = await postData({
-        url: '/api/create-portal-link',
+        url: getUrl() + 'api/create-portal-link',
       })
       window.location.assign(url)
     } catch (error) {
@@ -47,24 +47,27 @@ const AccountContent = () => {
         <div className='flex items-center flex-col sm:flex-row gap-2 justify-center w-full'>
           <p className='hidden sm:flex '>No active plan.</p>
           <SytledButton
+          sparkle
             onClick={subscribeModal.onOpen}
-            className='bg-green-400 px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2'>
+            className='bg-primary-purple px-6 py-3 my-2 max-w-[400px] flex items-center justify-center gap-x-2'>
             Go Premium
           </SytledButton>
         </div>
       ) : (
-        <div className='relative h-12 mt-2 text-center max-w-[300px]'>
-          <p>
-            You are on the <b>premium dancers</b> plan
-            <Sparkles count={5} minSize={5} fadeOutSpeed={10} flicker={false} />
-          </p>
-        </div>
+        <>
+          <div className='relative h-12 mt-2 text-center max-w-[300px]'>
+            <p>
+              You are on the <b>premium dancers</b> plan
+              <Sparkles count={5} minSize={5} fadeOutSpeed={10} flicker={false} />
+            </p>
+          </div>
+          <SytledButton
+            onClick={redirectToCustomerPortal}
+            className='bg-white bg-opacity-80 max-w-[400px] mb-5 flex flex-row items-center justify-center'>
+            Edit Subscription <FaLock className='ml-2' size={18} />{' '}
+          </SytledButton>
+        </>
       )}
-      <SytledButton
-        onClick={redirectToCustomerPortal}
-        className='bg-white bg-opacity-80 max-w-[400px] mb-5 flex flex-row items-center justify-center'>
-        Edit Subscription <FaLock className='ml-2' size={18} />{' '}
-      </SytledButton>
       <UserDetails />
       <h2 className='text-left w-full text-lg mt-2'>Your Orders</h2>
       <MyOrders />

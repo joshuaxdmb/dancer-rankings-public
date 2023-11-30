@@ -10,6 +10,7 @@ import ToasterProvider from '../providers/ToasterProvider'
 import SpotifyProvider from '../providers/SpotifyProvider'
 import Script from 'next/script'
 
+
 const font = Figtree({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

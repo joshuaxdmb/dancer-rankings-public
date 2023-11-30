@@ -19,6 +19,7 @@ import { shouldUpdateFromSpotify, shouldUpdateUser } from '../accountUtils'
 import { GendersEnum, UserDetailsType } from '@/types/types'
 import StyledTextInput from '../../components/StyledTextInput'
 import toast from 'react-hot-toast'
+import { isValidEmail } from '@/app/songs/songsUtils'
 
 type Props = {}
 
@@ -33,6 +34,7 @@ const UserDetails = ({}: Props) => {
   const [birthdate, setBirthdate] = useState<string>(userDetails?.birthdate || '')
   const [selectedLocation, setSelectedLocation] = useState(userDetails?.default_location)
   const [gender, setGender] = useState(userDetails?.gender)
+  const [enteredEmail, setEnteredEmail] = useState(userDetails?.email)
   //End form state
 
   const supabase = useSupabase()
@@ -46,13 +48,21 @@ const UserDetails = ({}: Props) => {
   }
 
   const handleSave = async () => {
+
+    if(!isValidEmail(enteredEmail)){
+      toast.error('Please enter a valid email')
+      return
+    }
     const insertData: UserDetailsType = {
       full_name: enteredName,
       primary_dance_role: primaryDanceRole,
       default_location: selectedLocation,
       birthdate: birthdate,
       gender,
+      email: enteredEmail,
     } as UserDetailsType
+
+    console.log('insertData', insertData)
 
     if (!shouldUpdateUser(insertData, userDetails)) {
       toast.success('No changes to save')
@@ -92,10 +102,11 @@ const UserDetails = ({}: Props) => {
           <div className={labelClass}>Your Email:</div>
           <StyledTextInput
             id='email'
-            value={userDetails.email}
-            setValue={() => {}}
+            type='email'
+            value={enteredEmail}
+            setValue={setEnteredEmail}
             placeholder={userDetails.email}
-            disabled={true}
+            disabled={!editable}
           />
           <div className={labelClass}>Your Birthday Dances:</div>
           <BirthdayInputField
@@ -122,9 +133,9 @@ const UserDetails = ({}: Props) => {
           ) : (
             <StyledTextInput
               id='location_uneditable'
-              value={LocationLabels[selectedLocation as LocationIdsEnum]}
+              value={gender}
               setValue={() => {}}
-              placeholder={userDetails.full_name}
+              placeholder={gender || ''}
               disabled={true}
             />
           )}
@@ -134,7 +145,7 @@ const UserDetails = ({}: Props) => {
               id='location'
               name='location'
               className='w-full p-2 border rounded mt-1'
-              value={LocationLabels[selectedLocation as LocationIdsEnum]}
+              value={selectedLocation}
               onChange={(e) => {
                 setSelectedLocation(e.target.value as LocationIdsEnum)
               }}>
@@ -149,7 +160,7 @@ const UserDetails = ({}: Props) => {
               id='location_uneditable'
               value={LocationLabels[selectedLocation as LocationIdsEnum]}
               setValue={() => {}}
-              placeholder={userDetails.full_name}
+              placeholder={LocationLabels[selectedLocation as LocationIdsEnum] || ''}
               disabled={true}
             />
           )}
@@ -166,7 +177,7 @@ const UserDetails = ({}: Props) => {
               disabled={!editable}>
               {Object.keys(DanceRolesEnum).map((dr) => (
                 <option key={dr} value={dr}>
-                  {DanceRoleLabels[dr as DanceRolesEnum]}
+                  {dr}
                 </option>
               ))}
             </select>

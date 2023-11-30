@@ -9,7 +9,8 @@ const MyOrders = (props: Props) => {
   const { userOrders } = useUser()
   return (
     <Box className='padding-2 drop-shadow-sm bg-white bg-opacity-10 px-5 py-5 rounded-md'>
-      {userOrders.map((order) => (
+      {userOrders.length === 0 ? <div>No orders yet</div> : 
+      userOrders.map((order) => (
         <div key={order.id} className='flex-row flex justify-between items-center'>
           <div>
             <div>{order.product_name}</div>
