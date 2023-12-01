@@ -1,3 +1,7 @@
+/*
+The sidebar wraps the main content of the app. It contains the navigation and the main content. 
+It is also responsible for handling its own visibility and setting other css classes based on the device
+*/
 'use client'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -37,6 +41,7 @@ const Sidebar = ({ children }: Props) => {
     setIsLoading(false)
   }
   useEffect(() => {
+    console.log('Beginning of Sidebar useEffect')
     setStatusBarHeight()
     setVisible(window.innerWidth >= 768)
   }, [])
@@ -170,7 +175,7 @@ const Sidebar = ({ children }: Props) => {
         {sidebarContent}
       </div>
       <main
-        className={`h-full flex-1 overflow-y-auto ${
+        className={`h-full flex-1 ${
           visible ? 'md:pl-[300px]' : ''
         }'md:pl-0' w-full`}>
         {children}

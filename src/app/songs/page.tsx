@@ -29,14 +29,12 @@ export default function Home() {
   return (
     <div
       className={`
-        bg-neutral-900 
+        bg-black
         rounded-lg 
-        h-full 
-        w-full 
-        overflow-hidden 
-        overflow-y-auto
-        scrollbar-hide
-        overscroll-y-contain
+        w-full
+        h-screen
+        flex
+        flex-col
         ${themes[playlist].pageBackground}
       `}>
       <Header

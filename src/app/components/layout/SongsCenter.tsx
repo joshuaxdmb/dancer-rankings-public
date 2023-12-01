@@ -216,24 +216,24 @@ const Center = ({playlist}: Props) => {
 
   return (
     //TODO:check overscroll
-    <div className="overscroll-y-contain h-full mb-20 scrollbar-hide">
-      <section className="flex items-center justify-center space-x-7 mb-0">
+    <div className="flex flex-col h-5/6">
+      <section className="flex items-center justify-center space-x-7">
         <SearchBar
           handleAddSong={handleAddSong}
           spotifyApi={spotifyApi}
           userDetails={userDetails}
         />
       </section>
-      <section>
+      <section className='flex flex-col overflow-y-auto'>
         {isLoading ? (
           <div className="w-full flex items-center justify-center flex-col h-screen">
             <div className="loader-container">
               <BeatLoader color="#FFFFFF" size={20} />
             </div>
             <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
-          </div>
+          </div >
         ) : songs[location]?.[playlist]?.length ? (
-          <div>
+          <div className='overflow-y-auto pb-20 scrollbar-hide'>
             {songs[location]?.[playlist]?.map(
               (song: SongLocal, index: number) => (
                 <SongItem
@@ -248,7 +248,7 @@ const Center = ({playlist}: Props) => {
             )}
           </div>
         ) : (
-          <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen">
+          <div className="text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen ">
             <h1>{`No songs found :( Try adding one!`}</h1>
           </div>
         )}

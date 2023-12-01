@@ -1,3 +1,6 @@
+/*
+This is the main layout component that wraps all pages. It contains all the providers and the sidebar.
+*/
 import Sidebar from '@/app/components/layout/Sidebar'
 import './globals.css'
 import type { Metadata } from 'next'
@@ -23,7 +26,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html className='scrollbar-hide' lang='en'>
+    <html className='scrollbar-hide overflow-x-hidden overflow-y-hidden' lang='en'>
       <body className={font.className}>
         <Script src='https://js.stripe.com/v3/' />
         <ToasterProvider />

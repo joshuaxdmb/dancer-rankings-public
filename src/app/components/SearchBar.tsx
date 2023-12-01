@@ -36,7 +36,7 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong}: Props) => {
       .catch((err: any) => {
         console.log('ERROR', err);
         if (err.statusCode === 401) {
-          toast.error('Your spotify session expired. Refreshing', {
+          toast.error('Your spotify session expired', {
             id: 'failed-spotify-search',
           });
           router.refresh();
@@ -77,7 +77,7 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong}: Props) => {
           className="flex-shrink-0"
         />
       </div>
-      <div className="flex items-center justify-center mt-8 w-full">
+      <div className="flex items-center justify-center mt-4 w-full">
         <SearchModal
           isOpen={searchOpen}
           songs={searchedSongs}

@@ -137,9 +137,6 @@ export default function Home() {
         rounded-lg 
         h-full 
         w-full 
-        overflow-hidden 
-        overflow-y-auto
-        scrollbar-hide
       '>
       <Header
         className=''
@@ -148,7 +145,8 @@ export default function Home() {
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
             : `If you're not a dancer, kindly close your browser 💃 🕺`
         }></Header>
-      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4'>
+      <div className=' h-screen overflow-y-auto pb-52 scrollbar-hide'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
         {routes.map((al) => (
           <MainLinkItem
             key={al.label}
@@ -158,6 +156,7 @@ export default function Home() {
             onClick={al.onClick}
           />
         ))}
+      </div>
       </div>
     </div>
   )

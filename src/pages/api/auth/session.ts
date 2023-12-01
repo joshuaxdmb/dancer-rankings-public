@@ -1,4 +1,3 @@
-// pages/api/session.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { authOptions } from './[...nextauth]';
 import { getToken } from 'next-auth/jwt';
