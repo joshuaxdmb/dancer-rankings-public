@@ -8,9 +8,10 @@ type Props = {
     disabled?: boolean;
     id:string
     type?: string;
+    className?: string;
 }
 
-const StyledTextInput = ({value,setValue, placeholder, disabled,id,type}: Props) => {
+const StyledTextInput = ({value,setValue, placeholder, disabled,id,type,className}: Props) => {
   return (
     <input
             id={id}
@@ -18,7 +19,7 @@ const StyledTextInput = ({value,setValue, placeholder, disabled,id,type}: Props)
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={placeholder}
-            className="text-gray-300 bg-transparent w-full py-2"
+            className={"text-gray-500 bg-transparent w-full py-2 z-20 rounded-md h-12 outline-primary-purple "+className}
             disabled={disabled}
           />
   )

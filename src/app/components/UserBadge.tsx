@@ -12,7 +12,7 @@ const UserBadge = ({userDetails}: Props) => {
     router.push('/account');
   };
   return (
-    <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0">
+    <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-lg flex-shrink-0 z-20">
       <Image
         width={25}
         height={25}

@@ -7,7 +7,7 @@ interface QRCodeGeneratorProps {
 }
 
 const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({partyId}) => {
-    const data = `LatinDancersApp:Party:${partyId}`;
+    const data = `https://latindancersapp.com://party-playlist?id=${partyId}`;
 
     return (
             <QRCode size={280} value={data} />

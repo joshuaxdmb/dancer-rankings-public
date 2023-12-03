@@ -65,16 +65,16 @@ const Header: React.FC<Props> = ({
   }, [visible])
 
   return (
-    <div style={{paddingTop}} className={twMerge(`p-4 md:p-6 bg-gradient-to-b from-purple-950`, className)}>
-      <div className='w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between'>
-        <div className='flex gap-x-2 items-center lg:hidden' />
+    <div style={{paddingTop}} className={twMerge(`p-4 md:p-6 bg-gradient-to-b from-purple-950 z-20`, className)}>
+      <div className='w-full mb-4 flex items-center justify-between md:justify-around lg:justify-between z-20'>
+        <div className='flex gap-x-2 items-center lg:hidden z-20' />
         {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
         <LoginButtons isLoading={isLoading} user={user} spotifySession={spotifySession} />
         {pageBadge
           ? pageBadge
           : user && userDetails && showUserBadge && <UserBadge userDetails={userDetails} />}
       </div>
-      {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
+      {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold z-20'>{pageTitle}</h1>}
       {children}
     </div>
   )

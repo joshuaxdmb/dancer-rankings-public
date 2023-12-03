@@ -3,8 +3,8 @@ import AuthModal from '@/app/components/authentication/AuthModal';
 import { useEffect, useState } from 'react';
 import SubscribeModal from '../app/components/authentication/SubscribeModal';
 import { ProductWithPrice } from '@/types/types';
-import QRCodeModal from '@/app/houseparty/components/QRCodeModal';
-import PartyOptionsModal from '@/app/houseparty/components/PartyOptionsModal';
+import QRCodeModal from '@/app/party-playlist/components/ShowPartyQRCodeModal';
+import PartyOptionsModal from '@/app/party-playlist/components/PartyOptionsModal';
 
 interface ModalProviderProps {
 }

@@ -153,9 +153,9 @@ export const ActiveLinks: Array<ActiveLink> = [
         label:'Book Classes',
     },
     {
-        href: Routes.HouseParty,
+        href: Routes.PartyPlaylist,
         emoji:'🎉',
-        label:'House Party',
+        label:'Party Playlist',
     },
 ]
 

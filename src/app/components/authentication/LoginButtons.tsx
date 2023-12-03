@@ -36,16 +36,6 @@ const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
         <div>
           <StyledButton
             onClick={() => {
-              authModal.setAuthOption('signup')
-              authModal.onOpen()
-            }}
-            className='bg-transparent text-neutral-200 font-medium min-w-[100px]'>
-            Sign Up
-          </StyledButton>
-        </div>
-        <div>
-          <StyledButton
-            onClick={() => {
               authModal.setAuthOption('login')
               authModal.onOpen()
             }}

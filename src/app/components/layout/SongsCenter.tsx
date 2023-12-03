@@ -222,6 +222,7 @@ const Center = ({playlist}: Props) => {
           handleAddSong={handleAddSong}
           spotifyApi={spotifyApi}
           userDetails={userDetails}
+          handleSelectSong={selectSong}
         />
       </section>
       <section className='flex flex-col overflow-y-auto'>

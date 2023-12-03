@@ -3,12 +3,12 @@ import Header from '@/app/components/layout/Header';
 import { useRecoilState } from 'recoil';
 import PlayingBar from '../components/PlayingBar';
 import SongsCenter from '../components/layout/SongsCenter';
-import { housePartyAtom } from '@/atoms/housePartyAtom';
-import CreateHouseParty from './components/CreateHouseParty';
-import HousePartyBadge from './components/HousePartyBadge';
+import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom';
+import CreatePartyPlaylist from './components/CreatePartyPlaylist';
+import PartyBadge from './components/PartyBadge';
 
 export default function Home() {
-  const [housePartyId] = useRecoilState<string | null>(housePartyAtom);
+  const [partyPlaylistId] = useRecoilState<string | null>(partyPlaylistAtom);
 
   const theme = {
     pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
@@ -22,16 +22,17 @@ export default function Home() {
         bg-neutral-900 
         rounded-lg 
         h-full 
-        w-full 
+        w-full
+        z-20
         ${theme.pageBackground}
       `}
     >
-      <Header className="bg-none" pageTitle={`What are we dancing to? 🎉`} pageBadge={housePartyId ? <HousePartyBadge partyId={housePartyId}/> : undefined} />
-      {!housePartyId ? (
-        <CreateHouseParty />
+      <Header className="bg-none z-20" pageTitle={`What are we dancing to? 🎉`} pageBadge={partyPlaylistId ? <PartyBadge partyId={partyPlaylistId}/> : undefined} />
+      {!partyPlaylistId ? (
+        <CreatePartyPlaylist />
       ) : (
         <div className="h-full">
-          <SongsCenter playlist={housePartyId || ''} />
+          <SongsCenter playlist={partyPlaylistId || ''} />
           <PlayingBar backGroundColor={theme.playingBarBackground} />
         </div>
       )}

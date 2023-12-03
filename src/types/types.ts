@@ -45,22 +45,6 @@ export interface SongLocal {
     total_votes: number
 }
 
-export interface SongVoteLocal {
-    song_spotify_id: string
-    user_id: string
-    location_id: string
-    playlist_id: PlaylistEnum
-    vote: number
-}
-
-export interface VotesMap {
-    [location_id: string]: {
-        [playlist_id: string]: {
-            [song_spotify_id: string]: number;
-        };
-    };
-};
-
 export interface SpotifySong {
     album: any;
     artists: any[];
@@ -80,6 +64,24 @@ export interface SpotifySong {
     type: string;
     uri: string;
 }
+
+export interface SongVoteLocal {
+    song_spotify_id: string
+    user_id: string
+    location_id: string
+    playlist_id: PlaylistEnum
+    vote: number
+}
+
+export interface VotesMap {
+    [location_id: string]: {
+        [playlist_id: string]: {
+            [song_spotify_id: string]: number;
+        };
+    };
+};
+
+
 
 //Subscriptions
 
@@ -151,7 +153,7 @@ export enum Routes {
     Events = '/events',
     Songs = '/songs',
     Classes = '/classes',
-    HouseParty = '/houseparty'
+    PartyPlaylist = '/party-playlist',
 }
 
 export type ActiveLink = {

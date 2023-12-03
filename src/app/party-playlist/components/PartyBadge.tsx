@@ -8,11 +8,11 @@ type Props = {
     partyId: string;
 };
 
-const HousePartyBadge = ({partyId}: Props) => {
+const PartyBadge = ({partyId}: Props) => {
   const { onOpen } = usePartyOptionsModal();
   
   return (
-    <div className="flex items-center bg-green-400 space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-2 pr-2 text-lg flex-shrink-0">
+    <div className="flex items-center bg-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-2 pr-2 text-lg flex-shrink-0">
       <BiSolidParty color="black"
         size={30}
       />
@@ -23,4 +23,4 @@ const HousePartyBadge = ({partyId}: Props) => {
   );
 }
 
-export default HousePartyBadge;
+export default PartyBadge;

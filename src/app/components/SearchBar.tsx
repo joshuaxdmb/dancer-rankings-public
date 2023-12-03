@@ -4,16 +4,17 @@ import { twMerge } from 'tailwind-merge';
 import { IoMdClose } from 'react-icons/io';
 import SearchModal from './SearchModal';
 import toast from 'react-hot-toast';
-import { SpotifySong } from '@/types/types';
+import { SongLocal, SpotifySong } from '@/types/types';
 import { useRouter } from 'next/navigation';
 
 type Props = {
   userDetails?: SpotifyApi.CurrentUsersProfileResponse;
   spotifyApi: any;
   handleAddSong: (song: SpotifySong) => void;
+  handleSelectSong: (song: SongLocal) => void;
 };
 
-const SearchBar = ({spotifyApi,userDetails, handleAddSong}: Props) => {
+const SearchBar = ({spotifyApi,userDetails, handleAddSong, handleSelectSong}: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchedSongs, setSearchedSongs] = useState<SpotifySong[]>([]);
@@ -77,11 +78,12 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong}: Props) => {
           className="flex-shrink-0"
         />
       </div>
-      <div className="flex items-center justify-center mt-4 w-full">
+      <div className="flex items-center justify-center mt-4 w-full overflow-y-auto">
         <SearchModal
           isOpen={searchOpen}
           songs={searchedSongs}
           addSong={handleAddSong}
+          handleSelectSong={handleSelectSong}
         />
       </div>
     </div>

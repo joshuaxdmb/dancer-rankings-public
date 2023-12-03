@@ -8,13 +8,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   sparkle?: boolean;
   sparkleWidth?: number;
   onClick?:any;
+  showLoading?:boolean;
 }
 
 const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, type = 'button', sparkle, sparkleWidth,onClick}, ref, ...props) => {
+  ({ className, children, disabled, type = 'button', sparkle, sparkleWidth,onClick, showLoading=true}, ref, ...props) => {
     const [isLoading, setIsLoading] = useState(false)
     const handlePress = async () => {
-      if (onClick.constructor.name === 'AsyncFunction') {
+      if (onClick?.constructor.name === 'AsyncFunction' && showLoading) {
         setIsLoading(true)
         try {
           await onClick()

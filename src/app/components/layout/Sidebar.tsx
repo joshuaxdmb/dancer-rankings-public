@@ -79,9 +79,9 @@ const Sidebar = ({ children }: Props) => {
         href: Routes.Events,
       },
       {
-        label: `🎉 House Party`,
-        active: pathname === Routes.HouseParty,
-        href: Routes.HouseParty,
+        label: `🎉 Party Playlist`,
+        active: pathname === Routes.PartyPlaylist,
+        href: Routes.PartyPlaylist,
       },
       {
         label: `🕺 Classes`,
@@ -115,15 +115,15 @@ const Sidebar = ({ children }: Props) => {
   // Sidebar content for code reuse
   const sidebarContent = (
     <div
-      className={`flex flex-col gap-y-2 h-full w-[300px] pr-2 transition-transform duration-300 overflow-y-scroll scrollbar-hide ${
+      className={`flex flex-col gap-y-2 h-full w-[300px] pr-2 transition-transform duration-300 overflow-y-scroll scrollbar-hide z-30 ${
         !visible ? '-translate-x-full' : ''
       }`}>
-      <Box className='overflow-y-auto h-full scrollbar-hide'>
+      <Box className='overflow-y-auto h-full scrollbar-hide z-30'>
         <button
           onClick={() => {
             setVisible(false)
           }}
-          className='md:hidden p-6 pt-8 pb-0'>
+          className='md:hidden p-6 pt-8 pb-0 z-30'>
           <HiMiniXMark className='text-white' size={35} />
         </button>
         {routes.map((p) => (
@@ -169,7 +169,7 @@ const Sidebar = ({ children }: Props) => {
         {sidebarContent}
       </div>
       <div
-        className={`md:hidden fixed top-0 left-0 bottom-0 z-10 transition-transform duration-300 ${
+        className={`md:hidden fixed top-0 left-0 bottom-0 transition-transform duration-300 z-30 ${
           !visible ? '-translate-x-full' : ''
         }`}>
         {sidebarContent}

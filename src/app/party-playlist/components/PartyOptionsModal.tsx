@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Modal from '../../components/layout/Modal';
 import { useRecoilState } from 'recoil';
-import { housePartyAtom, isPartyOwnerAtom } from '@/atoms/housePartyAtom';
+import { partyPlaylistAtom, isPartyOwnerAtom } from '@/atoms/partyPlaylistAtom';
 import SytledButton from '../../components/global/SytledButton';
 import { useSupabase } from '@/hooks/useSupabase';
 import usePartyOptionsModal from '@/hooks/usePartyOptionsModal';
@@ -15,7 +15,7 @@ import { Capacitor } from '@capacitor/core';
 type Props = {}
 
 const PartyOptionsModal = ({}: Props) => {
-  const [housePartyId, setHousePartyId] = useRecoilState(housePartyAtom);
+  const [partyPlaylistId, setPartyPlaylistId] = useRecoilState(partyPlaylistAtom);
   const [isPartyOwner, setIsPartyOwner] = useRecoilState(isPartyOwnerAtom)
   const { isOpen, onClose } = usePartyOptionsModal();
   const {onOpen:onOpenQRCode} = useQrCodeModal()
@@ -77,7 +77,7 @@ const PartyOptionsModal = ({}: Props) => {
   }
 
   const handleExitParty = async() => {
-    setHousePartyId(null)
+    setPartyPlaylistId(null)
     setIsPartyOwner(false)
     onClose()
   }
