@@ -1,5 +1,5 @@
 import { SongLocal } from "@/types/types";
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';
 
 export abstract class Player {
     abstract play(song: SongLocal, position_ms?:number): void;

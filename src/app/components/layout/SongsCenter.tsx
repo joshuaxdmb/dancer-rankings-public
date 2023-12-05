@@ -9,7 +9,7 @@ import {
   VotesMap,
 } from '@/types/types';
 import { useUser } from '@/hooks/useUser';
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '@/atoms/locationAtom';
 import { songsAtom } from '@/atoms/songsAtom';

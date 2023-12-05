@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { isPlayingAtom, currentTrackAtom } from '@/atoms/playingSongAtom';
 import { useSpotify } from '@/hooks/useSpotify';
 import { NonPremiumPlayer, Player, PremiumPlayer } from '@/classes/PlayerClass';
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';
 import {IoPlaySkipBackSharp, IoPlaySkipForwardSharp, IoPlayCircle} from 'react-icons/io5';
 import PlayingSong from './PlayingSong';
 import { PlaylistEnum } from '../../../content';

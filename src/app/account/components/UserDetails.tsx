@@ -18,7 +18,7 @@ import BirthdayInputField from './BirthDayInput'
 import { shouldUpdateFromSpotify, shouldUpdateUser } from '../accountUtils'
 import { GendersEnum, UserDetailsType } from '@/types/types'
 import StyledTextInput from '../../components/StyledTextInput'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast'
 import { isValidEmail } from '@/app/songs/songsUtils'
 
 type Props = {}

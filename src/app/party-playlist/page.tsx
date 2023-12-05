@@ -19,12 +19,9 @@ export default function Home() {
   return (
     <div
       className={`
-        bg-neutral-900 
         rounded-lg 
         h-full 
         w-full
-        z-20
-        ${theme.pageBackground}
       `}
     >
       <Header className="bg-none z-20" pageTitle={`What are we dancing to? 🎉`} pageBadge={partyPlaylistId ? <PartyBadge partyId={partyPlaylistId}/> : undefined} />

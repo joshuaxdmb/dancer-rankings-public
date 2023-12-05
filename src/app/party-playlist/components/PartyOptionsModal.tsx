@@ -7,7 +7,7 @@ import { useSupabase } from '@/hooks/useSupabase';
 import usePartyOptionsModal from '@/hooks/usePartyOptionsModal';
 import useQrCodeModal from '@/hooks/useQRCodeModal';
 import { ProductWithPrice } from '@/types/types';
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';
 import { postData } from '@/lib/helpers';
 import { useUser } from '@/hooks/useUser'
 import { Capacitor } from '@capacitor/core';

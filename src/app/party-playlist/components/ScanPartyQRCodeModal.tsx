@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil'
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
 import QRCode from './QRCode'
 import { useSupabase } from '@/hooks/useSupabase'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast';
 import SytledButton from '@/app/components/global/SytledButton'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 

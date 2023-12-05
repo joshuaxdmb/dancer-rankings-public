@@ -3,7 +3,7 @@ import { useUser } from '@/hooks/useUser'
 import React, { useEffect, useState } from 'react'
 import Loading from '../../components/Loading'
 import SytledButton from '../../components/global/SytledButton'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast';
 import { useSupabase } from '@/hooks/useSupabase'
 import { useRecoilState } from 'recoil'
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
@@ -38,10 +38,6 @@ const CreatePartyPlaylist = (props: Props) => {
   const startScan = async () => {
     try{
       const hasPermission = await didUserGrantPermission()
-
-      // make background of WebView transparent
-      // note: if you are using ionic this might not be enough, check below
-      BarcodeScanner.showBackground()
       const result = await BarcodeScanner.startScan({
         cameraDirection: CameraDirection.BACK
       })
@@ -53,7 +49,6 @@ const CreatePartyPlaylist = (props: Props) => {
       }
     } catch (e){
       console.log(e)
-      toast.error('Unable to access your camera')
     }
     
   }

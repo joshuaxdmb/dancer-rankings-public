@@ -3,7 +3,7 @@ import { HiSearch } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
 import { IoMdClose } from 'react-icons/io';
 import SearchModal from './SearchModal';
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';
 import { SongLocal, SpotifySong } from '@/types/types';
 import { useRouter } from 'next/navigation';
 

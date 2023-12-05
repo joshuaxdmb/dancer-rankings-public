@@ -5,7 +5,7 @@ import Modal from '../layout/Modal';
 import SytledButton from '../global/SytledButton';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import toast from '@/lib/toast';;
 import { postData } from '@/lib/helpers';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
 import Box from '../global/Box';

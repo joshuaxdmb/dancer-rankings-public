@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast';
 import { useRecoilState } from 'recoil'
 import { isPlayingAtom } from '@/atoms/playingSongAtom'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'

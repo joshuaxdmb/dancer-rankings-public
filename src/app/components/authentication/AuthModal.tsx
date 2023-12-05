@@ -13,7 +13,7 @@ import { Browser } from '@capacitor/browser'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { SpotifyTokenResponse } from '@/types/types'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast';
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { getUrl } from '@/lib/helpers'
 

@@ -161,7 +161,7 @@ const Sidebar = ({ children }: Props) => {
             setVisible(true)
           }}
           style={{marginTop}}
-          className={`h-12 w-12 absolute left-4 z-20 md:hidden rounded-full bg-black flex items-center justify-center hover:opacity-60 transition p-3 shadow-sm shadow-gray-900`}>
+          className={`h-12 w-12 absolute left-4 z-20 md:hidden rounded-full flex items-center justify-center hover:opacity-60 transition p-3 shadow-sm shadow-gray-900 bg-black`}>
           <GiHamburgerMenu className='text-white' size={22} />
         </button>
       )}
