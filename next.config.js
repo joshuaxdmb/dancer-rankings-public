@@ -1,11 +1,18 @@
 /** @type {import('next').NextConfig} */
 
-const isProduction = process.env.NODE_ENV === 'production'
 const nextConfig = {
     images: {
         domains: ['i.scdn.co','www.dancelifex.com','torontodancefridays.com'],
         unoptimized: true,
       },
+}
+
+const nextConfigProdLocal = {
+  images: {
+      domains: ['i.scdn.co','www.dancelifex.com','torontodancefridays.com'],
+      unoptimized: true,
+    },
+  output: "export",
 }
 
 const nextConfigProd = {
@@ -16,4 +23,13 @@ const nextConfigProd = {
   output: "export",
 }
 
-module.exports = isProduction? nextConfigProd : nextConfig
+switch(process.env.NODE_ENV) {
+  case 'production':
+    module.exports = nextConfigProd
+    break
+  case 'production-local':
+    module.exports = nextConfigProdLocal
+    break
+  default:
+    module.exports = nextConfig
+}
