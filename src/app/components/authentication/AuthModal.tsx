@@ -103,7 +103,7 @@ const AuthModal = ({}: Props) => {
       isOpen={isOpen}
       onChange={onChange}>
       <div className='flex items-center justify-center'>
-        <div className=' p-8 px-4 sm:px-8 pt-2 rounded shadow-md w-96'>
+        <div className=' pb-4 px-4 sm:px-8 pt-2 rounded w-96'>
           <div className='gap-y-2 flex flex-col mb-4'>
             <SytledButton
               onClick={signIngWithSpotify}

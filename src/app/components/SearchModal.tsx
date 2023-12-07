@@ -30,7 +30,7 @@ const SearchModal = ({ isOpen, songs, addSong, handleSelectSong }: Props) => {
     <div
       className={`${
         !isOpen ? 'hidden' : ''
-      } z-0 drop-shadow-md border flex flex-col border-neutral-700 max-h-full h-screen md:max-h-[85vh] w-[90%] md:w-[90vh] md:max-w-[450px]
+      } h-[70vh] z-0 drop-shadow-md flex flex-col border-0 w-[90%] md:w-[90vh] md:max-w-[450px] mb-20
     rounded-md bg-neutral-800 p-[25px] pt-2 focus:outline-none overflow-y-scroll scrollbar-hide`}
     >
       {songs.map((song, index) => (

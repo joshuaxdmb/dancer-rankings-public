@@ -14,7 +14,7 @@
     "stripe": "npm run stripe-login && npm run stripe-forward",
     "stripe-test": "stripe trigger payment_intent.succeeded",
     "static": "NODE_ENV=production next build && next export",
-    "dev:ios": "npm run static && npx cap sync ios"
+    "dev:ios": "NODE_ENV=production npm run static && npx cap sync ios"
   },
   "dependencies": {
     "@aashu-dubey/capacitor-statusbar-safe-area": "^2.1.1",

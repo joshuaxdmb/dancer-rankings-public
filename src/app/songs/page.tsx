@@ -6,25 +6,11 @@ import { useRecoilState } from 'recoil'
 import { locationAtom } from '@/atoms/locationAtom'
 import PlayingBar from '../components/PlayingBar'
 import { playlistAtom } from '@/atoms/playlistAtom'
+import { themes } from '@/lib/themes'
 
 export default function Home() {
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [location] = useRecoilState<LocationIdsEnum>(locationAtom)
-
-  const themes = {
-    [PlaylistEnum.bachata]: {
-      pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
-      playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900',
-    },
-    [PlaylistEnum.salsa]: {
-      pageBackground: 'bg-gradient-to-b from-red-950 via-black',
-      playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-red-950 via-red-950',
-    },
-    [PlaylistEnum.zouk]: {
-      pageBackground: 'bg-gradient-to-b from-blue-900 via-black',
-      playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-blue-900 via-blue-900',
-    },
-  }
 
   return (
     <div
@@ -35,7 +21,7 @@ export default function Home() {
         h-screen
         flex
         flex-col
-        ${themes[playlist].pageBackground}
+        ${themes[playlist]?.pageBackground || themes.default.pageBackground}
       `}>
       <Header
         className='bg-none'

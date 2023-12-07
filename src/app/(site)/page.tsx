@@ -13,10 +13,9 @@ import { Capacitor } from '@capacitor/core'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { App } from '@capacitor/app'
-import toast from 'react-hot-toast'
+import toast from '@/lib/toast'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { getUrl } from '@/lib/helpers'
-import { SafeArea } from 'capacitor-plugin-safe-area'
 
 export default function Home() {
   const { user, userDetails } = useUser()

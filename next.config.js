@@ -13,7 +13,7 @@ const nextConfigProd = {
       domains: ['i.scdn.co','www.dancelifex.com','torontodancefridays.com'],
       unoptimized: true,
     },
-  output: "export"
+  output: "export",
 }
 
 module.exports = isProduction? nextConfigProd : nextConfig

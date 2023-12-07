@@ -78,7 +78,7 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong, handleSelectSong}: Pr
           className="flex-shrink-0"
         />
       </div>
-      <div className="flex items-center justify-center mt-4 w-full overflow-y-auto">
+      <div className="flex items-center justify-center mt-4 w-full">
         <SearchModal
           isOpen={searchOpen}
           songs={searchedSongs}

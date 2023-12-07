@@ -6,6 +6,7 @@ import SongsCenter from '../components/layout/SongsCenter';
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom';
 import CreatePartyPlaylist from './components/CreatePartyPlaylist';
 import PartyBadge from './components/PartyBadge';
+import { themes } from '@/lib/themes';
 
 export default function Home() {
   const [partyPlaylistId] = useRecoilState<string | null>(partyPlaylistAtom);
@@ -22,6 +23,7 @@ export default function Home() {
         rounded-lg 
         h-full 
         w-full
+        ${themes.default.pageBackground}
       `}
     >
       <Header className="bg-none z-20" pageTitle={`What are we dancing to? 🎉`} pageBadge={partyPlaylistId ? <PartyBadge partyId={partyPlaylistId}/> : undefined} />

@@ -87,18 +87,18 @@ const PartyOptionsModal = ({}: Props) => {
       <div className="gap-y-2 flex flex-col mb-4">
             <SytledButton
               onClick={handleShowQRCode}
-              className="items-center flex justify-center bg-green-500"
+              className="items-center flex justify-center bg-white"
             >
               Show QR Code
             </SytledButton>
             <SytledButton
               onClick={handleBuyVoteBooster}
-              className="items-center flex justify-center bg-green-500"
+              className="items-center flex justify-center bg-primary-purple"
             >
               Buy Vote Booster
             </SytledButton>
             <SytledButton
-              className="items-center flex justify-center bg-white"
+              className="items-center flex justify-center bg-white mt-4"
               onClick={handleExitParty}
             >
              Exit Party
