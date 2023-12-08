@@ -20,7 +20,6 @@ const nextConfigProd = {
       domains: ['i.scdn.co','www.dancelifex.com','torontodancefridays.com'],
       unoptimized: true,
     },
-  output: "export",
 }
 
 switch(process.env.NODE_ENV) {
