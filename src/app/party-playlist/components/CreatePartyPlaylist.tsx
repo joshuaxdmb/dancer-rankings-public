@@ -3,7 +3,7 @@ import { useUser } from '@/hooks/useUser'
 import React, { useEffect, useState } from 'react'
 import Loading from '../../components/Loading'
 import SytledButton from '../../components/global/SytledButton'
-import toast from '@/lib/toast';
+import toast from '@/lib/toast'
 import { useSupabase } from '@/hooks/useSupabase'
 import { useRecoilState } from 'recoil'
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
@@ -23,40 +23,46 @@ const CreatePartyPlaylist = (props: Props) => {
 
   const supabase = useSupabase()
 
-  const handleJoin = async () => {
-    const partyExists = await supabase.checkPartyExists(enteredPartyId)
+  const handleJoinParty = async (partyId?: string) => {
+    const partyIdToJoin = partyId || enteredPartyId
+    const partyExists = await supabase.checkPartyExists(partyIdToJoin)
     if (!partyExists) {
       toast.error('No parties found. You can create one!', {
         id: 'party-does-not-exist',
         icon: '⚠️',
       })
     } else {
-      setPartyPlaylistId(enteredPartyId)
+      setPartyPlaylistId(partyIdToJoin)
     }
   }
 
   const startScan = async () => {
-    try{
+    try {
       const hasPermission = await didUserGrantPermission()
       const result = await BarcodeScanner.startScan({
-        cameraDirection: CameraDirection.BACK
+        cameraDirection: CameraDirection.BACK,
       })
-  
+
       // if the result has content
       if (result.hasContent) {
         const id = getPartyIdFromQRCodeLink(result.content)
         setPartyPlaylistId(id)
+        toast.success('Joining ' + id, { id: 'party-found' })
       }
-    } catch (e){
+
+      if(partyPlaylistId){
+        console.log('Stopping scan. Party playlist id found elsewhere')
+        stopScan()
+      }
+    } catch (e) {
       console.log(e)
     }
-    
   }
 
-  const stopScan = () =>{
-    try{
+  const stopScan = () => {
+    try {
       BarcodeScanner.stopScan()
-    } catch(e){
+    } catch (e) {
       console.log(e)
     }
   }
@@ -73,13 +79,20 @@ const CreatePartyPlaylist = (props: Props) => {
     if (!user?.id) {
       setError('You need to be logged in to create a house party')
     }
+  }, [userDetails, isPremium, user.action_link])
 
-    startScan()
+  useEffect(() => {
+    if (!partyPlaylistId) {
+     startScan()
+    } else {
+      stopScan()
+    }
 
     return () => {
       stopScan()
     }
-  }, [userDetails, isPremium, user])
+
+  }, [partyPlaylistAtom])
 
   const createPartyPlaylistHandler = async () => {
     if (error || !isPremium || !userDetails?.product || !user?.id) {
@@ -91,7 +104,6 @@ const CreatePartyPlaylist = (props: Props) => {
 
     try {
       const data = await supabase.getParty(user?.id)
-      console.log('PARTYYYYY', data)
       setPartyPlaylistId(data?.id)
       setIsPartyOwner(true)
     } catch (error) {
@@ -107,14 +119,17 @@ const CreatePartyPlaylist = (props: Props) => {
     <div className='flex flex-col justify-end items-center w-full top-0 right-0 h-3/4'>
       <div className='gap-y-2 flex flex-col w-full items-center'>
         <StyledTextInput
-            id='partyId'
-            value={enteredPartyId}
-            setValue={setEnteredPartyId}
-            placeholder={'Enter Party ID or Scan QR Code'}
-            className='max-w-[300px] z-20 text-center bg-white mb-2'
-          />
-        
-        <SytledButton showLoading={false} onClick={handleJoin} className='max-w-[300px] bg-white z-20'>
+          id='partyId'
+          value={enteredPartyId}
+          setValue={setEnteredPartyId}
+          placeholder={'Enter Party ID or Scan QR Code'}
+          className='max-w-[300px] z-20 text-center bg-white mb-2'
+        />
+
+        <SytledButton
+          showLoading={false}
+          onClick={handleJoinParty}
+          className='max-w-[300px] bg-white z-20'>
           Join a Party
         </SytledButton>
         <SytledButton

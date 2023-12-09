@@ -1,12 +1,9 @@
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 
 export const getPartyIdFromQRCodeLink = (qrCodeLink: string) => {
-    // Remove the protocol part of the URL (e.g., "https://latindancersapp.com://")
-    const urlWithoutProtocol = qrCodeLink.replace(/^https:\/\/latindancersapp.com:\/\//, '');
-
     // Use URLSearchParams to parse the remaining URL and get the "id" parameter
-    const urlParams = new URLSearchParams(urlWithoutProtocol);
-    const partyId = urlParams.get('id');
+    const url = new URL(qrCodeLink)
+    const partyId = url.searchParams.get('id')
 
     return partyId;
 }

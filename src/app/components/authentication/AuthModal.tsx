@@ -106,12 +106,14 @@ const AuthModal = ({}: Props) => {
         <div className=' pb-4 px-4 sm:px-8 pt-2 rounded w-96'>
           <div className='gap-y-2 flex flex-col mb-4'>
             <SytledButton
+              showLoading={false}
               onClick={signIngWithSpotify}
               className='items-center flex justify-center bg-green-500'>
               {authOption === 'login' ? 'Login' : 'Signup'} with Spotify{' '}
               <FontAwesomeIcon icon={faSpotify} className='ml-2 h-6 w-6' />
             </SytledButton>
             <SytledButton
+              showLoading={false}
               onClick={signInWithGoogle}
               className='items-center flex justify-center bg-white'>
               {authOption === 'login' ? 'Login' : 'Signup'} with Google
