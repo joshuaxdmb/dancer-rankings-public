@@ -12,9 +12,9 @@ export default function Home() {
   const [partyPlaylistId] = useRecoilState<string | null>(partyPlaylistAtom);
 
   const theme = {
-    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    pageBackground: 'bg-gradient-to-transparent from-purple-900 via-transparent',
     playingBarBackground:
-      'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900',
+      'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900 bg- ',
   };
 
   return (
@@ -23,10 +23,11 @@ export default function Home() {
         rounded-lg 
         h-full 
         w-full
-        ${themes.default.pageBackground}
+        ${partyPlaylistId ? themes.default.pageBackground : theme.pageBackground}
+        z-10
       `}
     >
-      <Header className="bg-none z-20" pageTitle={`What are we dancing to? 🎉`} pageBadge={partyPlaylistId ? <PartyBadge partyId={partyPlaylistId}/> : undefined} />
+      <Header className={`z-20 bg-none`} pageTitle={`What are we dancing to? 🎉`} pageBadge={partyPlaylistId ? <PartyBadge partyId={partyPlaylistId}/> : undefined} />
       {!partyPlaylistId ? (
         <CreatePartyPlaylist />
       ) : (

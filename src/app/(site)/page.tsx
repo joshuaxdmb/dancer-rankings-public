@@ -6,16 +6,16 @@ It leverages React hooks for state management and dynamically generates navigati
 import Header from '@/app/components/layout/Header'
 import MainLinkItem from '@/app/components/MainLinkItem'
 import { playlistAtom } from '@/atoms/playlistAtom'
-import { spotifySessionAtom } from '@/atoms/spotifyAtom'
+// import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { PlaylistEnum, ActiveLinks } from '../../../content'
 import { useUser } from '@/hooks/useUser'
-import { Capacitor } from '@capacitor/core'
+// import { Capacitor } from '@capacitor/core'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { App } from '@capacitor/app'
-import toast from '@/lib/toast'
+// import { App } from '@capacitor/app'
+// import toast from '@/lib/toast'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
-import { getUrl } from '@/lib/helpers'
+// import { getUrl } from '@/lib/helpers'
 
 export default function Home() {
   const { user, userDetails } = useUser()
@@ -23,66 +23,64 @@ export default function Home() {
   const [topMargin, setTopMargin] = useState(true)
   const pathname = usePathname()
   const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
-  const isNative = Capacitor.isNativePlatform()
-  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  // const isNative = Capacitor.isNativePlatform()
+  // const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
-  const fetchSpotifySession = async (authCode: any) => {
-    toast.success('Almost done...', { id: 'spotify-login' })
-    if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
-      return
-    }
-    try {
-      const res = await fetch(getUrl() + 'api/spotify/session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: authCode, isNative }),
-      })
-      const session = await res.json()
-      console.log('Spotify session response', session)
-      if (session.error) throw new Error(session.error)
-      setSpotifySession(session)
-      window.history.pushState({}, '', '/')
-    } catch (e) {
-      console.log('Failed to get spotify session', e)
-    }
-  }
+  // const fetchSpotifySession = async (authCode: any) => {
+  //   toast.success('Almost done...', { id: 'spotify-login' })
+  //   if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
+  //     return
+  //   }
+  //   try {
+  //     const res = await fetch(getUrl() + 'api/spotify/session', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ code: authCode, isNative }),
+  //     })
+  //     const session = await res.json()
+  //     console.log('Spotify session response', session)
+  //     if (session.error) throw new Error(session.error)
+  //     setSpotifySession(session)
+  //     window.history.pushState({}, '', '/')
+  //   } catch (e) {
+  //     console.log('Failed to get spotify session', e)
+  //   }
+  // }
 
-  //Handle Spotify callback on mobile
-  useEffect(() => {
-    if (isNative) {
-      App.addListener('appUrlOpen', (event) => {
-        const url = new URL(event.url)
-        if (url.pathname === '/spotify_callback') {
-          const authCode = url.searchParams.get('code')
-          if (authCode) {
-            fetchSpotifySession(authCode)
-          }
-        }
-      })
+  // //Handle Spotify callback on mobile
+  // useEffect(() => {
+  //   if (isNative) {
+  //     App.addListener('appUrlOpen', (event) => {
+  //       const url = new URL(event.url)
+  //         const authCode = url.searchParams.get('code')
+  //         if (authCode) {
+  //           fetchSpotifySession(authCode)
+  //       }
+  //     })
 
-      return () => {
-        App.removeAllListeners()
-      }
-    } else {
-      const handleAuthCode = async () => {
-        const url = window.location.href
-        const hasCode = url.includes('?code=')
-        if (hasCode) {
-          const newUrl = new URL(url)
-          const authCode = newUrl.searchParams.get('code')
-          console.log('Got spotify code', authCode)
-          if (authCode) {
-            fetchSpotifySession(authCode)
-          }
-        }
-      }
-      if (!isNative) {
-        handleAuthCode()
-      }
-    }
-  })
+  //     return () => {
+  //       App.removeAllListeners()
+  //     }
+  //   } else {
+  //     const handleAuthCode = async () => {
+  //       const url = window.location.href
+  //       const hasCode = url.includes('?code=')
+  //       if (hasCode) {
+  //         const newUrl = new URL(url)
+  //         const authCode = newUrl.searchParams.get('code')
+  //         console.log('Got spotify code', authCode)
+  //         if (authCode) {
+  //           fetchSpotifySession(authCode)
+  //         }
+  //       }
+  //     }
+  //     if (!isNative) {
+  //       handleAuthCode()
+  //     }
+  //   }
+  // },[])
 
   const routes = useMemo(
     () =>

@@ -12,6 +12,7 @@ import RecoilProvider from '../providers/RecoilProvider'
 import ToasterProvider from '../providers/ToasterProvider'
 import SpotifyProvider from '../providers/SpotifyProvider'
 import Script from 'next/script'
+import AppUrlListener from '@/providers/AppUrlListener'
 
 
 const font = Figtree({ subsets: ['latin'] })
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <UserProvider>
             <RecoilProvider>
               <SpotifyProvider>
+                <AppUrlListener />
                 <ModalProvider />
                 <Sidebar>{children}</Sidebar>
               </SpotifyProvider>

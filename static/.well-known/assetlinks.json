@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.latindancers.app",
+      "sha256_cert_fingerprints": [
+        "4A:6F:1A:4D:77:D5:87:2E:22:C0:16:5A:9C:C9:08:0E:D7:F1:02:18:95:98:14:3C:CB:3E:83:4A:BF:F4:58:0C"
+      ]
+    }
+  }
+]

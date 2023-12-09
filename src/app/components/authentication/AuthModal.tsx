@@ -99,7 +99,7 @@ const AuthModal = ({}: Props) => {
   return (
     <Modal
       title='Welcome!'
-      description='We want to keep this real dancers only 💃🕺'
+      description='We want to keep this real dancers only... 💃🕺'
       isOpen={isOpen}
       onChange={onChange}>
       <div className='flex items-center justify-center'>

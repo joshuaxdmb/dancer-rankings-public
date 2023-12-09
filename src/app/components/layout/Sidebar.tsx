@@ -29,13 +29,13 @@ const Sidebar = ({ children }: Props) => {
   const pathname = usePathname()
   const [visible, setVisible] = useState(true)
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
-  const [marginTop, setMarginTop] = useState(16)
+  const [marginTop, setMarginTop] = useState(17)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
 
   const setStatusBarHeight = async () => {
     const { statusBarHeight } = await SafeArea.getStatusBarHeight()
-    const margin = await getMarginTop(16, statusBarHeight)
+    const margin = await getMarginTop(17, statusBarHeight)
     setMarginTop(margin)
     setDeviceDimensions({ statusBarHeight })
     setIsLoading(false)
@@ -45,7 +45,6 @@ const Sidebar = ({ children }: Props) => {
     setStatusBarHeight()
     setVisible(window.innerWidth >= 768)
   }, [])
-
 
   const routes = useMemo(
     () => [
@@ -120,10 +119,11 @@ const Sidebar = ({ children }: Props) => {
       }`}>
       <Box className='overflow-y-auto h-full scrollbar-hide z-30'>
         <button
+          className={`md:hidden p-6 pt-8 pb-0 z-30`}
+          style={{ marginTop }}
           onClick={() => {
             setVisible(false)
-          }}
-          className='md:hidden p-6 pt-8 pb-0 z-30'>
+          }}>
           <HiMiniXMark className='text-white' size={35} />
         </button>
         {routes.map((p) => (
@@ -160,7 +160,7 @@ const Sidebar = ({ children }: Props) => {
           onClick={() => {
             setVisible(true)
           }}
-          style={{marginTop}}
+          style={{ marginTop }}
           className={`h-12 w-12 absolute left-4 z-30 md:hidden rounded-full flex items-center justify-center hover:opacity-60 transition p-3 shadow-sm shadow-gray-900 bg-black`}>
           <GiHamburgerMenu className='text-white' size={22} />
         </button>
@@ -174,10 +174,7 @@ const Sidebar = ({ children }: Props) => {
         }`}>
         {sidebarContent}
       </div>
-      <main
-        className={`h-full flex-1 ${
-          visible ? 'md:pl-[300px]' : ''
-        }'md:pl-0' w-full`}>
+      <main className={`h-full flex-1 ${visible ? 'md:pl-[300px]' : ''}'md:pl-0' w-full`}>
         {children}
       </main>
     </div>

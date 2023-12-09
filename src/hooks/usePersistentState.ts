@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
-import { RecoilState, useRecoilState } from 'recoil';
-import Cookies from 'js-cookie';
-import { Capacitor } from '@capacitor/core';
+import { useEffect } from 'react'
+import { RecoilState, useRecoilState } from 'recoil'
+import Cookies from 'js-cookie'
+import { Capacitor } from '@capacitor/core'
 import { Preferences } from '@capacitor/preferences'
 
 
 export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
-    const cookieName = 'latindancers' + atom.key;
-    const isNative = Capacitor.isNativePlatform();
-    const [state, setState] = useRecoilState(atom);
+    const cookieName = 'latindancers' + atom.key
+    const isNative = Capacitor.isNativePlatform()
+    const [state, setState] = useRecoilState(atom)
 
     const getFromStorage = async () => {
         try {
-            const { value } = await Preferences.get({ key: atom.key });
+            const { value } = await Preferences.get({ key: atom.key })
             if (value !== null) {
-                setState(JSON.parse(value));
+                setState(JSON.parse(value))
             }
         } catch (e) {
             console.log('Error loading storage', e)
@@ -23,7 +23,7 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
 
     const setInStorage = async () => {
         try {
-            await Preferences.set({ key: atom.key, value: JSON.stringify(state) });
+            await Preferences.set({ key: atom.key, value: JSON.stringify(state) })
         } catch (e) {
             console.log('Error setting storage', e)
         }
@@ -31,10 +31,10 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
 
     const getCookie = () => {
         try {
-            const cookieValue = Cookies.get(cookieName);
-            const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {};
+            const cookieValue = Cookies.get(cookieName)
+            const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {}
             if (parsedCookie[atom.key] !== undefined) {
-                setState(parsedCookie[atom.key]);
+                setState(parsedCookie[atom.key])
             }
         } catch (e) {
             console.log('Error loading cookie', e)
@@ -43,9 +43,9 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
 
     const setCookie = () => {
         try {
-            const cookieValue = Cookies.get(cookieName);
-            const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {};
-            Cookies.set(cookieName, JSON.stringify({ ...parsedCookie, [atom.key]: state }));
+            const cookieValue = Cookies.get(cookieName)
+            const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {}
+            Cookies.set(cookieName, JSON.stringify({ ...parsedCookie, [atom.key]: state }))
         } catch (e) {
             console.log('Error setting cookie', e)
         }
@@ -54,27 +54,27 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
     useEffect(() => {
         async function loadState() {
             try {
-                const storedState = isNative ? await getFromStorage() : await getCookie();
+                const storedState = isNative ? await getFromStorage() : await getCookie()
                 if (storedState !== undefined) {
-                    setState(storedState);
+                    setState(storedState)
                 }
             } catch (e) {
-                console.error('Error loading state:', e);
+                console.error('Error loading state:', e)
             }
         }
-        loadState();
+        loadState()
     }, [isNative]);;
 
     // Update cookie whenever state changes
     useEffect(() => {
         if (state === undefined || state === null) return
         if (isNative) {
-            setInStorage();
+            setInStorage()
         } else {
-            setCookie();
+            setCookie()
         }
 
-    }, [state, atom.key]);
+    }, [state, atom.key])
 
-    return [state, setState];
-};
+    return [state, setState]
+}
