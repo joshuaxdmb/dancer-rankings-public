@@ -13,6 +13,8 @@ import { songsAtom } from '@/atoms/songsAtom';
 import { locationAtom } from '@/atoms/locationAtom';
 import { SongLocal } from '@/types/types';
 import { useRouter } from 'next/navigation';
+import { usePersistentRecoilState } from '@/hooks/usePersistentState'
+import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 
 type Props = {
   backGroundColor?: string;
@@ -28,6 +30,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   const { userDetails, spotifyApi, spotifyDeviceId } = useSpotify();
   const [player, setPlayer] = useState<Player | undefined>();
   const router = useRouter();
+  const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
   useEffect(() => {
     if (userDetails?.product === 'premium') {
@@ -109,13 +112,16 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   }
 
   return (
-    <div className={`overscroll-y-contain flex h-20 sticky bottom-0 pt-4 px-4 pb-6 flex-row items-center justify-center ${backGroundColor || 'bg-black'} `}>
+    <div className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${backGroundColor || 'bg-black'} `}>
+      <div className={`flex h-20 flex-row items-center justify-center`}>
       <IoPlaySkipBackSharp onClick={handlePrevious} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
         <button className='mx-4 lg:mx-10 cursor-pointer' onClick={handlePlayPause}>
           {currentTrack? <PlayingSong isPlaying={isPlaying} song={currentTrack}/>
           : <IoPlayCircle size={50} className="text-white hover:opacity-80"/>}
         </button>
       <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
+      </div>
+     {(userDetails?.product === 'premium' || !spotifySession) && <p className='h-0 text-sm text-gray-400'>You need to link Spotify Premium to play full songs</p>}
     </div>
   );
 };

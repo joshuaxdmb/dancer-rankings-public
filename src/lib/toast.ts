@@ -1,4 +1,8 @@
-// customToast.ts
+/*
+Previously used to configure style in native devices. Now this is being done at the provider level.
+Keeping this file in case we need to add more customizations in the future.
+*/
+
 import hotToast, { ToastOptions } from 'react-hot-toast';
 import DeviceSafeArea from '../classes/DeviceSafeArea'; // Adjust the import path based on your file structure
 
@@ -14,11 +18,10 @@ const adjustOptionsForSafeArea = (options?: ToastOptions): ToastOptions => {
 // Creating a wrapper for each toast method
 const customToast = {
     ...hotToast, // Spread all existing methods
-    success: (message: string, options?: ToastOptions) => hotToast.success(message, adjustOptionsForSafeArea(options)),
-    error: (message: string, options?: ToastOptions) => hotToast.error(message, adjustOptionsForSafeArea(options)),
-    loading: (message: string, options?: ToastOptions) => hotToast.loading(message, adjustOptionsForSafeArea(options)),
-    custom: (message: string, options?: ToastOptions) => hotToast.custom(message, adjustOptionsForSafeArea(options)),
-    // You can continue to add other methods as needed
+    success: (message: string, options?: ToastOptions) => hotToast.success(message, options),
+    error: (message: string, options?: ToastOptions) => hotToast.error(message, options),
+    loading: (message: string, options?: ToastOptions) => hotToast.loading(message, options),
+    custom: (message: string, options?: ToastOptions) => hotToast.custom(message, options),
 };
 
 export default customToast;

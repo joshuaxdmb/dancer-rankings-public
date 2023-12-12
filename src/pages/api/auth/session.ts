@@ -7,7 +7,7 @@ export default async function session(req: NextApiRequest, res: NextApiResponse)
   const token = await getToken({ req, secret: authOptions.secret });
 
   if (!token) {
-    res.status(401).json({ message: "You must be logged in." });
+    res.status(401).json({ message: "You must be logged in" });
     return;
   }
 

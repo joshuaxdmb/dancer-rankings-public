@@ -24,16 +24,23 @@ const CreatePartyPlaylist = (props: Props) => {
   const supabase = useSupabase()
 
   const handleJoinParty = async (partyId?: string) => {
-    const partyIdToJoin = partyId || enteredPartyId
-    const partyExists = await supabase.checkPartyExists(partyIdToJoin)
-    if (!partyExists) {
-      toast.error('No parties found. You can create one!', {
+    try{const partyIdToJoin = partyId || enteredPartyId
+      const partyExists = await supabase.checkPartyExists(partyIdToJoin)
+      if (!partyExists) {
+        toast.error('No parties found. You can create one!', {
+          id: 'party-does-not-exist',
+          icon: '⚠️',
+        })
+      } else {
+        setPartyPlaylistId(partyIdToJoin)
+      }
+    }catch(e){
+      toast.error('Something wrong with that party...',{
         id: 'party-does-not-exist',
         icon: '⚠️',
       })
-    } else {
-      setPartyPlaylistId(partyIdToJoin)
     }
+    
   }
 
   const startScan = async () => {
@@ -47,7 +54,6 @@ const CreatePartyPlaylist = (props: Props) => {
       if (result.hasContent) {
         const id = getPartyIdFromQRCodeLink(result.content)
         setPartyPlaylistId(id)
-        toast.success('Joining ' + id, { id: 'party-found' })
       }
 
       if(partyPlaylistId){
@@ -77,9 +83,9 @@ const CreatePartyPlaylist = (props: Props) => {
     }
 
     if (!user?.id) {
-      setError('You need to be logged in to create a house party')
+      setError('You need to login to create a house party')
     }
-  }, [userDetails, isPremium, user.action_link])
+  }, [userDetails, isPremium, user])
 
   useEffect(() => {
     if (!partyPlaylistId) {

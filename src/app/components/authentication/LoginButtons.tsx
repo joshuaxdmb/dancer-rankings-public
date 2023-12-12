@@ -48,8 +48,8 @@ const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
   } else if (!spotifySession) {
     return (
       <div className='flex flex-row items-center'>
-        <div>
-          <StyledButton
+        <div className='flex gap-1 items-center'>
+          <StyledButton 
             onClick={getSpotifyCode}
             className=' px-6 py-2 flex items-center justify-center bg-green-400'>
             Link Spotify <FontAwesomeIcon icon={faSpotify} className='ml-2 h-6 w-6' />

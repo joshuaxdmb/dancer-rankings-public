@@ -215,7 +215,6 @@ const Center = ({playlist}: Props) => {
   };
 
   return (
-    //TODO:check overscroll
     <div className="flex flex-col h-5/6">
       <section className="flex items-center justify-center space-x-7">
         <SearchBar

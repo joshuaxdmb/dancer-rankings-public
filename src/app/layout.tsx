@@ -1,6 +1,7 @@
 /*
 This is the main layout component that wraps all pages. It contains all the providers and the sidebar.
 */
+
 import Sidebar from '@/app/components/layout/Sidebar'
 import './globals.css'
 import type { Metadata } from 'next'
@@ -49,3 +50,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   )
 }
+
+/* 
+  Coded by: Joshua Madero
+  Free License for Non-Commercial use
+
+  J   OOO  SSS  H   H U   U   A       M   M   A   DDD   EEEEE RRR    OOO 
+  J  O   O S    H   H U   U  A A      MM MM  A A  D  D  E     R   R O   O
+  J  O   O SSS  HHHHH U   U AAAAA     M M M AAAAA D   D EEE   RRR   O   O
+  J  O   O    S H   H U   U A    A    M   M A   A D  D  E     R  R  O   O
+JJJ   OOO  SSS  H   H  UUU A      A   M   M A   A DDD   EEEEE R   R  OOO 
+
+*/

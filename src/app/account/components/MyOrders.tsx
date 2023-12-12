@@ -16,7 +16,6 @@ const MyOrders = (props: Props) => {
             <div>{order.product_name}</div>
             <div className=''>{toBeautifulDateTime(order.created)}</div>
           </div>
-
           <div>{order.consumed_at ? 'Used' : 'Available'}</div>
         </div>
       ))}

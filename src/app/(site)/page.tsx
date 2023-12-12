@@ -1,6 +1,5 @@
 /*
-The Home component is the main page of our web application, primarily handling user authentication and Spotify session integration. 
-It leverages React hooks for state management and dynamically generates navigation links, adapting to both web and native mobile environments.
+This is the home component of the application
 */
 'use client'
 import Header from '@/app/components/layout/Header'
@@ -14,7 +13,6 @@ import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 
 export default function Home() {
   const { user, userDetails } = useUser()
-  const [showMessage, setShowMessage] = useState(false) // New state for showing buttons
   const [topMargin, setTopMargin] = useState(true)
   const pathname = usePathname()
   const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
@@ -30,39 +28,28 @@ export default function Home() {
         emoji: link.emoji ? link.emoji : null,
       })),
     [pathname, playlist]
-  ) //eslint-disable-line
+  )
 
   useEffect(() => {
     setTopMargin(window.innerWidth <= 768)
   }, [])
 
   useEffect(() => {
-    // Function to handle the resize event
+    // If window width is greater than or equal to 768px and sidebar is hidden, show the sidebar
     const handleResize = () => {
       if (window.innerWidth <= 768 && !topMargin) {
-        // If window width is greater than or equal to 768px and sidebar is hidden, show the sidebar
         setTopMargin(true)
       } else if (window.innerWidth > 768 && topMargin) {
         setTopMargin(false)
       }
     }
 
-    // Attach the resize event listener
     window.addEventListener('resize', handleResize)
 
-    // Cleanup: remove the event listener when the component is unmounted
     return () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [topMargin])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowMessage(true)
-    }, 1000) // 2-second delay
-
-    return () => clearTimeout(timer) // Clear the timer on component unmount
-  }, [])
 
   return (
     <div

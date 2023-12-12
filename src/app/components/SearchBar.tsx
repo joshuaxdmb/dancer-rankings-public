@@ -22,7 +22,7 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong, handleSelectSong}: Pr
 
   const handleSearch = (query: string) => {
     if(!userDetails?.display_name){
-      toast.error('You must be logged in to spotify to search for a song', {
+      toast.error('You must log into spotify to search for a song', {
         id: 'failed-spotify-search',
       });
       return;

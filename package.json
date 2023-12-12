@@ -18,7 +18,6 @@
     "dev:android": "NODE_ENV=production-local npm run static && npx cap sync android"
   },
   "dependencies": {
-    "@aashu-dubey/capacitor-statusbar-safe-area": "^2.1.1",
     "@capacitor-community/barcode-scanner": "^4.0.1",
     "@capacitor/android": "^5.5.1",
     "@capacitor/app": "^5.0.6",

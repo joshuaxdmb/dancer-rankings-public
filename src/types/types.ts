@@ -154,6 +154,7 @@ export enum Routes {
     Songs = '/songs',
     Classes = '/classes',
     PartyPlaylist = '/party-playlist',
+    Account = '/account',
 }
 
 export type ActiveLink = {
