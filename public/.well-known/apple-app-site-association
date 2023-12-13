@@ -1,10 +1,15 @@
 {
   "applinks": {
-    "apps": [],
     "details": [
       {
         "appID": "NX9S75GH2N.com.latindancers.app",
-        "paths": ["*"]
+        "paths": ["*"],
+        "appIDs": ["NX9S75GH2N.com.latindancers.app"],
+        "components": [
+          {
+            "/": "*"
+          }
+        ]
       }
     ]
   }
