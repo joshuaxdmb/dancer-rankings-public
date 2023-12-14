@@ -11,6 +11,14 @@ class SupabaseWrapper {
         this.client = client;
     }
 
+    async exchangeCodeForSession(code: string) {
+        await this.client.auth.exchangeCodeForSession(code)
+    }
+
+    async setSession (access_token:string, refresh_token:string) {
+        await this.client.auth.setSession({access_token, refresh_token})
+    }
+
     async vote10x (songSpotifyId: string, userId: string, partyId: string) {
         //First check if user has 10x votes not consumer
         const {data: orders, error} = await this.client

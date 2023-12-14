@@ -29,7 +29,7 @@ const Sidebar = ({ children }: Props) => {
   const pathname = usePathname()
   const [visible, setVisible] = useState(true)
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
-  const [marginTop, setMarginTop] = useState(17)
+  const [marginTop, setMarginTop] = useState(18)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
 
@@ -124,7 +124,7 @@ const Sidebar = ({ children }: Props) => {
       }`}>
       <Box className='overflow-y-auto h-full scrollbar-hide z-30'>
         <button
-          className={`md:hidden p-6 pt-8 pb-0 z-30`}
+          className={`md:hidden p-6 pt-4 pb-0 z-30`}
           style={{ marginTop }}
           onClick={() => {
             setVisible(false)

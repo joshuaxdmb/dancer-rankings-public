@@ -8,6 +8,11 @@ export const getStatusBarHeight = async () => {
   return Capacitor.isNativePlatform() ? statusBarHeight : 0 // Ex. 29.090909957885742
 }
 
+export const getBottomBarHeight = async () => {
+  const {insets} = await SafeArea.getSafeAreaInsets()
+  return insets.bottom
+}
+
 export const getStatusBarHeightClass = (defaultHeight: number, statusBarHeight: number) => {
   const height = statusBarHeight
   return `h-${Math.round((height + 4 * defaultHeight) / 4)}`
@@ -29,6 +34,12 @@ export const getMarginTopClass = (defaultMargin: number, statusBarHeight: number
 }
 
 export const getMarginTop = async (defaultMargin: number, statusBarHeight?: number) => {
+  let height = statusBarHeight || (await getStatusBarHeight())
+  if (height) height -= 20 //If device is native (has status bar) the padding is excessive, so reduce by 20px
+  return Math.round(height + defaultMargin)
+}
+
+export const getMarginBottom = async (defaultMargin: number, statusBarHeight?: number) => {
   let height = statusBarHeight || (await getStatusBarHeight())
   if (height) height -= 20 //If device is native (has status bar) the padding is excessive, so reduce by 20px
   return Math.round(height + defaultMargin)

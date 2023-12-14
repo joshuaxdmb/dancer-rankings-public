@@ -15,6 +15,7 @@ import { SongLocal } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
+import { getMarginBottom } from './layout/StatusBarSpacing';
 
 type Props = {
   backGroundColor?: string;
@@ -31,6 +32,15 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   const [player, setPlayer] = useState<Player | undefined>();
   const router = useRouter();
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  const [marginBottom, setMarginBottom] = useState(0)
+
+  useEffect(() => {
+    const setMarginBottomHeight = async () => {
+      const margin = await getMarginBottom(0)
+      setMarginBottom(margin)
+    }
+    setMarginBottomHeight()
+  }, [])
 
   useEffect(() => {
     if (userDetails?.product === 'premium') {
@@ -112,7 +122,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   }
 
   return (
-    <div className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${backGroundColor || 'bg-black'} `}>
+    <div style={{marginBottom}} className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${backGroundColor || 'bg-black'} `}>
       <div className={`flex h-20 flex-row items-center justify-center`}>
       <IoPlaySkipBackSharp onClick={handlePrevious} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
         <button className='mx-4 lg:mx-10 cursor-pointer' onClick={handlePlayPause}>
