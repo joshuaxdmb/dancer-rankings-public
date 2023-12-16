@@ -1,5 +1,5 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { App, URLOpenListenerEvent } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
 import { getUrl } from '@/lib/helpers'
@@ -37,9 +37,9 @@ const AppUrlListener: React.FC<any> = () => {
       return
     }
     try {
-      console.log('Testing API', getUrl() + 'api/hello2/route')
-      const res1 = await fetch(getUrl() + 'api/hello2/route', {
-        method: 'GET',
+      console.log('Testing API', getUrl() + 'api/hello2/route3')
+      const res1 = await fetch(getUrl() + 'api/hello2/route3', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },

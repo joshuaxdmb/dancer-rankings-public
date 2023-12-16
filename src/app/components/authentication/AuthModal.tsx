@@ -30,7 +30,7 @@ const AuthModal = ({}: Props) => {
 
   const getSpotifyCode = async () => {
     if (isNative) {
-      await Browser.open({ url: SPOTIFY_LOGIN_URL_CAPACITOR })
+      window.location.href = SPOTIFY_LOGIN_URL_CAPACITOR
     } else {
       window.location.href = SPOTIFY_LOGIN_URL_WEB
     }
