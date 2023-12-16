@@ -59,7 +59,7 @@ const EventsCenter = ({}: Props) => {
 
   const handleVote = async (eventId: string) => {
     if (!user) {
-      toast.error('You must log in to upvote a song', {
+      toast.error('You must login to vote', {
         id: 'failed-upvote-song-supabase',
       })
       return
