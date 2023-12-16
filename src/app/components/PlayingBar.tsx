@@ -122,7 +122,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
   }
 
   return (
-    <div style={{marginBottom}} className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${backGroundColor || 'bg-black'} `}>
+    <div style={{paddingBottom:marginBottom}} className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${backGroundColor || 'bg-black'} `}>
       <div className={`flex h-20 flex-row items-center justify-center`}>
       <IoPlaySkipBackSharp onClick={handlePrevious} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
         <button className='mx-4 lg:mx-10 cursor-pointer' onClick={handlePlayPause}>
@@ -131,7 +131,7 @@ const PlayingBar: React.FC<Props> = ({backGroundColor}) => {
         </button>
       <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/>
       </div>
-     {(userDetails?.product === 'premium' || !spotifySession) && <p className='h-0 text-sm text-gray-400'>You need to link Spotify Premium to play full songs</p>}
+     {(userDetails?.product !== 'premium' || !spotifySession) && <p className='h-0 text-sm text-gray-400'>You need to link Spotify Premium to play full songs</p>}
     </div>
   );
 };
