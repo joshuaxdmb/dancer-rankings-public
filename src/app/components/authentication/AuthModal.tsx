@@ -69,16 +69,16 @@ const AuthModal = ({}: Props) => {
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('google', authOption !== 'login')
-    console.log('data', data, 'error', error)
+    console.log('data from Signin:', data, 'error from Signin:', error)
     if (spotifySession?.token) {
       refreshSpotifyToken(spotifySession.token)
     }
   }
 
   const signIngWithSpotify = async () => {
-    handleSpotifyLogin()
     const { data, error } = await supabaseClient.signInWithProvider('spotify', authOption !== 'login')
-    console.log('data', data, 'error', error)
+    console.log('data from Signin:', data, 'error from Signin:', error)
+    //handleSpotifyLogin()
    
   }
 

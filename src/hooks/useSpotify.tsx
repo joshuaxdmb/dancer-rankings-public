@@ -112,6 +112,10 @@ export const SpotifyProviderContext = (props: Props) => {
       spotifyApi.setAccessToken(access_token)
       const userDetails = await spotifyApi.getMe()
       setUserDetails(userDetails.body)
+      if(!userDetails?.body?.id){
+        toast.error('Failed to Link Spotify', { id: 'spotify-login' })
+        throw new Error
+      }
       toast.success('Linked Spotify', { id: 'spotify-login' })
     } catch (e){
       console.error('Failed to fetch Spotify user details', e)

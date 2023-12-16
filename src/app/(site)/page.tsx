@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 
 export default function Home() {
-  const { user, userDetails } = useUser()
+  const { userDetails } = useUser()
   const [topMargin, setTopMargin] = useState(true)
   const pathname = usePathname()
   const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)

@@ -8,6 +8,16 @@ export const getStatusBarHeight = async () => {
   return Capacitor.isNativePlatform() ? statusBarHeight : 0 // Ex. 29.090909957885742
 }
 
+export const getBottomBarHeight = async () => {
+  const {insets} = await SafeArea.getSafeAreaInsets()
+  return insets.bottom
+}
+
+export const getMarginBottom = async (defaultMargin: number) => {
+  const {insets} = await SafeArea.getSafeAreaInsets()
+  return Math.round(insets.bottom + defaultMargin)
+}
+
 export const getStatusBarHeightClass = (defaultHeight: number, statusBarHeight: number) => {
   const height = statusBarHeight
   return `h-${Math.round((height + 4 * defaultHeight) / 4)}`
