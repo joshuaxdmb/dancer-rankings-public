@@ -20,7 +20,7 @@ import AuthButtons from '../authentication/SidebarButtons'
 import Loading from '../Loading'
 import { deviceDimensionsAtom } from '@/atoms/deviceDimensionsAtom'
 import { SafeArea } from 'capacitor-plugin-safe-area'
-import { getMarginTop } from './StatusBarSpacing'
+import { getMarginBottom, getMarginTop } from './StatusBarSpacing'
 
 type Props = { children: React.ReactNode }
 
@@ -30,12 +30,14 @@ const Sidebar = ({ children }: Props) => {
   const [visible, setVisible] = useState(true)
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
   const [marginTop, setMarginTop] = useState(18)
+  const [marginBottom, setMarginBottom] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
 
   const setStatusBarHeight = async () => {
     const { statusBarHeight } = await SafeArea.getStatusBarHeight()
-    const margin = await getMarginTop(17, statusBarHeight)
+    const margin = await getMarginTop(16, statusBarHeight)
+    const marginBottom = await getMarginBottom(0)
     setMarginTop(margin)
     setDeviceDimensions({ statusBarHeight })
     setIsLoading(false)
@@ -119,12 +121,13 @@ const Sidebar = ({ children }: Props) => {
   // Sidebar content for code reuse
   const sidebarContent = (
     <div
+      style={{marginBottom}}
       className={`flex flex-col gap-y-2 h-full w-[300px] pr-2 transition-transform duration-300 overflow-y-scroll scrollbar-hide z-30 ${
         !visible ? '-translate-x-full' : ''
       }`}>
       <Box className='overflow-y-auto h-full scrollbar-hide z-30'>
         <button
-          className={`md:hidden p-6 pt-4 pb-0 z-30`}
+          className={`md:hidden p-6 pt-2 pb-0 z-30`}
           style={{ marginTop }}
           onClick={() => {
             setVisible(false)

@@ -37,7 +37,7 @@ const AppUrlListener: React.FC<any> = () => {
       return
     }
     try {
-      console.log('Testing API',getUrl() + 'api/hello2/route')
+      console.log('Testing API', getUrl() + 'api/hello2/route')
       const res1 = await fetch(getUrl() + 'api/hello2/route', {
         method: 'GET',
         headers: {
@@ -66,69 +66,67 @@ const AppUrlListener: React.FC<any> = () => {
     }
   }
 
-const handleSupabaseCallback = async (code:string) => {
-  try{
-    await supabase.exchangeCodeForSession(code)
-  } catch (e){
-    console.log('Error exchanging code for session', e)
+  const handleSupabaseCallbackNative = async (code: string) => {
+    try {
+      await supabase.exchangeCodeForSession(code)
+    } catch (e) {
+      console.log('Error exchanging code for session', e)
+    }
   }
-}
 
-  //Handle Spotify callback on mobile
   useEffect(() => {
-    if (isNative) {
-      App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-        const url = new URL(event.url)
-        console.log('Got url', url)
-        const authCode = url.searchParams.get('code')
-        handleSupabaseCallback(authCode)
-        // const url = new URL(event.url)
-        // const authCode = url.searchParams.get('code')
-        // const partyId = url.searchParams.get('id')
-        // console.log('Got party id', partyId)
-        // console.log('Got code', authCode)
-        // if (authCode) {
-        //   fetchSpotifySession(authCode)
-        // }
-        // if (partyId) {
-        //   console.log('Setting party id 1000:', partyId)
-        //   setPartyPlaylistId(partyId)
-        //   handleJoinParty(partyId)
-        // }
-      })
+    if (!isNative) return
+    App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+      const url = new URL(event.url)
+      console.log('Got url', url)
+      const authCode = url.searchParams.get('code')
+      const provider = url.searchParams.get('provider')
+      handleSupabaseCallbackNative(authCode)
+      fetchSpotifySession(authCode)
+      // switch (provider) {
+      //   case 'spotify':
+      //     fetchSpotifySession(authCode)
+      //     break
+      //   case 'supabase':
+      //     handleSupabaseCallbackNative(authCode)
+      //     break
+      //   default:
+      //     handleSupabaseCallbackNative(authCode)
+      // }
+      // const url = new URL(event.url)
+      // const authCode = url.searchParams.get('code')
+      // const partyId = url.searchParams.get('id')
+      // console.log('Got party id', partyId)
+      // console.log('Got code', authCode)
+      // if (authCode) {
+      //   fetchSpotifySession(authCode)
+      // }
+      // if (partyId) {
+      //   console.log('Setting party id 1000:', partyId)
+      //   setPartyPlaylistId(partyId)
+      //   handleJoinParty(partyId)
+      // }
+    })
 
-      return () => {
-        App.removeAllListeners()
-     }
-    } else {
-      const handleAuthCode = async () => {
-        const url = window.location.href
-        console.log('URL', url)
-        const newUrl = new URL(url)
-        const hasCode = url.includes('?code=')
-        if (hasCode) {
-          const authCode = newUrl.searchParams.get('code')
-          console.log('Got spotify code', authCode)
-          if (authCode) {
-            fetchSpotifySession(authCode)
-          }
-        }
+    return () => {
+      App.removeAllListeners()
+    }
+  }, [])
 
-        const partyId = newUrl.searchParams.get('id')
-        console.log('partyid', partyId)
-        if (partyId) {
-          console.log('Setting party id 1000:', partyId)
-          setPartyPlaylistId(partyId)
-          handleJoinParty(partyId)
-        }
-      }
-      if (!isNative) {
-        //handleAuthCode()
-      }
+  useEffect(() => {
+    if (isNative) return
+    const url = window.location.href
+    console.log('URL', url)
+    const newUrl = new URL(url)
+    const partyId = newUrl.searchParams.get('id')
+    console.log('partyid', partyId)
+    if (partyId) {
+      console.log('Setting party id 1000:', partyId)
+      setPartyPlaylistId(partyId)
+      handleJoinParty(partyId)
     }
   }, [])
 
   return null
 }
-
 export default AppUrlListener

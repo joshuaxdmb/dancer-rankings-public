@@ -42,7 +42,7 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
         <select
           id="location"
           name="location"
-          className="w-full p-2 border-none rounded mt-1 bg-white text-center"
+          className="w-full p-2 border-none rounded bg-white text-center h-10 min-h-[30px]"
           value={location}
           onChange={(e) => {
             handleLocationChange(e.target.value as LocationIdsEnum);
