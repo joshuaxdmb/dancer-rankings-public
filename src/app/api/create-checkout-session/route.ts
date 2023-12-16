@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server"
 import { stripe } from '@/lib/stripe'
 import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin"
+import {OPTIONS as _OPTIONS} from '@/lib/api'
+
+export async function OPTIONS(req: Request, res:Response) {
+    return _OPTIONS(req, res)
+}
 
 export async function POST(request: Request) {
     const { price, user, mode, isNative, quantity = 1, metadata = {} } = await request.json()

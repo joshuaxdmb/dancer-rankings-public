@@ -15,4 +15,14 @@ export const customSignIn = async (provider:string, callbackUrl:string) => {
       console.error('Error during custom sign-in:', error);
     }
   };
-  
+
+export async function OPTIONS(req:Request, res:Response) {
+  return new Response(null,{status:200})
+}
+
+export const handleCors = (fn:any) => async (req:Request, res:Response) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null,{status:200})
+  }
+  return await fn(req, res)
+}

@@ -4,6 +4,11 @@ import { NextResponse } from "next/server"
 import { stripe } from '@/lib/stripe'
 import { getUrl } from '@/lib/helpers'
 import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin"
+import {OPTIONS as _OPTIONS} from '@/lib/api'
+
+export async function OPTIONS(req: Request, res:Response) {
+    return _OPTIONS(req, res)
+}
 
 export async function POST() {
     try {

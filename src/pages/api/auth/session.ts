@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { authOptions } from './[...nextauth]';
 import { getToken } from 'next-auth/jwt';
+import { handleCors as _handleCors } from '@/lib/api'
 
-export default async function session(req: NextApiRequest, res: NextApiResponse) {
+async function session(req: NextApiRequest, res: NextApiResponse) {
   // Extract token from the Authorization header
   const token = await getToken({ req, secret: authOptions.secret });
 
@@ -14,3 +15,5 @@ export default async function session(req: NextApiRequest, res: NextApiResponse)
   // Assuming token contains necessary user information
   return res.json({ user: token.user });
 }
+
+export default _handleCors(session)

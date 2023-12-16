@@ -1,4 +1,9 @@
 import fetch from 'node-fetch';
+import {OPTIONS as _OPTIONS} from '@/lib/api'
+
+export async function OPTIONS(req: Request, res:Response) {
+    return _OPTIONS(req, res)
+}
 
 export type SpotifyTokenResponse = {
     access_token: string;

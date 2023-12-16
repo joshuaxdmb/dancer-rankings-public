@@ -1,5 +1,10 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import { SpotifyTokenResponse } from '../session/route';
+import {OPTIONS as _OPTIONS} from '@/lib/api'
+
+export async function OPTIONS(req: Request, res:Response) {
+    return _OPTIONS(req, res)
+}
 
 const scopes = [
   'user-read-email',
