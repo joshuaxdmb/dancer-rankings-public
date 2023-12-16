@@ -74,38 +74,32 @@ const AppUrlListener: React.FC<any> = () => {
     }
   }
 
+  const handleUrl = (url:URL) =>{
+    const authCode = url.searchParams.get('code')
+    const provider = url.searchParams.get('provider')
+    const partyId = url.searchParams.get('id')
+    handleSupabaseCallbackNative(authCode)
+    fetchSpotifySession(authCode)
+    switch (provider) {
+      case 'spotify':
+        authCode && fetchSpotifySession(authCode)
+        break
+      default:
+        authCode && handleSupabaseCallbackNative(authCode)
+    }
+    if (partyId) {
+      //console.log('Setting party id 1000:', partyId)
+      //setPartyPlaylistId(partyId)
+      handleJoinParty(partyId)
+    }
+  }
+
   useEffect(() => {
     if (!isNative) return
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       const url = new URL(event.url)
       console.log('Got url', url)
-      const authCode = url.searchParams.get('code')
-      const provider = url.searchParams.get('provider')
-      handleSupabaseCallbackNative(authCode)
-      fetchSpotifySession(authCode)
-      // switch (provider) {
-      //   case 'spotify':
-      //     fetchSpotifySession(authCode)
-      //     break
-      //   case 'supabase':
-      //     handleSupabaseCallbackNative(authCode)
-      //     break
-      //   default:
-      //     handleSupabaseCallbackNative(authCode)
-      // }
-      // const url = new URL(event.url)
-      // const authCode = url.searchParams.get('code')
-      // const partyId = url.searchParams.get('id')
-      // console.log('Got party id', partyId)
-      // console.log('Got code', authCode)
-      // if (authCode) {
-      //   fetchSpotifySession(authCode)
-      // }
-      // if (partyId) {
-      //   console.log('Setting party id 1000:', partyId)
-      //   setPartyPlaylistId(partyId)
-      //   handleJoinParty(partyId)
-      // }
+      handleUrl(url)
     })
 
     return () => {
@@ -116,15 +110,8 @@ const AppUrlListener: React.FC<any> = () => {
   useEffect(() => {
     if (isNative) return
     const url = window.location.href
-    console.log('URL', url)
-    const newUrl = new URL(url)
-    const partyId = newUrl.searchParams.get('id')
-    console.log('partyid', partyId)
-    if (partyId) {
-      console.log('Setting party id 1000:', partyId)
-      setPartyPlaylistId(partyId)
-      handleJoinParty(partyId)
-    }
+    console.log('Got URL', url)
+    handleUrl(new URL(url))
   }, [])
 
   return null

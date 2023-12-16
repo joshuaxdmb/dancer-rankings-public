@@ -29,7 +29,7 @@ const Sidebar = ({ children }: Props) => {
   const pathname = usePathname()
   const [visible, setVisible] = useState(true)
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
-  const [marginTop, setMarginTop] = useState(18)
+  const [marginTop, setMarginTop] = useState(20)
   const [marginBottom, setMarginBottom] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
@@ -37,7 +37,7 @@ const Sidebar = ({ children }: Props) => {
   const setStatusBarHeight = async () => {
     const { statusBarHeight } = await SafeArea.getStatusBarHeight()
     const margin = await getMarginTop(16, statusBarHeight)
-    const marginBottom = await getMarginBottom(0)
+    const marginBottom = await getMarginBottom(4)
     setMarginTop(margin)
     setDeviceDimensions({ statusBarHeight })
     setIsLoading(false)

@@ -31,7 +31,7 @@ const Header: React.FC<Props> = ({
   const [visible, setVisible] = useState(true)
   const { userDetails } = useSpotify()
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
-  const [paddingTop, setPaddingTop] = useState(20)
+  const [paddingTop, setPaddingTop] = useState(22)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
   const [showLogin, setShowLogin] = useState(true)
 
