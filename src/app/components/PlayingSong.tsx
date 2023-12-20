@@ -8,7 +8,7 @@ type Props = {
 
 const PlayingSong = ({ song, isPlaying }: Props) => {
   return (
-    <div className="px-4 flex flex-row justify-between items-center w-full
+    <div className="px-4 gap-2 flex flex-row justify-between items-center w-full
     ">
         <Image alt='song-image' src={isPlaying?'/assets/icons/spotify.svg':'/assets/icons/spotify-white-icon.svg'} width={50} height={50}/>
       <div className={`flex flex-col pb-2 cursor-pointer text-left flex-grow truncate ml-2`}>

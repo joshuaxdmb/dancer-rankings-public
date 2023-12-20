@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpotify } from '@fortawesome/free-brands-svg-icons'
 import { Capacitor } from '@capacitor/core'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
-import { Browser } from '@capacitor/browser'
 import { SpotifyProfile } from 'next-auth/providers/spotify'
 
 type Props = {
@@ -52,7 +51,7 @@ const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
         <div className='flex gap-1 items-center'>
           <StyledButton 
             onClick={getSpotifyCode}
-            className=' px-6 py-2 flex items-center justify-center bg-green-400'>
+            className=' px-6 py-2 flex items-center justify-center bg-spotify-green'>
             Link Spotify <FontAwesomeIcon icon={faSpotify} className='ml-2 h-6 w-6' />
           </StyledButton>
         </div>

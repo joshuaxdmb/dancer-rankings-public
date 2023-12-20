@@ -9,6 +9,7 @@ import { playlistAtom } from '@/atoms/playlistAtom'
 import { themes } from '@/lib/themes'
 import PageWrapper, { BachataPageWrapper, SalsaPageWrapper } from '../party-playlist/components/PageWrapper'
 import { useEffect } from 'react'
+import SongsBadge from './SongsBadge'
 
 export default function Home() {
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
@@ -21,8 +22,9 @@ export default function Home() {
   return (
     <PageWrapper playlist={playlist}>
       <Header
-        className='bg-none'
-        pageTitle={`Top ${PlaylistLabels[playlist]} Songs | ${LocationLabels[location]}`}></Header>
+        className='z-20 bg-none'
+        pageTitle={`Top ${PlaylistLabels[playlist]} Songs | ${LocationLabels[location]}`}
+        pageBadge={<SongsBadge/>}></Header>
       <Center playlist={playlist || PlaylistEnum.bachata} />
       <PlayingBar backGroundColor={themes[playlist].playingBarBackground} />
     </PageWrapper>

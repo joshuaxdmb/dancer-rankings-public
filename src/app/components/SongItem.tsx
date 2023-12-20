@@ -21,7 +21,7 @@ const SongItem = ({ song, onVote, userVote, onSelect, isPlaying }: Props) => {
           onSelect(song)
         }}
         className='flex flex-col pb-2 cursor-pointer text-left flex-grow truncate'>
-        <div className='flex flex-row'>
+        <div className='flex flex-row gap-2'>
           <Image
             alt={'song-image'+song.spotify_id}
             src={song.image_path}
