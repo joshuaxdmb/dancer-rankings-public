@@ -9,12 +9,13 @@ import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
 import { useRecoilState } from 'recoil'
 import { useSupabase } from '@/hooks/useSupabase'
+import { useSpotify } from '@/hooks/useSpotify'
 
 const AppUrlListener: React.FC<any> = () => {
   const isNative = Capacitor.isNativePlatform()
-  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const [partyPlaylistId, setPartyPlaylistId] = useRecoilState(partyPlaylistAtom)
   const supabase = useSupabase()
+  const {fetchSpotifySession} = useSpotify()
 
   const handleJoinParty = async (partyId?: string) => {
     const partyIdToJoin = partyId
@@ -27,42 +28,6 @@ const AppUrlListener: React.FC<any> = () => {
     } else {
       console.log('Setting party id:', partyIdToJoin)
       setPartyPlaylistId(partyIdToJoin)
-    }
-  }
-
-  const fetchSpotifySession = async (authCode: any) => {
-    toast.success('Almost done...', { id: 'spotify-login' })
-    if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
-      console.log('Session token still valid')
-      return
-    }
-    try {
-      console.log('Testing API', getUrl() + 'api/hello2/route3')
-      const res1 = await fetch(getUrl() + 'api/hello2/route3', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      })
-      console.log('here')
-      console.log('Test result:', res1)
-      console.log('Fetching spotify session', getUrl() + 'api/spotify/session')
-      const res = await fetch(getUrl() + 'api/spotify/session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: authCode, isNative }),
-      })
-      console.log('Got some spotify session response', res)
-      const session = await res.json()
-      console.log('Spotify session response', session)
-      if (session.error) throw new Error(session.error)
-      setSpotifySession(session)
-      window.history.pushState({}, '', '/')
-    } catch (e) {
-      console.log('Failed to get spotify session', e)
     }
   }
 

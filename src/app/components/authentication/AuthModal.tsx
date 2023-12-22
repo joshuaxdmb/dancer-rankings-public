@@ -28,45 +28,6 @@ const AuthModal = ({}: Props) => {
   const isNative = Capacitor.isNativePlatform()
   const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
-  const getSpotifyCode = async () => {
-    if (isNative) {
-      window.location.href = SPOTIFY_LOGIN_URL_CAPACITOR
-    } else {
-      window.location.href = SPOTIFY_LOGIN_URL_WEB
-    }
-  }
-
-  const refreshSpotifyToken = async (currentToken: SpotifyTokenResponse) => {
-    const res = await fetch(getUrl()+'api/spotify/refresh-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: currentToken }),
-    })
-
-    const session = await res.json()
-    setSpotifySession(session)
-
-    if (session.error) {
-      console.log('Error refreshing token', error)
-      toast.error('Error refreshing Spotify session')
-    }
-  }
-
-  const handleSpotifyLogin = async () => {
-    try{
-      if (spotifySession?.token) {
-        refreshSpotifyToken(spotifySession.token)
-      } else if (!spotifySession?.token) {
-        getSpotifyCode()
-      }
-    } catch (e){
-      console.log('Error refreshing Spotify token', e)
-    }
-    
-  }
-
   const signInWithGoogle = async () => {
     const { data, error } = await supabaseClient.signInWithProvider('google', authOption !== 'login')
     console.log('data from Signin:', data, 'error from Signin:', error)

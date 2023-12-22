@@ -25,7 +25,7 @@ const SongItem = ({ song, onVote, userVote, onSelect, isPlaying }: Props) => {
           <Image
             alt={'song-image'+song.spotify_id}
             src={song.image_path}
-            width={55}
+            width={60}
             height={50}
             className='mr-1'
           />

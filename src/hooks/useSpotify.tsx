@@ -1,18 +1,24 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
-import toast from '@/lib/toast';
+import toast from '@/lib/toast'
 import { useRecoilState } from 'recoil'
 import { isPlayingAtom } from '@/atoms/playingSongAtom'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { usePersistentRecoilState } from './usePersistentState'
 import { SpotifySession } from '@/types/types'
 import { getUrl } from '@/lib/helpers'
+import { Capacitor } from '@capacitor/core'
+import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
 
 type SpotifyContextType = {
   togglePlay?: () => void
   spotifyApi: SpotifyWebApi
   spotifyDeviceId: string
   userDetails?: SpotifyApi.CurrentUsersProfileResponse
+  fetchSpotifySession?: (authCode: any) => void
+  refreshSession?: (session?: SpotifySession) => void
+  getSpotifyCode?: () => void
+  unlinkSpotify?: () => void
 }
 
 const SpotifyContext = createContext<SpotifyContextType | null>(null)
@@ -24,6 +30,7 @@ interface Props {
 export const SpotifyProviderContext = (props: Props) => {
   const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const [player, setPlayer] = useState<any | null>(null)
+  const isNative = Capacitor.isNativePlatform()
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
   const [isPlayerActive, setIsPlayerActive] = useState(false)
   const [spotifyDeviceId, setSpotifyDeviceId] = useState<string>('')
@@ -50,6 +57,11 @@ export const SpotifyProviderContext = (props: Props) => {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const token = sessionToken || spotifySession?.token.access_token
+      if(!token){
+        console.log('No token found for Spotify Player')
+        return
+      }
+
       const spotifyPlayer = new Spotify.Player({
         name: 'Dancer Rankings App',
         getOAuthToken: (cb) => {
@@ -108,24 +120,62 @@ export const SpotifyProviderContext = (props: Props) => {
   }
 
   const initializeApi = async (access_token: any) => {
-    try{
+    try {
       spotifyApi.setAccessToken(access_token)
       const userDetails = await spotifyApi.getMe()
       setUserDetails(userDetails.body)
-      if(!userDetails?.body?.id){
+      if (!userDetails?.body?.id) {
         toast.error('Failed to Link Spotify', { id: 'spotify-login' })
-        throw new Error
+        throw new Error()
       }
       toast.success('Linked Spotify', { id: 'spotify-login' })
-    } catch (e){
+    } catch (e) {
       console.error('Failed to fetch Spotify user details', e)
     }
-    
   }
 
-  const refreshToken = async (session: SpotifySession) => {
+  const getSpotifyCode = async () => {
+    if (isNative) {
+      window.location.href = SPOTIFY_LOGIN_URL_CAPACITOR
+    } else {
+      window.location.href = SPOTIFY_LOGIN_URL_WEB
+    }
+  }
+
+  const unlinkSpotify = async () =>{
+    setUserDetails(undefined)
+    setSpotifySession(undefined)
+  }
+
+  const fetchSpotifySession = async (authCode: any) => {
+    toast.success('Almost done...', { id: 'spotify-login' })
+    if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
+      console.log('Session token still valid')
+      return
+    }
     try {
-      const res = await fetch(getUrl()+'api/spotify/refresh-session', {
+      const res = await fetch(getUrl() + 'api/spotify/session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: authCode, isNative }),
+      })
+      console.log('Got some spotify session response', res)
+      const session = await res.json()
+      console.log('Spotify session response', session)
+      if (session.error) throw new Error(session.error)
+      setSpotifySession(session)
+      window.history.pushState({}, '', '/')
+    } catch (e) {
+      console.log('Failed to get spotify session', e)
+    }
+  }
+
+  const refreshSession = async (session?: SpotifySession) => {
+    session = session || spotifySession
+    try {
+      const res = await fetch(getUrl() + 'api/spotify/refresh-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,11 +191,11 @@ export const SpotifyProviderContext = (props: Props) => {
           ...sessionResponse.token,
         },
       }
-
       setSpotifySession(newSession)
       console.log('Refreshed spotify token', newSession)
     } catch (e) {
-      console.error('Failed to refresh spotify token', e)
+      console.error('Failed to refresh spotify session', e)
+      setSpotifySession(undefined)
     }
   }
 
@@ -154,7 +204,7 @@ export const SpotifyProviderContext = (props: Props) => {
       return
     } else {
       if (spotifySession?.token?.expires_at < Date.now() - 600 * 1000) {
-        refreshToken(spotifySession)
+        refreshSession()
       }
       if (!player) initializeSpotifyPlayer(spotifySession.token.access_token)
 
@@ -163,7 +213,12 @@ export const SpotifyProviderContext = (props: Props) => {
     }
   }, [spotifySession?.token]) //eslint-disable-line
 
-  return <SpotifyContext.Provider value={{ spotifyApi, spotifyDeviceId, userDetails }} {...props} />
+  return (
+    <SpotifyContext.Provider
+      value={{ spotifyApi, spotifyDeviceId, userDetails, fetchSpotifySession, refreshSession, getSpotifyCode, unlinkSpotify }}
+      {...props}
+    />
+  )
 }
 
 export const useSpotify = () => {

@@ -20,15 +20,18 @@ import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom';
 import SearchBar from '../SearchBar';
 import { BeatLoader } from 'react-spinners';
 import { useSupabase } from '@/hooks/useSupabase';
+import { LocationIdsEnum } from '../../../../content'
 
 type Props = {
   playlist: string;
+  isParty?: boolean;
 };
 
-const Center = ({playlist}: Props) => {
+const Center = ({playlist, isParty}: Props) => {
   const { user } = useUser();
   const { spotifyApi, userDetails } = useSpotify();
-  const [location] = useRecoilState(locationAtom);
+  const [location, setLocation] = useRecoilState(locationAtom);
+  const [playlistLocation, setPlaylistLocation] = useState<LocationIdsEnum>(location)
   const [songs, setSongs] = useRecoilState<any>(songsAtom);
   const [userVotes, setUserVotes] = useRecoilState<VotesMap>(votesByUserAtom);
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom);
@@ -36,17 +39,19 @@ const Center = ({playlist}: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
 
+
   useEffect(() => {
+    if(isParty) setPlaylistLocation(LocationIdsEnum.global)
     !isLoading && setIsLoading(true);
     if (
-      !songs[location] ||
-      !songs[location]?.[playlist] ||
-      !songs[location]?.[playlist]?.length
+      !songs[playlistLocation] ||
+      !songs[playlistLocation]?.[playlist] ||
+      !songs[playlistLocation]?.[playlist]?.length
     ) {
       supabaseClient
-        .getVotedSongs(playlist, location)
+        .getVotedSongs(playlist, playlistLocation)
         .then((data: any) => {
-          const updatedSongs = mergeSongs(songs, location, playlist, data);
+          const updatedSongs = mergeSongs(songs, playlistLocation, playlist, data);
           setSongs(updatedSongs);
         })
         .catch((e: any) => {
@@ -123,7 +128,7 @@ const Center = ({playlist}: Props) => {
       down_votes: 0,
       total_votes: 1,
       playlist_id: playlist,
-      location_id: location,
+      location_id: playlistLocation,
     };
 
     const insertSong: Song = {
@@ -150,13 +155,13 @@ const Center = ({playlist}: Props) => {
       });
 
     supabaseClient
-      .voteSong(insertSong.spotify_id, user.id, location, playlist, 1)
+      .voteSong(insertSong.spotify_id, user.id, playlistLocation, playlist, 1)
       .then((data: any) => {
         const newVotes = {
           ...userVotes,
-          [location]: {
+          [playlistLocation]: {
             [playlist]: {
-              ...userVotes[location]?.[playlist],
+              ...userVotes[playlistLocation]?.[playlist],
               [insertSong.spotify_id]: 1,
             },
           },
@@ -167,11 +172,11 @@ const Center = ({playlist}: Props) => {
         console.log('Failed to vote for song', e);
       });
 
-    const localSongExists = songs[location]?.[playlist]?.find(
+    const localSongExists = songs[playlistLocation]?.[playlist]?.find(
       (song: SongLocal) => song.spotify_id === songDetails.id
     );
     if (!localSongExists) {
-      setSongs(mergeSongs(songs, location, playlist, [insertLocalSong]));
+      setSongs(mergeSongs(songs, playlistLocation, playlist, [insertLocalSong]));
     }
   };
 
@@ -183,25 +188,25 @@ const Center = ({playlist}: Props) => {
       return;
     }
 
-    if (userVotes?.[location]?.[playlist]?.[song.spotify_id] === vote) return;
+    if (userVotes?.[playlistLocation]?.[playlist]?.[song.spotify_id] === vote) return;
 
     supabaseClient
-      .voteSong(song.spotify_id, user.id, location, playlist, vote)
+      .voteSong(song.spotify_id, user.id, playlistLocation, playlist, vote)
       .then((data: any) => {
         console.log('Voted for song', data);
         const newVotes = mergeVotes(
           userVotes,
-          location,
+          playlistLocation,
           playlist,
           song.spotify_id,
           vote
         );
         setUserVotes(newVotes);
         const currentVote =
-        userVotes?.[location]?.[playlist]?.[song.spotify_id] || 0;
+        userVotes?.[playlistLocation]?.[playlist]?.[song.spotify_id] || 0;
         const newSongs = updateSongsVotes(
           songs,
-          location,
+          playlistLocation,
           playlist,
           song.spotify_id,
           vote,
@@ -232,16 +237,16 @@ const Center = ({playlist}: Props) => {
             </div>
             <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
           </div >
-        ) : songs[location]?.[playlist]?.length ? (
+        ) : songs[playlistLocation]?.[playlist]?.length ? (
           <div className='overflow-y-auto pb-20 scrollbar-hide'>
-            {songs[location]?.[playlist]?.map(
+            {songs[playlistLocation]?.[playlist]?.map(
               (song: SongLocal, index: number) => (
                 <SongItem
                   key={index}
                   song={song}
                   onVote={handleVote}
                   onSelect={selectSong}
-                  userVote={userVotes?.[location]?.[playlist]?.[song.spotify_id]}
+                  userVote={userVotes?.[playlistLocation]?.[playlist]?.[song.spotify_id]}
                   isPlaying={currentTrack?.spotify_id === song.spotify_id}
                 />
               )

@@ -9,6 +9,9 @@ const scopes = [
     'user-modify-playback-state',
     'user-read-currently-playing',
     'user-read-private',
+    'playlist-read-private',
+    'playlist-modify-private',
+    'playlist-modify-public'
 ].join(',')
 
 const params = {

@@ -32,7 +32,7 @@ export default function Home() {
         <CreatePartyPlaylist />
       ) : (
         <div className="h-full">
-          <SongsCenter playlist={partyPlaylistId || ''} />
+          <SongsCenter playlist={partyPlaylistId || ''} isParty={true} />
           <PlayingBar backGroundColor={theme.playingBarBackground} />
         </div>
       )}

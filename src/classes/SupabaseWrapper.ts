@@ -144,6 +144,8 @@ class SupabaseWrapper {
         if (error1) {
             throw error1
         }
+        //When party is created, it does not return the id, so we need to fetch it again
+        console.log('Created party', data)
         const { data: newParty, error: error2 } = await this.client.from('playlists').select('*').eq('owner_id', userId).order('created_at', { ascending: false }).single()
 
         if (error2) {

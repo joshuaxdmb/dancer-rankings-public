@@ -57,7 +57,7 @@ const Header: React.FC<Props> = ({
 
       if(window.innerWidth >= 360 && !showLogin) {
         setShowLogin(true)
-      } else if (window.innerWidth < 360 && showLogin) {
+      } else if (window.innerWidth < 410 && showLogin) {
         setShowLogin(false)
       }
     }

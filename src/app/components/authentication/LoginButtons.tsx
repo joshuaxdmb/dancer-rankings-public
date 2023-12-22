@@ -5,8 +5,9 @@ import StyledButton from '../global/SytledButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpotify } from '@fortawesome/free-brands-svg-icons'
 import { Capacitor } from '@capacitor/core'
-import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
+import { Browser } from '@capacitor/browser'
 import { SpotifyProfile } from 'next-auth/providers/spotify'
+import { useSpotify } from '@/hooks/useSpotify'
 
 type Props = {
   isLoading: boolean
@@ -15,16 +16,8 @@ type Props = {
 }
 
 const LoginButtons = ({ isLoading, user, spotifySession }: Props) => {
-  const isNative = Capacitor.isNativePlatform()
-
-  const getSpotifyCode = async () => {
-    if (isNative) {
-      window.location.assign(SPOTIFY_LOGIN_URL_CAPACITOR)
-
-    } else {
-      window.location.assign(SPOTIFY_LOGIN_URL_WEB) 
-    }
-  }
+  
+  const {getSpotifyCode} = useSpotify()
 
   const authModal = useAuthModal()
 

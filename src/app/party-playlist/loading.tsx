@@ -8,7 +8,7 @@ const Loading = () =>{
     return (
         <Box className="h-full flex items-center justify-center flex-col">
              <BeatLoader color="#FFFFFF" size={20} />
-             <h1 className="text-lg mt-4">Hold on a sec... </h1>
+             <h1 className="text-lg mt-4">Getting some data... </h1>
         </Box>
     )
 }
