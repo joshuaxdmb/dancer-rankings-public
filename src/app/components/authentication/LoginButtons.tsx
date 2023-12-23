@@ -4,8 +4,6 @@ import useAuthModal from '@/hooks/useAuthModal'
 import StyledButton from '../global/SytledButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpotify } from '@fortawesome/free-brands-svg-icons'
-import { Capacitor } from '@capacitor/core'
-import { Browser } from '@capacitor/browser'
 import { SpotifyProfile } from 'next-auth/providers/spotify'
 import { useSpotify } from '@/hooks/useSpotify'
 

@@ -3,19 +3,11 @@ import Modal from '../layout/Modal'
 import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
-import { Capacitor } from '@capacitor/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons'
 import useAuthModal from '@/hooks/useAuthModal'
 import SupabaseWrapper from '@/classes/SupabaseWrapper'
 import SytledButton from '../global/SytledButton'
-import { Browser } from '@capacitor/browser'
-import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
-import { spotifySessionAtom } from '@/atoms/spotifyAtom'
-import { SpotifyTokenResponse } from '@/types/types'
-import toast from '@/lib/toast';
-import { usePersistentRecoilState } from '@/hooks/usePersistentState'
-import { getUrl } from '@/lib/helpers'
 
 type Props = {}
 
@@ -25,22 +17,15 @@ const AuthModal = ({}: Props) => {
   const router = useRouter()
   const { session } = useSessionContext()
   const [error, setError] = useState('')
-  const isNative = Capacitor.isNativePlatform()
-  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
 
   const signInWithGoogle = async () => {
+    // Takes to another window
     const { data, error } = await supabaseClient.signInWithProvider('google', authOption !== 'login')
-    console.log('data from Signin:', data, 'error from Signin:', error)
-    // if (spotifySession?.token) {
-    //   refreshSpotifyToken(spotifySession.token)
-    // }
   }
 
   const signIngWithSpotify = async () => {
+    // Takes to another window
     const { data, error } = await supabaseClient.signInWithProvider('spotify', authOption !== 'login')
-    console.log('data from Signin:', data, 'error from Signin:', error)
-    //handleSpotifyLogin()
-   
   }
 
   const onChange = (open: boolean) => {
@@ -51,8 +36,6 @@ const AuthModal = ({}: Props) => {
 
   useEffect(() => {
     if (session) {
-      //router.refresh();
-      console.log('User session found')
       onClose()
     }
   }, [session, router, onClose])

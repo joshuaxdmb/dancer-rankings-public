@@ -2,7 +2,6 @@ import fetch from 'node-fetch';
 
 export async function POST(req: Request) {
     const { code } = await req.json();
-    console.log(`Basic ${Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')}`)
 
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',

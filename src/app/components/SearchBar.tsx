@@ -35,7 +35,7 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong, handleSelectSong}: Pr
         setSearchedSongs(data.body.tracks.items);
       })
       .catch((err: any) => {
-        console.log('ERROR', err);
+        console.log('Error searching', err);
         if (err.statusCode === 401) {
           toast.error('Your spotify session expired', {
             id: 'failed-spotify-search',
@@ -43,7 +43,6 @@ const SearchBar = ({spotifyApi,userDetails, handleAddSong, handleSelectSong}: Pr
           router.refresh();
         }
       });
-    console.log(searchedSongs);
   };
 
   const handleCloseSearch = () => {

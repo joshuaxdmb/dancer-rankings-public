@@ -44,11 +44,11 @@ const EventsCenter = ({}: Props) => {
         supabaseClient
           .getVotedEventsByUser(user?.id)
           .then((data: any) => {
-            console.log(data, 'event votes fetched')
             const votes_list = data.map((v: any) => v.event_id)
             setUserVotes(votes_list)
           })
           .catch((e: any) => {
+            console.error('Error fetching votes', e)
             toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' })
             setIsLoading(false)
           })
@@ -70,27 +70,25 @@ const EventsCenter = ({}: Props) => {
       supabaseClient
         .deleteVoteEvent(eventId, user.id)
         .then((data: any) => {
-          console.log('Deleted vote for event', data)
           const newVotes = userVotes.filter((v: any) => v !== eventId)
           const newEvents = updateEventsVotes(events, location, eventId, -1)
           setEvents(newEvents)
           setUserVotes(newVotes)
         })
         .catch((e: any) => {
-          console.log('Failed to delete vote for event', e)
+          console.error('Failed to delete vote for event', e)
         })
     } else {
       supabaseClient
         .voteEvent(eventId, user.id)
         .then((data: any) => {
-          console.log('Voted for event', data)
           const newVotes = [...userVotes, eventId]
           const newEvents = updateEventsVotes(events, location, eventId, 1)
           setEvents(newEvents)
           setUserVotes(newVotes)
         })
         .catch((e: any) => {
-          console.log('Failed to vote for event', e)
+          console.error('Failed to vote for event', e)
         })
     }
   }

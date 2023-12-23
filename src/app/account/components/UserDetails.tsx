@@ -62,7 +62,7 @@ const UserDetails = ({}: Props) => {
       email: enteredEmail,
     } as UserDetailsType
 
-    console.log('insertData', insertData)
+    console.log('Insert user data:', insertData)
 
     if (!shouldUpdateUser(insertData, userDetails)) {
       toast.success('No changes to save')

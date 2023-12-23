@@ -51,7 +51,7 @@ async function refreshAccessToken(token: SpotifyTokenResponse) {
       error: null,
     };
   } catch (error) {
-    console.error('Error refreshing access token', error);
+    console.error('Error refreshing Spotify token', error);
     return {
       token,
       error,

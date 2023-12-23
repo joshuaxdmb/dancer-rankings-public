@@ -45,7 +45,6 @@ const SearchModal = ({ isOpen, songs, addSong, handleSelectSong }: Props) => {
             )}
           </span>
           <IoIosAddCircle onClick={()=>{
-            console.log('Adding song')
             addSong(song)
           }} className='hover:opacity-75 cursor-pointer' size={28} />{' '}
         </div>

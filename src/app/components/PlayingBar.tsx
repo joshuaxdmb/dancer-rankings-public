@@ -45,7 +45,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   useEffect(() => {
     if (userDetails?.product === 'premium') {
       spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
-        console.log('Error setting device on Spotify', e)
+        console.error('Error setting device on Spotify', e)
       })
       setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
     } else {
@@ -85,7 +85,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         }
       }
     } catch (err: any) {
-      console.error('ERROR', err)
+      console.error('Error playing/pausing', err)
       if (err.statusCode === 401) {
         toast.error('Your spotify session expired', {
           id: 'failed-spotify-search',

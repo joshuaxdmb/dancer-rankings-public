@@ -382,7 +382,6 @@ class SupabaseWrapper {
                 .from('songs')
                 .select('*')
                 .eq('spotify_id', spotifyId);
-            console.log('Fetched song', data)
             return data
 
 

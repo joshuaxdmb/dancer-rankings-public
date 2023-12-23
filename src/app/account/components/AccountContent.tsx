@@ -33,7 +33,7 @@ const AccountContent = () => {
       window.location.assign(url)
     } catch (error) {
       if (error) {
-        console.log(error)
+        console.log('Error redirecting to customer portal ',error)
         toast.error('Unable to fetch customer portal')
       }
     } finally {
