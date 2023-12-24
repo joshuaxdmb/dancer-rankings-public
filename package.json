@@ -73,7 +73,8 @@
     "stripe": "^13.8.0",
     "tailwind-merge": "^1.14.0",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "zustand": "^4.4.1"
+    "zustand": "^4.4.1",
+    "enable-webview-music-play": "https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play"
   },
   "devDependencies": {
     "@capacitor/cli": "^5.5.1",
@@ -89,7 +90,6 @@
     "postcss": "^8.4.30",
     "supabase": "^1.99.5",
     "tailwindcss": "^3.3.3",
-    "typescript": "latest",
-    "enable-webview-music-play": "file:./capacitor-plugins/capacitor-plugins"
+    "typescript": "latest"
   }
 }
