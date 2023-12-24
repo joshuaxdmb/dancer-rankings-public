@@ -53,6 +53,7 @@
     "dayjs": "^1.11.10",
     "depcheck": "^1.4.7",
     "dotenv": "^16.3.1",
+    "enable-webview-music-play": "git+https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play.git#main",
     "ionicons": "^7.2.1",
     "js-cookie": "^3.0.5",
     "lottie-react": "^2.4.0",
@@ -73,12 +74,12 @@
     "stripe": "^13.8.0",
     "tailwind-merge": "^1.14.0",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "zustand": "^4.4.1",
-    "enable-webview-music-play": "git+https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play.git#main"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^5.5.1",
     "@types/node": "latest",
+    "@types/node-fetch": "^2.6.9",
     "@types/qrcode": "^1.5.5",
     "@types/react": "latest",
     "@types/react-dom": "latest",
