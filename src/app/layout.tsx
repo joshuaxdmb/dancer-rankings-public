@@ -14,7 +14,7 @@ import ToasterProvider from '../providers/ToasterProvider'
 import SpotifyProvider from '../providers/SpotifyProvider'
 import Script from 'next/script'
 import AppUrlListener from '@/providers/AppUrlListener'
-
+import UseCustomWebView from '../../capacitor-plugins/enable-webview-music-play'
 
 const font = Figtree({ subsets: ['latin'] })
 

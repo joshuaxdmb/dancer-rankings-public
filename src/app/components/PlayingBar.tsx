@@ -64,7 +64,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
     )
     setSongIndex(index)
 
-    console.log('Debug: CURRENTLY PLAYIHG', index, songs, location, playlist, currentTrack?.spotify_id)
+    console.log('Debug: CURRENTLY PLAYING', currentTrack?.spotify_id)
   }, [currentTrack]) // eslint-disable-line
 
   const handlePlayPause = async() => {
@@ -125,8 +125,8 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   //TODO : Readd/uncomment player controls based on Spotify feedback
   return (
     <div
-      style={{ paddingBottom: marginBottom }}
-      className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 pb-6 items-center justify-center ${
+      style={{ paddingBottom: marginBottom ? marginBottom - 10 : 0 }} //Safe area is too large
+      className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 items-center justify-center ${
         backGroundColor || 'bg-black'
       } `}>
       <div className={`flex h-20 flex-row items-center justify-center`}>
@@ -141,7 +141,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         {/* <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/> */}
       </div>
       {(userDetails?.product !== 'premium' || !spotifySession) && (
-        <p className='h-0 text-sm text-gray-400'>
+        <p className='h-0 text-sm text-gray-400 mb-2'>
           You need to link Spotify Premium to play full songs
         </p>
       )}

@@ -71,7 +71,7 @@ export const SpotifyProviderContext = (props: Props) => {
       })
 
       spotifyPlayer.addListener('ready', ({ device_id }) => {
-        console.log('Device is ready to play!')
+        console.log('Device is ready to play on ', device_id)
         setSpotifyDeviceId(device_id)
       })
 

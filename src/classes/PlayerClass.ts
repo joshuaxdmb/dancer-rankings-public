@@ -14,7 +14,7 @@ export class PremiumPlayer extends Player {
     }
 
     play(song: SongLocal, position_ms?:number): void {
-        console.log('Currently playing', song?.title);
+        console.log('Currently playing', song?.title,'on ',this.spotifyDeviceId);
         this.spotifyApi
             .transferMyPlayback([this.spotifyDeviceId])
             .then(() => {
