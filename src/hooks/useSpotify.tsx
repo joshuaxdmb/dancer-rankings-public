@@ -63,12 +63,15 @@ export const SpotifyProviderContext = (props: Props) => {
       }
 
       const spotifyPlayer = new Spotify.Player({
+        enableMediaSession: true, // NEW
         name: 'Dancer Rankings App',
         getOAuthToken: (cb) => {
           cb(token)
         },
         volume: 0.7,
       })
+
+      spotifyPlayer.setName('Dancer Rankings App')
 
       spotifyPlayer.addListener('ready', ({ device_id }) => {
         console.log('Device is ready to play on ', device_id)

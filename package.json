@@ -74,7 +74,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "zustand": "^4.4.1",
-    "enable-webview-music-play": "https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play"
+    "enable-webview-music-play": "git+https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play.git#main"
   },
   "devDependencies": {
     "@capacitor/cli": "^5.5.1",
