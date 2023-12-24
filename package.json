@@ -53,7 +53,7 @@
     "dayjs": "^1.11.10",
     "depcheck": "^1.4.7",
     "dotenv": "^16.3.1",
-    "enable-webview-music-play": "git+https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play.git#v1.0.0",
+    "enable-webview-music-play": "git+https://github.com/joshuaxdmb/capacitor-enable-webbiew-music-play.git#main",
     "ionicons": "^7.2.1",
     "js-cookie": "^3.0.5",
     "lottie-react": "^2.4.0",
