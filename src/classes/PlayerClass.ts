@@ -1,5 +1,6 @@
 import { SongLocal } from "@/types/types";
 import toast from '@/lib/toast';
+import SpotifyApi from "./SpotifyApi"
 
 export abstract class Player {
     abstract play(song: SongLocal, position_ms?:number): void;
@@ -9,24 +10,23 @@ export abstract class Player {
 
 // 2. Derived PremiumPlayer class
 export class PremiumPlayer extends Player {
-    constructor(private spotifyApi: any, private spotifyDeviceId: string) {
+    constructor(private spotifyApi: SpotifyApi, private spotifyDeviceId: string) {
         super();
     }
 
     play(song: SongLocal, position_ms?:number): void {
         console.log('Currently playing', song?.title,'on ',this.spotifyDeviceId);
+        this.spotifyApi.getMyDevices().then((devices: any) => { console.log('My decides: ',devices) })
         this.spotifyApi
             .transferMyPlayback([this.spotifyDeviceId])
             .then(() => {
+                console.log('Transfered playback to', this.spotifyDeviceId);
                 this.spotifyApi
-                    .play({uris: [`spotify:track:${song.spotify_id}`], options:{position_ms},  })
+                    .play({uris: [`spotify:track:${song.spotify_id}`],position_ms: position_ms || 0})
                     .catch((err: any) => {
                         console.log('Something failed playing from Spotify', err);
                     });
             })
-            .catch((e: any) => {
-                console.log('Error setting device on Spotify', e);
-            });
     }
 
     pause(): void {

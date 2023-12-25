@@ -1,7 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import Sparkles from 'react-sparkle';
-import {ActivityIndicator} from 'react-native-paper'
 import { BeatLoader } from 'react-spinners';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

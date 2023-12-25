@@ -3,7 +3,6 @@ import React from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useUser } from '@/hooks/useUser'
 import { useEffect, useState } from 'react'
-import LoginButtons from '../authentication/LoginButtons'
 import { useSpotify } from '@/hooks/useSpotify'
 import UserBadge from '../UserBadge'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
@@ -11,6 +10,8 @@ import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { getPaddingTop } from './StatusBarSpacing'
 import { useRecoilState } from 'recoil'
 import { deviceDimensionsAtom } from '@/atoms/deviceDimensionsAtom'
+import LoginButton from '../authentication/LoginButton'
+import LinkSpotifyButton from '../spotify/LinkSpotifyButton'
 
 type Props = {
   children?: React.ReactNode
@@ -71,6 +72,19 @@ const Header: React.FC<Props> = ({
     }
   }, [visible,showLogin])
 
+  const PageBadge = () => {
+    if(!user || isLoading){
+      return <LoginButton isLoading={isLoading}/>
+    } else if(!spotifySession) {
+      return <LinkSpotifyButton/>
+    } else if(pageBadge) {
+      return pageBadge
+    } else if (user && userDetails && showUserBadge) {
+      return <UserBadge userDetails={userDetails} />
+    }
+    return <LoginButton isLoading={isLoading}/>
+  }
+
   return (
     <div
       style={{ paddingTop }}
@@ -79,10 +93,7 @@ const Header: React.FC<Props> = ({
         <div className='flex gap-x-2 items-center lg:hidden z-20' />
         {visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold'>{pageTitle}</h1>}
         <div className='flex flex-row justify-end gap-2'>
-        {(!pageBadge || showLogin) && <LoginButtons isLoading={isLoading} user={user} spotifySession={spotifySession} />}
-        {pageBadge
-          ? pageBadge
-          : user && userDetails && showUserBadge && <UserBadge userDetails={userDetails} />}
+        <PageBadge />
         </div>
       </div>
       {!visible && pageTitle && <h1 className='ml-4 text-2xl font-semibold z-20'>{pageTitle}</h1>}

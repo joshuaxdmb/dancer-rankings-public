@@ -28,7 +28,8 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   const [songs] = useRecoilState<any>(songsAtom)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
   const [songIndex, setSongIndex] = useState<number | null>(null)
-  const { userDetails, spotifyApi, spotifyDeviceId, refreshSession } = useSpotify()
+  const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession, resetSpotifyPlayer } =
+    useSpotify()
   const [player, setPlayer] = useState<Player | undefined>()
   const router = useRouter()
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
@@ -46,13 +47,14 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
     if (userDetails?.product === 'premium') {
       spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
         console.error('Error setting device on Spotify', e)
+        resetSpotifyPlayer()
       })
       setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
     } else {
       setPlayer(new NonPremiumPlayer())
       toast.success('Login with Spotify Premium to play complete songs!', { id: 'spotify-premium' })
     }
-  }, [spotifyDeviceId, spotifyApi, userDetails?.product])
+  }, [spotifyApi, userDetails?.product])
 
   useEffect(() => {
     //autoplay when currentTrack changes
@@ -67,22 +69,35 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
     console.log('Debug: CURRENTLY PLAYING', currentTrack?.spotify_id)
   }, [currentTrack]) // eslint-disable-line
 
-  const handlePlayPause = async() => {
+  const play = () => {
+    try {
+      player?.play(currentTrack)
+      if (player instanceof NonPremiumPlayer) {
+        setIsPlaying(true) //non premium player doesn't automatically set this
+      }
+    } catch (e) {
+      console.error('Error Playing on Spotify Player: ', e)
+      resetSpotifyPlayer()
+    }
+  }
+
+  const pause = () => {
+    player?.pause()
+    if (player instanceof NonPremiumPlayer) {
+      setIsPlaying(false) //non premium player doesn't automatically set this
+    }
+  }
+
+  const handlePlayPause = async () => {
     if (!currentTrack) {
       toast.success('Select a song to play!', { id: 'no-song-selected' })
       return
     }
     try {
       if (isPlaying) {
-        player?.pause()
-        if (player instanceof NonPremiumPlayer) {
-          setIsPlaying(false) //non premium player doesn't automatically set this
-        }
+        pause()
       } else {
-        player?.play(currentTrack)
-        if (player instanceof NonPremiumPlayer) {
-          setIsPlaying(true) //non premium player doesn't automatically set this
-        }
+        play()
       }
     } catch (err: any) {
       console.error('Error playing/pausing', err)
@@ -90,11 +105,12 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         toast.error('Your spotify session expired', {
           id: 'failed-spotify-search',
         })
-        refreshSession()
+        refreshSpotifySession()
       }
     }
   }
 
+   //TODO : Readd/uncomment player controls based on Spotify feedback
   const handleNext = () => {
     let newIndex = songIndex
     if (songIndex === null || !currentTrack) {
@@ -122,11 +138,11 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
       setSongIndex(newIndex)
     }
   }
-  //TODO : Readd/uncomment player controls based on Spotify feedback
+
   return (
     <div
       style={{ paddingBottom: marginBottom ? marginBottom - 10 : 0 }} //Safe area is too large
-      className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-4 px-4 items-center justify-center ${
+      className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-6 px-4 items-center justify-center ${
         backGroundColor || 'bg-black'
       } `}>
       <div className={`flex h-20 flex-row items-center justify-center`}>
@@ -141,7 +157,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         {/* <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/> */}
       </div>
       {(userDetails?.product !== 'premium' || !spotifySession) && (
-        <p className='h-0 text-sm text-gray-400 mb-2'>
+        <p style={{marginBottom: (userDetails?.product !== 'premium' || !spotifySession) ? 2 : 0}} className='h-0 text-sm text-gray-400'>
           You need to link Spotify Premium to play full songs
         </p>
       )}

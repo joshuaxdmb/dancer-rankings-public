@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil'
 import { songsAtom } from '@/atoms/songsAtom'
 import { SongLocal } from '@/types/types'
 import { LocationIdsEnum } from '../../../../content'
+import toast from 'react-hot-toast'
 
 type Props = {
   partyId: string
@@ -21,7 +22,7 @@ const PartyBadge = ({ partyId }: Props) => {
   const { onOpen } = usePartyOptionsModal()
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const { spotifyApi } = useSpotify()
-  const [songs, setSongs] = useRecoilState<any>(songsAtom)
+  const [songs] = useRecoilState<any>(songsAtom)
   const [spotifyText, setSpotifyText] = useState('PLAY ON SPOTIFY')
   const [partyOptionsText, setPartyOptionsText] = useState('')
 
@@ -55,28 +56,15 @@ const PartyBadge = ({ partyId }: Props) => {
     }
   }, [])
 
-  const findPlaylist = async () => {
-    const res = await spotifyApi.getUserPlaylists()
-    const playlists = res.body
-    const playlist = playlists.items.find((playlist) => playlist.name === `Dancers App: ${partyId}`)
-    return playlist
-  }
-
-  const createPlaylist = async () => {
-    const playlist = await spotifyApi.createPlaylist(`Dancers App: ${partyId}`, {
-      description: 'Dancers App Playlist',
-    })
-    console.log('Created playlist',playlist.body)
-    return playlist.body
-  }
-
   const openSpotify = async () => {
-    let existingPlaylist = await findPlaylist()
-    let playlist = existingPlaylist ? existingPlaylist : await createPlaylist()
     const playlistSongs = songs[LocationIdsEnum.global]?.[partyId]
-    const uris = playlistSongs.map((song: SongLocal) => 'spotify:track:' + song.spotify_id)
-    const res = await spotifyApi.replaceTracksInPlaylist(playlist.id, uris)
-    window.open(`https://open.spotify.com/playlist/${playlist.id}`)
+    const {res, spotifyPlaylist} = await spotifyApi.updateSpotifyPlaylist(partyId, playlistSongs)
+    if(!res?.statusCode || res.statusCode !== 200) {
+      console.error('Failed to add new tracks to playlist')
+      toast.error('Failed to add new tracks to playlist', {id: 'failed-add-tracks'})
+    } else {
+      window.open(`https://open.spotify.com/playlist/${spotifyPlaylist.id}`)  
+    }
   }
 
   const SpotifyButton = () => {

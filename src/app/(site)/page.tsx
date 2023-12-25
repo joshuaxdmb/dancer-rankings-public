@@ -61,6 +61,7 @@ export default function Home() {
       '>
       <Header
         className=''
+        showUserBadge={true}
         pageTitle={
           userDetails
             ? `Hi ${userDetails.full_name || 'there'} 👋! `

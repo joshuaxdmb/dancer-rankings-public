@@ -9,16 +9,18 @@ import { SpotifySession } from '@/types/types'
 import { getUrl } from '@/lib/helpers'
 import { Capacitor } from '@capacitor/core'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
+import SpotifyApi from '@/classes/SpotifyApi'
 
 type SpotifyContextType = {
   togglePlay?: () => void
-  spotifyApi: SpotifyWebApi
+  spotifyApi: SpotifyApi
   spotifyDeviceId: string
   userDetails?: SpotifyApi.CurrentUsersProfileResponse
   fetchSpotifySession?: (authCode: any) => void
-  refreshSession?: (session?: SpotifySession) => void
+  refreshSpotifySession?: (session?: SpotifySession) => void
   getSpotifyCode?: () => void
   unlinkSpotify?: () => void
+  resetSpotifyPlayer?: () => void
 }
 
 const SpotifyContext = createContext<SpotifyContextType | null>(null)
@@ -34,8 +36,8 @@ export const SpotifyProviderContext = (props: Props) => {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
   const [isPlayerActive, setIsPlayerActive] = useState(false)
   const [spotifyDeviceId, setSpotifyDeviceId] = useState<string>('')
-  const [spotifyApi] = useState<SpotifyWebApi>(
-    new SpotifyWebApi({
+  const [spotifyApi] = useState<SpotifyApi>(
+    new SpotifyApi({
       clientId: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     })
@@ -57,7 +59,7 @@ export const SpotifyProviderContext = (props: Props) => {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const token = sessionToken || spotifySession?.token.access_token
-      if(!token){
+      if (!token) {
         console.log('No token found for Spotify Player')
         return
       }
@@ -145,7 +147,7 @@ export const SpotifyProviderContext = (props: Props) => {
     }
   }
 
-  const unlinkSpotify = async () =>{
+  const unlinkSpotify = async () => {
     setUserDetails(undefined)
     setSpotifySession(undefined)
   }
@@ -175,7 +177,7 @@ export const SpotifyProviderContext = (props: Props) => {
     }
   }
 
-  const refreshSession = async (session?: SpotifySession) => {
+  const refreshSpotifySession = async (session?: SpotifySession) => {
     session = session || spotifySession
     try {
       const res = await fetch(getUrl() + 'api/spotify/refresh-session', {
@@ -195,10 +197,22 @@ export const SpotifyProviderContext = (props: Props) => {
         },
       }
       setSpotifySession(newSession)
-      console.log('Refreshed spotify token', newSession)
+      console.log('Refreshed spotify token. New session:', newSession)
     } catch (e) {
       console.error('Failed to refresh spotify session', e)
       setSpotifySession(undefined)
+    }
+  }
+
+  const resetSpotifyPlayer = () => {
+    try {
+      console.log('Resetting Spotify Player')
+      setPlayer(null)
+      setSpotifyDeviceId('')
+      spotifySession?.token?.access_token &&
+        initializeSpotifyPlayer(spotifySession.token.access_token)
+    } catch (e) {
+      console.error('Failed to reset Spotify Player: ', e)
     }
   }
 
@@ -206,19 +220,38 @@ export const SpotifyProviderContext = (props: Props) => {
     if (!spotifySession?.token) {
       return
     } else {
-      if (spotifySession?.token?.expires_at < Date.now() - 600 * 1000) {
-        refreshSession()
+      // Refresh if it expires in less than 10 minutes, or already expired + some buffer time
+      const currentTime = Date.now()
+      const timeBuffer = 600 * 1000 // 10 minutes
+      if (spotifySession?.token?.expires_at < currentTime + timeBuffer) {
+        console.log('Current session token has expired: ', spotifySession)
+        console.log(
+          'Token expiration: ',
+          spotifySession?.token?.expires_at,
+          ' Current time: ',
+          currentTime
+        )
+        refreshSpotifySession()
       }
       if (!player) initializeSpotifyPlayer(spotifySession.token.access_token)
 
       if (!spotifyApi.getAccessToken() || !userDetails)
         initializeApi(spotifySession.token.access_token)
     }
-  }, [spotifySession?.token]) //eslint-disable-line
+  }, [spotifySession?.token, player]) //eslint-disable-line
 
   return (
     <SpotifyContext.Provider
-      value={{ spotifyApi, spotifyDeviceId, userDetails, fetchSpotifySession, refreshSession, getSpotifyCode, unlinkSpotify }}
+      value={{
+        spotifyApi,
+        spotifyDeviceId,
+        userDetails,
+        fetchSpotifySession,
+        refreshSpotifySession,
+        getSpotifyCode,
+        unlinkSpotify,
+        resetSpotifyPlayer,
+      }}
       {...props}
     />
   )
