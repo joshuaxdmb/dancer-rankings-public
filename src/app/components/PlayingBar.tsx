@@ -5,14 +5,13 @@ import { isPlayingAtom, currentTrackAtom } from '@/atoms/playingSongAtom'
 import { useSpotify } from '@/hooks/useSpotify'
 import { NonPremiumPlayer, Player, PremiumPlayer } from '@/classes/PlayerClass'
 import toast from '@/lib/toast'
-import { IoPlaySkipBackSharp, IoPlaySkipForwardSharp, IoPlayCircle } from 'react-icons/io5'
+import { IoPlayCircle } from 'react-icons/io5'
 import PlayingSong from './PlayingSong'
 import { PlaylistEnum } from '../../../content'
 import { playlistAtom } from '@/atoms/playlistAtom'
 import { songsAtom } from '@/atoms/songsAtom'
 import { locationAtom } from '@/atoms/locationAtom'
 import { SongLocal } from '@/types/types'
-import { useRouter } from 'next/navigation'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { getMarginBottom } from './layout/StatusBarSpacing'
@@ -31,7 +30,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession, resetSpotifyPlayer } =
     useSpotify()
   const [player, setPlayer] = useState<Player | undefined>()
-  const router = useRouter()
   const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const [marginBottom, setMarginBottom] = useState(0)
 
@@ -59,7 +57,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   useEffect(() => {
     //autoplay when currentTrack changes
     if (currentTrack?.spotify_id && player) {
-      player.play(currentTrack)
+      play()
     }
     const index = songs?.[location]?.[playlist]?.findIndex(
       (song: SongLocal) => song.spotify_id === currentTrack?.spotify_id

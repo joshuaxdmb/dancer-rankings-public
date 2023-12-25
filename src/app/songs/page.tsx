@@ -7,17 +7,12 @@ import { locationAtom } from '@/atoms/locationAtom'
 import PlayingBar from '../components/PlayingBar'
 import { playlistAtom } from '@/atoms/playlistAtom'
 import { themes } from '@/lib/themes'
-import PageWrapper, { BachataPageWrapper, SalsaPageWrapper } from '../party-playlist/components/PageWrapper'
-import { useEffect } from 'react'
+import PageWrapper from '../party-playlist/components/PageWrapper'
 import SongsBadge from './SongsBadge'
 
 export default function Home() {
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [location] = useRecoilState<LocationIdsEnum>(locationAtom)
-
-  useEffect(() => {
-    
-  },[playlist])
 
   return (
     <PageWrapper playlist={playlist}>

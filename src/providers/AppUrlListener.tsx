@@ -2,10 +2,7 @@
 import React, { useEffect } from 'react'
 import { App, URLOpenListenerEvent } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
-import { getUrl } from '@/lib/helpers'
 import toast from '@/lib/toast'
-import { spotifySessionAtom } from '@/atoms/spotifyAtom'
-import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
 import { useRecoilState } from 'recoil'
 import { useSupabase } from '@/hooks/useSupabase'
@@ -43,8 +40,6 @@ const AppUrlListener: React.FC<any> = () => {
     const authCode = url.searchParams.get('code')
     const provider = url.searchParams.get('provider')
     const partyId = url.searchParams.get('id')
-    handleSupabaseCallbackNative(authCode)
-    fetchSpotifySession(authCode)
     switch (provider) {
       case 'spotify':
         authCode && fetchSpotifySession(authCode)

@@ -17,26 +17,29 @@ import toast from 'react-hot-toast'
 type Props = {}
 
 const SongsBadge = ({}: Props) => {
-  const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const [playlistId] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [location] = useRecoilState<LocationIdsEnum>(locationAtom)
   const [songs] = useRecoilState<any>(songsAtom);
 
   const { spotifyApi } = useSpotify()
 
+  function capitalizeFirstLetter(str:String) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
   const openSpotify = async () => {
-    let existingPlaylist = await spotifyApi.findSpotifyPlaylist(playlistId)
-    let spotifyPlaylist = existingPlaylist ? existingPlaylist : await spotifyApi.findSpotifyPlaylist(playlistId)
+    const customPlaylistName = `${capitalizeFirstLetter(playlistId)} - ${capitalizeFirstLetter(location)}`
     const playlistSongs = songs[location]?.[playlistId]
-    const uris = playlistSongs.map((song: SongLocal) => 'spotify:track:' + song.spotify_id)
-    const res = await spotifyApi.replaceTracksInPlaylist(spotifyPlaylist.id, uris)
-    if(!res?.statusCode || res.statusCode !== 200) {
-      console.error('Failed to add new tracks to playlist')
+    const {res, spotifyPlaylist} = await spotifyApi.updateSpotifyPlaylist(playlistId, playlistSongs, customPlaylistName)
+    if(!res?.statusCode || res.statusCode >= 400) {
+      console.error('Failed to add new tracks to playlist',res.body)
       toast.error('Failed to add new tracks to playlist', {id: 'failed-add-tracks'})
     } else {
       window.open(`https://open.spotify.com/playlist/${spotifyPlaylist.id}`)  
     }
-    
+    console.log('here')
   }
 
   if (!spotifySession) {

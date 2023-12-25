@@ -13,9 +13,7 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
     const getFromStorage = async () => {
         try {
             const { value } = await Preferences.get({ key: atom.key })
-            if (value !== null) {
-                setState(JSON.parse(value))
-            }
+            return JSON.parse(value)
         } catch (e) {
             console.log('Error loading storage', e)
         }
@@ -33,9 +31,7 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         try {
             const cookieValue = Cookies.get(cookieName)
             const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {}
-            if (parsedCookie[atom.key] !== undefined) {
-                setState(parsedCookie[atom.key])
-            }
+            return parsedCookie[atom.key]
         } catch (e) {
             console.log('Error loading cookie', e)
         }
@@ -55,25 +51,42 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         async function loadState() {
             try {
                 const storedState = isNative ? await getFromStorage() : await getCookie()
-                if (storedState !== undefined) {
+                console.log('Setting up persistent state', storedState, state)
+                if (!!storedState && storedState !== state) {
                     setState(storedState)
                 }
             } catch (e) {
                 console.error('Error loading state:', e)
             }
         }
-        loadState()
+
+        // Only load if this state has not been loaded yet
+        if(state === null) loadState()
+        
     }, [isNative]);;
+
 
     // Update cookie whenever state changes
     useEffect(() => {
-        if (state === undefined || state === null) return
-        if (isNative) {
-            setInStorage()
-        } else {
-            setCookie()
-        }
+        const syncStorage = async () => {
+            try {
+                const storedState = isNative ? await getFromStorage() : await getCookie()
 
+                // State might be null initially, so we need to check for that
+                if (state !== null && (JSON.stringify(storedState) !== JSON.stringify(state))) {
+                    console.log('Updating cookie', atom.key, 'from', storedState, 'to', state)
+                    if (isNative) {
+                        setInStorage()
+                    } else {
+                        setCookie()
+                    }
+            
+                }
+            } catch (e) {
+                console.error('Error loading state:', e)
+            }
+        }
+        syncStorage()
     }, [state, atom.key])
 
     return [state, setState]

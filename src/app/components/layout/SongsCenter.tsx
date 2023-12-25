@@ -1,6 +1,5 @@
 import { useSpotify } from '@/hooks/useSpotify';
 import React, { useEffect, useState } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import {
   Song,
   SongLocal,
@@ -42,6 +41,7 @@ const Center = ({playlist, isParty}: Props) => {
 
   useEffect(() => {
     if(isParty) setPlaylistLocation(LocationIdsEnum.global)
+    else setPlaylistLocation(location)
     !isLoading && setIsLoading(true);
     if (
       !songs[playlistLocation] ||

@@ -196,8 +196,9 @@ export const SpotifyProviderContext = (props: Props) => {
           ...sessionResponse.token,
         },
       }
-      setSpotifySession(newSession)
       console.log('Refreshed spotify token. New session:', newSession)
+      setSpotifySession(newSession)
+      
     } catch (e) {
       console.error('Failed to refresh spotify session', e)
       setSpotifySession(undefined)
@@ -207,8 +208,6 @@ export const SpotifyProviderContext = (props: Props) => {
   const resetSpotifyPlayer = () => {
     try {
       console.log('Resetting Spotify Player')
-      setPlayer(null)
-      setSpotifyDeviceId('')
       spotifySession?.token?.access_token &&
         initializeSpotifyPlayer(spotifySession.token.access_token)
     } catch (e) {
