@@ -16,7 +16,6 @@ type Props = {
 const AuthButtons = ({ isPremiumUser }: Props) => {
   const [location, setLocation] = useRecoilState(locationAtom);
   const supabaseClient = useSupabaseClient();
-  const router = useRouter();
   const { onOpen: openSubscribe } = useSubscribeModal();
 
   const handleLocationChange = async (location: LocationIdsEnum) => {

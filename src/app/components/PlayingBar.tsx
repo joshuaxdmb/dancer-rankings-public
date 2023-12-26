@@ -155,7 +155,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         {/* <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/> */}
       </div>
       {(userDetails?.product !== 'premium' || !spotifySession) && (
-        <p style={{marginBottom: (userDetails?.product !== 'premium' || !spotifySession) ? 2 : 0}} className='h-0 text-sm text-gray-400'>
+        <p style={{marginBottom: (userDetails?.product !== 'premium' || !spotifySession) ? 10 : 0}} className='h-0 text-sm text-gray-400'>
           You need to link Spotify Premium to play full songs
         </p>
       )}
