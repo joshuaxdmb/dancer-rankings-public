@@ -40,8 +40,9 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
 
   const getProducts = async () => {
     try{
-      const proods = await supabase.getProductsWithPrices()
-      setProducts(proods)
+      const prods = await supabase.getProductsWithPrices()
+      console.log('PRODUUUUCTS',prods,process.env.NEXT_PUBLIC_SUBSCRIPTION_PRODUCT_ID)
+      setProducts(prods)
     } catch (error){
       console.log(error)
       toast.error('Could not connect to the database', {id: 'get-products-error'})
@@ -132,7 +133,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
           </SytledButton>
         ) : (
           products
-            .filter((p) => p.name === 'Dancers App Premium')
+            .filter((p) => p.id === process.env.NEXT_PUBLIC_SUBSCRIPTION_PRODUCT_ID)
             .map((product) => (
               <div className="w-full" key={product.id}>
                 {product?.prices?.length ? (
