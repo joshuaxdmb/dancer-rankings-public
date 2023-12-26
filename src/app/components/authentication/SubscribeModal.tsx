@@ -139,8 +139,8 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
                   product.prices.map((price) => (
                     <SytledButton
                       showLoading={true}
-                      onClick={() => {
-                        handleCheckout(price);
+                      onClick={async() => {
+                        await handleCheckout(price);
                       }}
                       key={price.id}
                       className="text-2xl font-bold bg-green-400"
