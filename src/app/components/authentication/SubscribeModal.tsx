@@ -138,6 +138,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
                 {product?.prices?.length ? (
                   product.prices.map((price) => (
                     <SytledButton
+                      showLoading={true}
                       onClick={() => {
                         handleCheckout(price);
                       }}

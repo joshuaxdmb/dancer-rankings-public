@@ -3,13 +3,13 @@ import { UserDetailsType } from '@/types/types';
 
 export const shouldUpdateFromSpotify = (userDetails: UserDetailsType, userDetailsSpotify: SpotifyApi.CurrentUsersProfileResponse) => {
   const insertData = {} as UserDetailsType;
-  if (!userDetails.email) {
-    insertData['email'] = userDetailsSpotify.email;
+  if (!userDetails?.email) {
+    insertData['email'] = userDetailsSpotify?.email;
   }
-  if (!userDetails.birthdate && userDetailsSpotify.birthdate) {
-    insertData['birthdate'] = userDetailsSpotify.birthdate;
+  if (!userDetails?.birthdate && userDetailsSpotify?.birthdate) {
+    insertData['birthdate'] = userDetailsSpotify?.birthdate;
   }
-  if (insertData.email || insertData.birthdate) {
+  if (insertData?.email || insertData?.birthdate) {
     return insertData
   }
   return false
