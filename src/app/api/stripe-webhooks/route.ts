@@ -4,6 +4,11 @@ import { stripe } from '../../../lib/stripe'
 import {
     upsertPriceRecrtord, upsertProductRecord, manageSubscriptionStatusChange, manageNewOrder
 } from '@/lib/supabaseAdmin'
+import { OPTIONS as _OPTIONS } from '@/lib/api'
+
+export async function OPTIONS(req: Request, res: Response) {
+    return _OPTIONS(req, res)
+}
 
 const relevantEvents = new Set([
     'product.created',
@@ -15,6 +20,10 @@ const relevantEvents = new Set([
     'customer.subscription.updated',
     'customer.subscription.deleted',
 ])
+
+export async function GET(request: Request) {
+    return POST(request)
+}
 
 export async function POST(
     request: Request,
