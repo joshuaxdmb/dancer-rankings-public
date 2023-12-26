@@ -166,9 +166,8 @@ export const SpotifyProviderContext = (props: Props) => {
         },
         body: JSON.stringify({ code: authCode, isNative }),
       })
-      console.log('Got some spotify session response', res)
       const session = await res.json()
-      console.log('Spotify session response', session)
+      console.log('Got some spotify session response', session)
       if (session.error) throw new Error(session.error)
       setSpotifySession(session)
       window.history.pushState({}, '', '/')

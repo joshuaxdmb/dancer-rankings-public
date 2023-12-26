@@ -14,8 +14,15 @@ export class PremiumPlayer extends Player {
         super()
     }
 
-    play(song: SongLocal, position_ms?: number): void {
-        console.log('Currently playing', song?.title)
+    async play(song: SongLocal, position_ms?: number) {
+        const devices = await this.spotifyApi.getMyDevices()
+        console.log('Devices', devices.body)
+        devices.body?.devices?.map((device: any) => {
+            if (device.id === this.spotifyDeviceId && !device.is_active) this.spotifyApi
+                .transferMyPlayback([this.spotifyDeviceId]).catch((err: any) => {
+                    console.log('Something failed transferring playback to Spotify', err)
+                })
+        })
         this.spotifyApi
             .play({ uris: [`spotify:track:${song.spotify_id}`], position_ms: position_ms || 0 })
             .catch((err: any) => {

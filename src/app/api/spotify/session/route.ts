@@ -47,7 +47,8 @@ export async function POST(req: Request) {
     } catch (error) {
         let e = (error as any)?.message || error
         return Response.json({
-            error: e
+            error: e,
+            redirect_uri: process.env.SPOTIFY_REDIRECT_URI_WEB
         });
     }
 }

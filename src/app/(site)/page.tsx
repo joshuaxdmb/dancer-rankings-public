@@ -9,13 +9,13 @@ import { PlaylistEnum, ActiveLinks } from '../../../content'
 import { useUser } from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { usePersistentRecoilState } from '@/hooks/usePersistentState'
+import { useRecoilState } from 'recoil'
 
 export default function Home() {
   const { userDetails } = useUser()
   const [topMargin, setTopMargin] = useState(true)
   const pathname = usePathname()
-  const [playlist, setPlaylist] = usePersistentRecoilState(playlistAtom)
+  const [playlist, setPlaylist] = useRecoilState(playlistAtom)
 
   const routes = useMemo(
     () =>

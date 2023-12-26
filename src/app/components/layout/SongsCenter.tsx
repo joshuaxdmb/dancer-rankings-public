@@ -38,56 +38,71 @@ const Center = ({playlist, isParty}: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
 
+  const fetchSongs = async()=>{
+    try{
+      if (
+        !songs[playlistLocation] ||
+        !songs[playlistLocation]?.[playlist] ||
+        !songs[playlistLocation]?.[playlist]?.length
+      ) {
+        console.log('Fetching songs from supabase')
+        supabaseClient
+          .getVotedSongs(playlist, playlistLocation)
+          .then((data: any) => {
+            const updatedSongs = mergeSongs(songs, playlistLocation, playlist, data);
+            console.log('Songs fetched', updatedSongs)
+            setSongs(updatedSongs);
+          })
+          .catch((e: any) => {
+            toast.error('Failed to fetch songs', { id: 'failed-fetch-songs' });
+            setIsLoading(false);
+          });
+      } else {
+        console.log('Songs already fetched', songs[playlistLocation]?.[playlist])
+      }
+      if (Object.keys(userVotes).length < 1) {
+        if (user) {
+          supabaseClient
+            .getVotedSongsByUser(user?.id)
+            .then((data: any) => {
+              console.log(data.length, 'votes fetched');
+              const transformedVotes = data.reduce(
+                (acc: VotesMap, vote: SongVoteLocal) => {
+                  if (!acc[vote.location_id]) {
+                    acc[vote.location_id] = {};
+                  }
+                  if (!acc[vote.location_id][vote.playlist_id]) {
+                    acc[vote.location_id][vote.playlist_id] = {};
+                  }
+                  acc[vote.location_id][vote.playlist_id][vote.song_spotify_id] =
+                    vote.vote;
+                  return acc;
+                },
+                {}
+              );
+              setUserVotes(transformedVotes);
+            })
+            .catch((e: any) => {
+              toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' });
+              setIsLoading(false);
+            });
+        }
+      } 
+    } catch(e){
+      console.log(e)
+    } finally {
+      setIsLoading(false)
+    }
+    
+  }
+
 
   useEffect(() => {
     if(isParty) setPlaylistLocation(LocationIdsEnum.global)
     else setPlaylistLocation(location)
     !isLoading && setIsLoading(true);
-    if (
-      !songs[playlistLocation] ||
-      !songs[playlistLocation]?.[playlist] ||
-      !songs[playlistLocation]?.[playlist]?.length
-    ) {
-      supabaseClient
-        .getVotedSongs(playlist, playlistLocation)
-        .then((data: any) => {
-          const updatedSongs = mergeSongs(songs, playlistLocation, playlist, data);
-          setSongs(updatedSongs);
-        })
-        .catch((e: any) => {
-          toast.error('Failed to fetch songs', { id: 'failed-fetch-songs' });
-          setIsLoading(false);
-        });
-    }
-    if (Object.keys(userVotes).length < 1) {
-      if (user) {
-        supabaseClient
-          .getVotedSongsByUser(user?.id)
-          .then((data: any) => {
-            console.log(data.length, 'votes fetched');
-            const transformedVotes = data.reduce(
-              (acc: VotesMap, vote: SongVoteLocal) => {
-                if (!acc[vote.location_id]) {
-                  acc[vote.location_id] = {};
-                }
-                if (!acc[vote.location_id][vote.playlist_id]) {
-                  acc[vote.location_id][vote.playlist_id] = {};
-                }
-                acc[vote.location_id][vote.playlist_id][vote.song_spotify_id] =
-                  vote.vote;
-                return acc;
-              },
-              {}
-            );
-            setUserVotes(transformedVotes);
-          })
-          .catch((e: any) => {
-            toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' });
-            setIsLoading(false);
-          });
-      }
-    }
-    setIsLoading(false);
+    console.log('Fetching songs:', playlist)
+    fetchSongs()
   }, [user, playlist, location]); //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {

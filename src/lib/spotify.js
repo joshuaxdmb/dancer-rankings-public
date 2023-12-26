@@ -29,7 +29,7 @@ const spotifyApi = new SpotifyWebApi({
 
 const SPOTIFY_CLIENT_ID='10b68d8b3e99461586a62425e11a71fe'
 const SPOTIFY_REDIRECT_URI_CAPACITOR='https://latindancersapp.com/?provider=spotify'
-const SPOTIFY_REDIRECT_URI=getUrl()
+const SPOTIFY_REDIRECT_URI=getUrl()+'?provider=spotify'
 
 const client_params_web = new URLSearchParams({
     client_id:SPOTIFY_CLIENT_ID,
