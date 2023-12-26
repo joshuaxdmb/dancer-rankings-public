@@ -6,7 +6,7 @@ import SytledButton from '../global/SytledButton';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useState } from 'react';
 import toast from '@/lib/toast';;
-import { postData } from '@/lib/helpers';
+import { postDataToApi } from '@/lib/helpers';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
 import Box from '../global/Box';
 import { BeatLoader } from 'react-spinners';
@@ -66,7 +66,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
     }
 
     try {
-      const { sessionId } = await postData({
+      const { sessionId } = await postDataToApi({
         url: 'api/create-checkout-session',
         data: { price, user, mode: 'subscription', isNative},
       });

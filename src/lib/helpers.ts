@@ -12,7 +12,8 @@ export const getUrl = () => {
     return url
 }
 
-export const postData = async ({ url, data }: { url: string, data?: {price:Price, user:User, mode:Stripe.Checkout.SessionCreateParams.Mode, isNative:boolean}}) => {
+export const postDataToApi = async ({ url, data }: { url: string, data?: {price:Price, user:User, mode:Stripe.Checkout.SessionCreateParams.Mode, isNative:boolean}}) => {
+    const isNative = Capacitor.isNativePlatform()
     const fullUrl = `${getUrl()}${url}`
     console.log('PORT REQUEST', fullUrl, data)
     const res: Response = await fetch(fullUrl, {
@@ -20,7 +21,7 @@ export const postData = async ({ url, data }: { url: string, data?: {price:Price
         headers: new Headers({
             'Content-Type': 'application/json'
         }),
-        credentials: 'same-origin',
+        credentials: isNative? 'include' : 'same-origin',
         body: JSON.stringify(data ?? {})
     })
 

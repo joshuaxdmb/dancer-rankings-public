@@ -8,7 +8,7 @@ import usePartyOptionsModal from '@/hooks/usePartyOptionsModal';
 import useQrCodeModal from '@/hooks/useQRCodeModal';
 import { ProductWithPrice } from '@/types/types';
 import toast from '@/lib/toast';
-import { postData } from '@/lib/helpers';
+import { postDataToApi } from '@/lib/helpers';
 import { useUser } from '@/hooks/useUser'
 import { Capacitor } from '@capacitor/core';
 
@@ -50,7 +50,7 @@ const PartyOptionsModal = ({}: Props) => {
     }
 
     try {
-      const { sessionId } = await postData({
+      const { sessionId } = await postDataToApi({
         url: 'api/create-checkout-session',
         data: { price:product.prices[0], user, mode: 'payment', isNative },
       });

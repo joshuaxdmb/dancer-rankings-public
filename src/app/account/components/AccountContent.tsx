@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import useSubscribeModal from '@/hooks/useSubscribeModal'
 import { useUser } from '@/hooks/useUser'
 import { useEffect, useState } from 'react'
-import { getUrl, postData } from '@/lib/helpers'
+import { postDataToApi } from '@/lib/helpers'
 import Sparkles from 'react-sparkle'
 import toast from '@/lib/toast'
 import SytledButton from '../../components/global/SytledButton'
@@ -27,8 +27,8 @@ const AccountContent = () => {
   const redirectToCustomerPortal = async () => {
     setLoading(true)
     try {
-      const { url } = await postData({
-        url: getUrl() + 'api/create-portal-link',
+      const { url } = await postDataToApi({
+        url: 'api/create-portal-link',
       })
       window.location.assign(url)
     } catch (error) {
