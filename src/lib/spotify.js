@@ -3,11 +3,6 @@ import { getUrl } from "./helpers"
 
 const scopes = [
     'user-read-email',
-    'streaming',
-    'user-read-private',
-    'user-read-playback-state',
-    'user-modify-playback-state',
-    'user-read-currently-playing',
     'user-read-private',
     'playlist-read-private',
     'playlist-modify-private',

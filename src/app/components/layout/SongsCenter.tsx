@@ -235,7 +235,7 @@ const Center = ({playlist, isParty}: Props) => {
   };
 
   return (
-    <div className="flex flex-col h-5/6">
+    <div className="flex flex-col h-[80vh]">
       <section className="flex items-center justify-center space-x-7">
         <SearchBar
           handleAddSong={handleAddSong}
@@ -253,7 +253,7 @@ const Center = ({playlist, isParty}: Props) => {
             <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
           </div >
         ) : songs[playlistLocation]?.[playlist]?.length ? (
-          <div className='overflow-y-auto pb-26 scrollbar-hide'>
+          <div className='overflow-y-auto pb-20 scrollbar-hide'>
             {songs[playlistLocation]?.[playlist]?.map(
               (song: SongLocal, index: number) => (
                 <SongItem

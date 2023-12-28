@@ -42,17 +42,9 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   }, [])
 
   useEffect(() => {
-    if (userDetails?.product === 'premium') {
-      spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
-        console.error('Error setting device on Spotify', e)
-        resetSpotifyPlayer()
-      })
-      setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
-    } else {
       setPlayer(new NonPremiumPlayer())
-      toast.success('Login with Spotify Premium to play complete songs!', { id: 'spotify-premium' })
     }
-  }, [spotifyApi, userDetails?.product])
+  , [])
 
   useEffect(() => {
     //autoplay when currentTrack changes
