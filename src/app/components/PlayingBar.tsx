@@ -12,8 +12,6 @@ import { playlistAtom } from '@/atoms/playlistAtom'
 import { songsAtom } from '@/atoms/songsAtom'
 import { locationAtom } from '@/atoms/locationAtom'
 import { SongLocal } from '@/types/types'
-import { usePersistentRecoilState } from '@/hooks/usePersistentState'
-import { spotifySessionAtom } from '@/atoms/spotifyAtom'
 import { getMarginBottom } from './layout/StatusBarSpacing'
 
 type Props = {
@@ -30,7 +28,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession, resetSpotifyPlayer } =
     useSpotify()
   const [player, setPlayer] = useState<Player | undefined>()
-  const [spotifySession] = usePersistentRecoilState(spotifySessionAtom)
   const [marginBottom, setMarginBottom] = useState(0)
 
   useEffect(() => {
@@ -42,9 +39,17 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   }, [])
 
   useEffect(() => {
+    if (userDetails?.product === 'premium') {
+      spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
+        console.error('Error setting device on Spotify', e)
+        resetSpotifyPlayer()
+      })
+      setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
+    } else {
       setPlayer(new NonPremiumPlayer())
+      toast.success('Login with Spotify Premium to play complete songs!', { id: 'spotify-premium' })
     }
-  , [])
+  }, [spotifyApi, userDetails?.product])
 
   useEffect(() => {
     //autoplay when currentTrack changes
@@ -100,35 +105,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
     }
   }
 
-   //TODO : Readd/uncomment player controls based on Spotify feedback
-  const handleNext = () => {
-    let newIndex = songIndex
-    if (songIndex === null || !currentTrack) {
-      return
-    } else if (songIndex >= songs[location][playlist].length - 1) {
-      newIndex = 0
-    } else {
-      newIndex = songIndex + 1
-    }
-    const nextSong = songs?.[location]?.[playlist][newIndex]
-    setCurrentTrack(nextSong)
-    setSongIndex(newIndex)
-  }
-
-  const handlePrevious = () => {
-    let newIndex = songIndex
-    if (songIndex === null || songIndex < 0 || !currentTrack) {
-      return
-    } else if (songIndex === 0) {
-      player?.play(currentTrack, 0)
-    } else {
-      newIndex = songIndex - 1
-      const nextSong = songs?.[location]?.[playlist][newIndex]
-      setCurrentTrack(nextSong)
-      setSongIndex(newIndex)
-    }
-  }
-
   return (
     <div
       style={{ paddingBottom: marginBottom ? marginBottom - 10 : 0 }} //Safe area is too large
@@ -136,7 +112,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         backGroundColor || 'bg-black'
       } `}>
       <div className={`flex h-20 flex-row items-center justify-center`}>
-        {/* <IoPlaySkipBackSharp onClick={handlePrevious} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/> */}
         <button className='mx-4 lg:mx-10 cursor-pointer' onClick={handlePlayPause}>
           {currentTrack ? (
             <PlayingSong isPlaying={isPlaying} song={currentTrack} />
@@ -144,13 +119,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
             <IoPlayCircle size={50} className='text-white hover:opacity-80' />
           )}
         </button>
-        {/* <IoPlaySkipForwardSharp onClick={handleNext} size={32} className="text-white flex-shrink-0 cursor-pointer hover:opacity-80"/> */}
       </div>
-      {(userDetails?.product !== 'premium' || !spotifySession) && (
-        <p style={{marginBottom: (userDetails?.product !== 'premium' || !spotifySession) ? 20 : 0}} className='h-0 text-sm text-gray-400'>
-          You need to link Spotify Premium to play full songs
-        </p>
-      )}
     </div>
   )
 }
