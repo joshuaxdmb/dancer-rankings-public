@@ -43,7 +43,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
 
   useEffect(() => {
       setPlayer(new NonPremiumPlayer())
-      toast.success('Open Spotify to play complete songs!', { id: 'spotify-premium' })
     }
   , [])
 
