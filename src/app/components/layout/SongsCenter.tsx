@@ -253,7 +253,7 @@ const Center = ({playlist, isParty}: Props) => {
             <h1 className="text-lg mt-4">Getting you the latest 🔥 tunes</h1>
           </div >
         ) : songs[playlistLocation]?.[playlist]?.length ? (
-          <div className='overflow-y-auto pb-26 scrollbar-hide'>
+          <div className='overflow-y-auto pb-24 scrollbar-hide'>
             {songs[playlistLocation]?.[playlist]?.map(
               (song: SongLocal, index: number) => (
                 <SongItem
