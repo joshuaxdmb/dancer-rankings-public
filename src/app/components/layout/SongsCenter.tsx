@@ -85,14 +85,14 @@ const Center = ({ playlist, isParty }: Props) => {
 
   const handleAddSong = async (songDetails: SpotifySong) => {
     if (!user) {
-      toast.error('You login to add a song', {
+      toast.error('You must login to add a song', {
         id: 'failed-add-song-supabase',
       })
       return
     }
 
     if (!userDetails?.display_name) {
-      toast.error('You must log into spotify to add a song', {
+      toast.error('You must link Spotify to add a song', {
         id: 'failed-add-song-spotify',
       })
       return
