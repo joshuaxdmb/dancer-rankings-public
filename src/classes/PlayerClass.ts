@@ -46,7 +46,7 @@ export class NonPremiumPlayer extends Player {
     play(song: SongLocal, position_ms?: number): void {
         console.log('Currently previewing', song?.title)
         if (!song?.preview_url) {
-            toast.error('No preview available for this song. Spotify Premium needed')
+            toast.error('No preview available for this song. Play on Spotify')
             return
         }
         if (this.audioInstance) {

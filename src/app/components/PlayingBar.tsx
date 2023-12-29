@@ -25,8 +25,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   const [songs] = useRecoilState<any>(songsAtom)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
   const [songIndex, setSongIndex] = useState<number | null>(null)
-  const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession } =
-    useSpotify()
+  const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession } = useSpotify()
   const [player, setPlayer] = useState<Player | undefined>()
   const [marginBottom, setMarginBottom] = useState(0)
 
@@ -39,16 +38,8 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   }, [])
 
   useEffect(() => {
-    if (userDetails?.product === 'premium') {
-      spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
-        console.error('Error setting device on Spotify', e)
-      })
-      setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
-    } else {
-      setPlayer(new NonPremiumPlayer())
-      toast.success('Login with Spotify Premium to play complete songs!', { id: 'spotify-premium' })
-    }
-  }, [spotifyApi, userDetails?.product])
+    setPlayer(new NonPremiumPlayer())
+  }, [])
 
   useEffect(() => {
     //autoplay when currentTrack changes

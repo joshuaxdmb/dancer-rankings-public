@@ -75,9 +75,6 @@ const CreatePartyPlaylist = (props: Props) => {
 
   useEffect(() => {
     setError(null)
-    if (userDetails?.product !== 'premium') {
-      setError('You need Spotify Premium to host a house party :(')
-    }
     if (!isPremium) {
       setError('You need to be a premium member to create a house party')
     }
