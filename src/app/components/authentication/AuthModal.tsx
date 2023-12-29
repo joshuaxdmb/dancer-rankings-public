@@ -8,6 +8,10 @@ import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons'
 import useAuthModal from '@/hooks/useAuthModal'
 import SupabaseWrapper from '@/classes/SupabaseWrapper'
 import SytledButton from '../global/SytledButton'
+import { usePersistentRecoilState } from '@/hooks/usePersistentState'
+import { signInMethodAtom } from '@/atoms/signInMethodAtom'
+import { SignInMethodsEnum } from '../../../../content'
+import Bluebird from 'bluebird'
 
 type Props = {}
 
@@ -17,15 +21,16 @@ const AuthModal = ({}: Props) => {
   const router = useRouter()
   const { session } = useSessionContext()
   const [error, setError] = useState('')
+  const [signInMethod, setSignInMethod, setPersistentSignInMethod] = usePersistentRecoilState(signInMethodAtom)
 
   const signInWithGoogle = async () => {
-    // Takes to another window
-    const { data, error } = await supabaseClient.signInWithProvider('google', authOption !== 'login')
+    await setPersistentSignInMethod(SignInMethodsEnum.google)
+    await supabaseClient.signInWithProvider('google', authOption !== 'login')
   }
 
   const signIngWithSpotify = async () => {
-    // Takes to another window
-    const { data, error } = await supabaseClient.signInWithProvider('spotify', authOption !== 'login')
+    await setPersistentSignInMethod(SignInMethodsEnum.spotify)
+    await supabaseClient.signInWithProvider('spotify', authOption !== 'login')
   }
 
   const onChange = (open: boolean) => {

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import SpotifyWebApi from 'spotify-web-api-node'
 import toast from '@/lib/toast'
 import { useRecoilState } from 'recoil'
 import { isPlayingAtom } from '@/atoms/playingSongAtom'
@@ -10,6 +9,8 @@ import { getUrl } from '@/lib/helpers'
 import { Capacitor } from '@capacitor/core'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
 import SpotifyApi from '@/classes/SpotifyApi'
+import { signInMethodAtom } from '@/atoms/signInMethodAtom'
+import { SignInMethodsEnum } from '../../content'
 
 type SpotifyContextType = {
   togglePlay?: () => void
@@ -20,6 +21,7 @@ type SpotifyContextType = {
   refreshSpotifySession?: (session?: SpotifySession) => void
   getSpotifyCode?: () => void
   unlinkSpotify?: () => void
+  linkSpotify: () => void
   resetSpotifyPlayer?: () => void
 }
 
@@ -31,6 +33,7 @@ interface Props {
 
 export const SpotifyProviderContext = (props: Props) => {
   const [spotifySession, setSpotifySession] = usePersistentRecoilState(spotifySessionAtom)
+  const [signInMethod, setSignInMethod] = usePersistentRecoilState(signInMethodAtom)
   const [player, setPlayer] = useState<any | null>(null)
   const isNative = Capacitor.isNativePlatform()
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
@@ -140,6 +143,7 @@ export const SpotifyProviderContext = (props: Props) => {
   }
 
   const getSpotifyCode = async () => {
+    setSignInMethod(SignInMethodsEnum.spotifySession)
     if (isNative) {
       window.location.href = SPOTIFY_LOGIN_URL_CAPACITOR
     } else {
@@ -152,13 +156,23 @@ export const SpotifyProviderContext = (props: Props) => {
     setSpotifySession(undefined)
   }
 
-  const fetchSpotifySession = async (authCode: any) => {
-    toast.success('Almost done...', { id: 'spotify-login' })
-    if (spotifySession?.token && spotifySession?.token?.expires_at > Date.now()) {
-      console.log('Session token still valid')
-      return
-    }
+  const linkSpotify = async () => {
     try {
+      if (spotifySession) {
+        const success = await refreshSpotifySession()
+        if (!success) getSpotifyCode()
+      } else {
+        getSpotifyCode()
+      }
+    } catch (e) {
+      console.log('Error linking spotify: ', e)
+      toast.error('Unable to link with Spotify', { id: 'spotify-link' })
+    }
+  }
+
+  const fetchSpotifySession = async (authCode: any) => {
+    try {
+      setSignInMethod(SignInMethodsEnum.spotifySession)
       const res = await fetch(getUrl() + 'api/spotify/session', {
         method: 'POST',
         headers: {
@@ -197,13 +211,15 @@ export const SpotifyProviderContext = (props: Props) => {
       }
       console.log('Refreshed spotify token. New session:', newSession)
       setSpotifySession(newSession)
-      
+      return true
     } catch (e) {
       console.error('Failed to refresh spotify session', e)
       setSpotifySession(undefined)
+      return false
     }
   }
 
+  // Legacy (keep)
   const resetSpotifyPlayer = () => {
     try {
       console.log('Resetting Spotify Player')
@@ -231,12 +247,10 @@ export const SpotifyProviderContext = (props: Props) => {
         )
         refreshSpotifySession()
       }
-      if (!player) initializeSpotifyPlayer(spotifySession.token.access_token)
-
       if (!spotifyApi.getAccessToken() || !userDetails)
         initializeApi(spotifySession.token.access_token)
     }
-  }, [spotifySession?.token, player]) //eslint-disable-line
+  }, [spotifySession?.token]) //eslint-disable-line
 
   return (
     <SpotifyContext.Provider
@@ -248,7 +262,7 @@ export const SpotifyProviderContext = (props: Props) => {
         refreshSpotifySession,
         getSpotifyCode,
         unlinkSpotify,
-        resetSpotifyPlayer,
+        linkSpotify,
       }}
       {...props}
     />

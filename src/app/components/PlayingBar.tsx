@@ -25,7 +25,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
   const [songs] = useRecoilState<any>(songsAtom)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
   const [songIndex, setSongIndex] = useState<number | null>(null)
-  const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession, resetSpotifyPlayer } =
+  const { userDetails, spotifyApi, spotifyDeviceId, refreshSpotifySession } =
     useSpotify()
   const [player, setPlayer] = useState<Player | undefined>()
   const [marginBottom, setMarginBottom] = useState(0)
@@ -42,7 +42,6 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
     if (userDetails?.product === 'premium') {
       spotifyApi.transferMyPlayback([spotifyDeviceId]).catch((e: any) => {
         console.error('Error setting device on Spotify', e)
-        resetSpotifyPlayer()
       })
       setPlayer(new PremiumPlayer(spotifyApi, spotifyDeviceId))
     } else {
@@ -71,8 +70,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
         setIsPlaying(true) //non premium player doesn't automatically set this
       }
     } catch (e) {
-      console.error('Error Playing on Spotify Player: ', e)
-      resetSpotifyPlayer()
+      console.error('Error playing song: ', e)
     }
   }
 

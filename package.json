@@ -44,6 +44,7 @@
     "@supabase/auth-ui-shared": "^0.1.7",
     "@supabase/gotrue-js": "^2.57.0",
     "@supabase/supabase-js": "^2.38.2",
+    "@types/bluebird": "^3.5.42",
     "@types/js-cookie": "^3.0.6",
     "@zendeskgarden/container-utilities": "^1.0.12",
     "@zendeskgarden/react-loaders": "^8.73.0",

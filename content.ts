@@ -17,6 +17,12 @@ export enum PlaylistEnum{
     zouk = 'zouk'
 }
 
+export enum SignInMethodsEnum{
+    google = 'google',
+    spotify = 'spotify',
+    spotifySession = 'spotify-session'
+}
+
 export const Locations = [
     {
         id:LocationIdsEnum.toronto,

@@ -19,9 +19,10 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         }
     }
 
-    const setInStorage = async () => {
+    const setInStorage = async (newState?: any) => {
+        const localState = newState || state
         try {
-            await Preferences.set({ key: atom.key, value: JSON.stringify(state) })
+            await Preferences.set({ key: atom.key, value: JSON.stringify(localState) })
         } catch (e) {
             console.log('Error setting storage', e)
         }
@@ -37,11 +38,12 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         }
     }
 
-    const setCookie = () => {
+    const setCookie = (newState?: any) => {
+        const localState = newState || state
         try {
             const cookieValue = Cookies.get(cookieName)
             const parsedCookie = cookieValue ? JSON.parse(cookieValue) : {}
-            Cookies.set(cookieName, JSON.stringify({ ...parsedCookie, [atom.key]: state }))
+            Cookies.set(cookieName, JSON.stringify({ ...parsedCookie, [atom.key]: localState }))
         } catch (e) {
             console.log('Error setting cookie', e)
         }
@@ -50,8 +52,8 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
     useEffect(() => {
         async function loadState() {
             try {
-                const storedState = isNative ? await getFromStorage() : await getCookie()
-                console.log('Setting up persistent state', storedState, state)
+                const storedState = await persistentState()
+                console.log('Setting up persistent state', cookieName,storedState)
                 if (!!storedState && storedState !== state) {
                     setState(storedState)
                 }
@@ -61,17 +63,29 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         }
 
         // Only load if this state has not been loaded yet
-        if(state === null) loadState()
-        
-    }, [isNative]);;
+        if (state === null) loadState()
 
+    }, [isNative])
+
+    const persistentState = async () => {
+        const storedState = isNative ? await getFromStorage() : await getCookie()
+        return storedState
+    }
+
+    const setPersistentState = async (newState: any) => {
+        console.log('Setting in storage/cookie ', cookieName, newState)
+        if (isNative) {
+            await setInStorage(newState)
+        } else {
+            setCookie(newState)
+        }
+    }
 
     // Update cookie whenever state changes
     useEffect(() => {
         const syncStorage = async () => {
             try {
                 const storedState = isNative ? await getFromStorage() : await getCookie()
-
                 // State might be null initially, so we need to check for that
                 if (state !== null && (JSON.stringify(storedState) !== JSON.stringify(state))) {
                     console.log('Updating cookie', atom.key, 'from', storedState, 'to', state)
@@ -80,7 +94,7 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
                     } else {
                         setCookie()
                     }
-            
+
                 }
             } catch (e) {
                 console.error('Error loading state:', e)
@@ -89,5 +103,5 @@ export const usePersistentRecoilState = (atom: RecoilState<any>,) => {
         syncStorage()
     }, [state, atom.key])
 
-    return [state, setState]
+    return [state, setState, persistentState, setPersistentState]
 }
