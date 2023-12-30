@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         const { code, isNative } = await req.json();
         if (!code) throw new Error('No code provided')
 
-        const redirect_uri = (isNative ? process.env.SPOTIFY_REDIRECT_URI_NATIVE : process.env.SPOTIFY_REDIRECT_URI_WEB) || 'https://latindancersapp.com'
+        const redirect_uri = (isNative ? process.env.SPOTIFY_REDIRECT_URI_NATIVE : process.env.SPOTIFY_REDIRECT_URI_WEB) || 'https://open.latindancers.app/'
 
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
