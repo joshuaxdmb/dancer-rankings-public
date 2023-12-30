@@ -7,6 +7,7 @@ import Header from '@/app/components/layout/Header'
 import { useUser } from '@/hooks/useUser'
 import AccountContent from './components/AccountContent'
 import Loading from './loading'
+import { DEFAULT_NOT_SIGNED_IN_MESSAGE } from '@/utils/constants'
 
 export default function Account() {
   const { userDetails, isLoading } = useUser()
@@ -27,7 +28,7 @@ export default function Account() {
         pageTitle={
           userDetails
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
-            : `If you're not a dancer, kindly close your browser 💃 🕺`
+            : DEFAULT_NOT_SIGNED_IN_MESSAGE
         }></Header>
       <AccountContent />
     </div>

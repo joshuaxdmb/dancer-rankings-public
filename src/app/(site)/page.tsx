@@ -10,6 +10,7 @@ import { useUser } from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useRecoilState } from 'recoil'
+import { DEFAULT_NOT_SIGNED_IN_MESSAGE } from '@/utils/constants'
 
 export default function Home() {
   const { userDetails } = useUser()
@@ -65,7 +66,7 @@ export default function Home() {
         pageTitle={
           userDetails
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
-            : `If you're not a dancer, kindly close your browser 💃 🕺`
+            : DEFAULT_NOT_SIGNED_IN_MESSAGE 
         }></Header>
       <div className=' h-screen overflow-y-auto pb-52 scrollbar-hide'>
       <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
