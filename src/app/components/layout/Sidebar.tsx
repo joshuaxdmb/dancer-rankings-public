@@ -85,11 +85,6 @@ const Sidebar = ({ children }: Props) => {
         href: Routes.PartyPlaylist,
       },
       {
-        label: `🕺 Privates`,
-        active: pathname === Routes.Classes,
-        href: Routes.Classes,
-      },
-      {
         label: `👤 My Account`,
         active: pathname === Routes.Account,
         href: Routes.Account,

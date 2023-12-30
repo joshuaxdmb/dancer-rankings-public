@@ -20,7 +20,7 @@ export default function Home() {
 
   const routes = useMemo(
     () =>
-      ActiveLinks.map((link) => ({
+      ActiveLinks.map((link) => (link.enabled && {
         label: link.label,
         active: pathname === link.href,
         href: link.href,

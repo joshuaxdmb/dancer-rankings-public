@@ -163,6 +163,7 @@ export type ActiveLink = {
     label: string,
     playlist?: PlaylistEnum
     icon?: any
+    enabled: boolean
 };
 
 export enum SupportedCommunities {
