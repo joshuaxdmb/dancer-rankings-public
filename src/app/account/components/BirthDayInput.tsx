@@ -5,10 +5,10 @@ type BirthdayInputFieldProps = {
   disabled?: boolean;
   birthdate?: string;
   setBirthdate: (birthdate: string) => void;
+  className?:string
 }
 
-const BirthdayInputField = ({disabled, birthdate, setBirthdate}:BirthdayInputFieldProps) => {
-  const [proxyDate, setProxyDate] = useState<string>(birthdate);
+const BirthdayInputField = ({disabled, birthdate, setBirthdate, className}:BirthdayInputFieldProps) => {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Format the date as the user types it
     const formattedDate = dayjs(e.target.value).format('YYYY-MM-DD');
@@ -22,7 +22,7 @@ const BirthdayInputField = ({disabled, birthdate, setBirthdate}:BirthdayInputFie
       onChange={handleDateChange}
       placeholder="Enter your birthday"
       disabled={disabled}
-      className='bg-transparent text-gray-300 w-full py-2'
+      className={'bg-transparent text-gray-300 w-full py-2 '+className}
       // Additional styling can be applied here or via external CSS
     />
   );

@@ -21,6 +21,7 @@ import Loading from '../Loading'
 import { deviceDimensionsAtom } from '@/atoms/deviceDimensionsAtom'
 import { SafeArea } from 'capacitor-plugin-safe-area'
 import { getMarginBottom, getMarginTop } from './StatusBarSpacing'
+import { showSideBarAtom } from '@/atoms/layoutAtom'
 
 type Props = { children: React.ReactNode }
 
@@ -33,6 +34,7 @@ const Sidebar = ({ children }: Props) => {
   const [marginBottom, setMarginBottom] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [deviceDimensions, setDeviceDimensions] = useRecoilState(deviceDimensionsAtom)
+  const [showSideBar, setShowSideBar] = useRecoilState(showSideBarAtom)
 
   const setStatusBarHeight = async () => {
     const { statusBarHeight } = await SafeArea.getStatusBarHeight()
@@ -159,7 +161,7 @@ const Sidebar = ({ children }: Props) => {
   return (
     <div className={`flex h-full relative scrollbar-hide`}>
       {visible ? null : (
-        <button
+        showSideBar && <button
           onClick={() => {
             setVisible(true)
           }}
@@ -168,9 +170,9 @@ const Sidebar = ({ children }: Props) => {
           <GiHamburgerMenu className='text-white' size={22} />
         </button>
       )}
-      <div className='md:block md:static hidden absolute top-0 left-0 bottom-0'>
+      {showSideBar && <div className='md:block md:static hidden absolute top-0 left-0 bottom-0'>
         {sidebarContent}
-      </div>
+      </div>}
       <div
         className={`md:hidden fixed top-0 left-0 bottom-0 transition-transform duration-300 z-30 ${
           !visible ? '-translate-x-full' : ''

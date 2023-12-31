@@ -17,6 +17,7 @@ export interface UserDetailsType {
     lead_level?: DanceLevelsEnum;
     follow_level?: DanceLevelsEnum;
     birthdate?: string;
+    identification?:string;
     
 
 }
@@ -219,6 +220,7 @@ export type EventType = {
     instructors: string,
     end_time: any,
     event_location: LocationIdsEnum
+    playlistId?: string
 }
 
 export type EventLocalType = {
