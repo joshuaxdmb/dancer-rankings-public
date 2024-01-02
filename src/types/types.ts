@@ -216,11 +216,16 @@ export type EventType = {
     location_link?: string,
     event_site?: string,
     start_time: any,
-    classes_included?: ClassOfferedByInstructor[],
+    classes_included?: ClassOfferedByInstructor[] | any[],
     instructors: string,
     end_time: any,
     event_location: LocationIdsEnum
     playlistId?: string
+}
+
+export type EventClassType = {
+    class: string,
+    level: string
 }
 
 export type EventLocalType = {
