@@ -221,11 +221,13 @@ export type EventType = {
     end_time: any,
     event_location: LocationIdsEnum
     playlistId?: string
+    image_path?: string,
 }
 
 export type EventClassType = {
     class: string,
-    level: string
+    level: string,
+    instructors: string,
 }
 
 export type EventLocalType = {

@@ -1,9 +1,10 @@
 import StyledTextInput from '@/app/components/StyledTextInput'
 import React from 'react'
+import { LocationIdsEnum, LocationLabels } from '../../../../content'
 
 type Props = {
     editable:boolean
-    value:string
+    value:LocationIdsEnum
     setValue: Function
     options: any[]
     labels?:any[]
@@ -31,7 +32,7 @@ const MultipleChoiceInput = ({editable, value, setValue, options, labels, placeh
       ) : (
         <StyledTextInput
           id={id+'-disabled'}
-          value={value}
+          value={LocationLabels[value]}
           setValue={() => {}}
           placeholder={placeholder || ''}
           disabled={true}

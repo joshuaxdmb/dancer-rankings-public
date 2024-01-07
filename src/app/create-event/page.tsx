@@ -9,8 +9,8 @@ import CreateEventContent from './components/CreateEventContent'
 import Loading from './loading'
 
 export default function Account() {
-  const { userDetails, isLoading } = useUser()
-  if (isLoading || !userDetails?.id) return <Loading />
+  const {isLoading } = useUser()
+  if (isLoading) return <Loading />
 
   return (
     <div

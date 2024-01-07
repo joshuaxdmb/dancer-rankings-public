@@ -14,11 +14,12 @@ const AccountContent = () => {
   const { isLoading, subscription, user } = useUser()
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.replace('/')
-    }
-  }, [isLoading, user, router])
+  // TODO: Add a check to see if the user is logged in and redirect to login if not
+  // useEffect(() => {
+  //   if (!isLoading && !user) {
+  //     router.replace('/')
+  //   }
+  // }, [isLoading, user, router])
 
   const redirectToCustomerPortal = async () => {
     setLoading(true)

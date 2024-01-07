@@ -73,7 +73,6 @@ const getLevelsTitle = (levels: DanceLevelsEnum[]): string => {
 };
 
 const EventItem = ({ event, onVote, userVote }: Props) => {
-  const router = useRouter();
   const [expand, setExpand] = useState(false);
   let classes_included: string[] = [];
   if (typeof event.classes_included === 'string') {
@@ -113,7 +112,7 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
           </p>
           <div className="flex-row flex items-center">
             <p className="text-sm text-gray-300 w-full">
-              {event.classes_included?.length
+              {classes_included?.length > 0
                 ? 'Includes Dance Lessons'
                 : 'See Details'}
             </p>
@@ -141,7 +140,7 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
       </div>
       {expand && (
         <div className='xl:px-20'>
-          {event.classes_included?.length && (
+          {classes_included?.length > 0 && (
             <p className="text-sm text-gray-200 w-full">Included Classes:</p>
           )}
           {classes_included.map((c, index) => (

@@ -44,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log(signUpForm)
-    if(!userDetails?.identification && !rejectedSignUp) router.push('/signup')
+    if(userDetails && !userDetails?.identification && !rejectedSignUp) router.push('/signup')
     setShowSidebar(true)
     setTopMargin(window.innerWidth <= 768)
   }, [])
