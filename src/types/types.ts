@@ -243,6 +243,7 @@ export type EventLocalType = {
     end_time: any,
     event_location: LocationIdsEnum,
     total_votes: number,
+    playlist_id?: string
 }
 
 export type SpotifyTokenResponse = {

@@ -1,36 +1,23 @@
-import { DanceLevelsEnum, DanceRolesEnum } from '@/types/danceClassesTypes';
+import { DanceLevelsEnum } from '@/types/danceClassesTypes';
 import { EventLocalType } from '@/types/types';
 import { toBeautifulDateTime } from '@/utils/utils';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import {
   BsArrowUpCircleFill as ArrowUp,
-  BsArrowDownCircleFill as ArrowDown,
 } from 'react-icons/bs';
 import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
 import ChevronUpIcon from '@heroicons/react/24/outline/ChevronUpIcon';
 import { HiMapPin } from 'react-icons/hi2';
 import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
 import SytledButton from '../../components/global/SytledButton';
-import { useRouter } from 'next/navigation';
-
-
+import { BiSolidParty } from 'react-icons/bi'
+import { getUrl } from '@/lib/helpers'
 
 type Props = {
   event: EventLocalType;
   onVote: (event: any) => void;
   userVote: boolean;
-};
-
-const getRolesTitle = (role: DanceRolesEnum) => {
-  switch (role) {
-    case DanceRolesEnum.Follow:
-      return 'for followers';
-    case DanceRolesEnum.Lead:
-      return 'for leaders';
-    case DanceRolesEnum.Both:
-      return 'partnerwork';
-  }
 };
 
 const getBroadCategory = (level: DanceLevelsEnum): string => {
@@ -163,6 +150,15 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
               </a>
             </SytledButton>
           )}
+          {
+            event.playlist_id && (
+              <SytledButton className="max-w-[300px] bg-primary-purple ">
+                <a target='_blank' href={getUrl()+'party-playlist?id='+event.playlist_id} className='text-sm text-black0 w-full flex justify-center items-center pt-1'>
+                <p>Event Playlist</p> <BiSolidParty size={20} className="ml-2 inline-block mb-1" />
+                </a>
+              </SytledButton>
+            )
+          }
           </div>
         </div>
         
