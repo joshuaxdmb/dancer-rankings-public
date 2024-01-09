@@ -220,7 +220,7 @@ export type EventType = {
     instructors: string,
     end_time: any,
     event_location: LocationIdsEnum
-    playlistId?: string
+    playlist_id?: string
     image_path?: string,
 }
 

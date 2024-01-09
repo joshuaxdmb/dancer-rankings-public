@@ -15,7 +15,6 @@ import { showSideBarAtom } from '@/atoms/layoutAtom'
 import { useRouter } from 'next/navigation'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { rejectedSignUpAtom, signUpFormAtom } from '@/atoms/signupFormAtom'
-import { stagesEnum } from '../signup/content'
 
 export default function Home() {
   const { userDetails } = useUser()
@@ -26,7 +25,7 @@ export default function Home() {
   const router = useRouter()
   const [signUpForm, setSignUpForm, persistentSignUpForm] =
     usePersistentRecoilState(signUpFormAtom)
-  const [rejectedSignUp, setRejectedSignUp] = useRecoilState(rejectedSignUpAtom)
+  const [rejectedSignUp] = useRecoilState(rejectedSignUpAtom)
 
   const routes = useMemo(
     () =>

@@ -3,7 +3,6 @@ This is the home component of the application
 */
 'use client'
 import { useUser } from '@/hooks/useUser'
-import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { showSideBarAtom } from '@/atoms/layoutAtom'
@@ -17,7 +16,7 @@ import { HiMiniChevronLeft, HiMiniChevronRight, HiMiniXMark } from 'react-icons/
 import { useRouter } from 'next/navigation'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { signUpFormAtom, rejectedSignUpAtom } from '@/atoms/signupFormAtom'
-import SwipeableViews from 'react-swipeable-views'
+import SwipeableViews from 'react-swipeable-views-react-18-fix'
 import BirthdayInputField from '../account/components/BirthDayInput'
 import { useSupabase } from '@/hooks/useSupabase'
 
@@ -34,21 +33,7 @@ export default function Home() {
   const [rejectedSignUp, setRejectedSignUp] = useRecoilState(rejectedSignUpAtom)
   const [birthdate, setBirthdate] = useState<string>('')
   const supabase = useSupabase()
-
-  const updateBirthDate = async () => {
-    birthdate &&
-      (await setPersistentSignUpForm({
-        ...signUpForm,
-        rejected: true,
-        [stagesEnum.birthday]: birthdate,
-      }))
-    birthdate &&
-      setSignUpForm({
-        ...signUpForm,
-        rejected: true,
-        [stagesEnum.birthday]: birthdate,
-      })
-  }
+  const [wrongBirthdate, setWrongBirthdate] = useState(false)
 
   const setStatusBarHeight = async () => {
     const margin = await getMarginTop(16, deviceDimensions?.statusBarHeight)
@@ -60,8 +45,29 @@ export default function Home() {
     else prevState()
   }
 
+  const saveLocally = async (rej = false) => {
+    let updatedForm =
+    birthdate && !wrongBirthdate
+      ? {
+          ...signUpForm,
+          [stagesEnum.birthday]: birthdate,
+        }
+      : signUpForm
+
+    await setPersistentSignUpForm(updatedForm)
+    setSignUpForm(updatedForm)
+  }
+
   const saveToDataBase = async () => {
-    await supabase.updateUser(userDetails.id, persistentSignUpForm)
+    let updatedForm =
+      birthdate && !wrongBirthdate
+        ? {
+            ...signUpForm,
+            [stagesEnum.birthday]: birthdate,
+          }
+        : signUpForm
+
+    await supabase.updateUser(userDetails.id, updatedForm)
   }
 
   const setNewInedx = (newIndex: number) => {
@@ -113,8 +119,8 @@ export default function Home() {
 
   const closeModal = async () => {
     setRejectedSignUp(true)
-    await updateBirthDate()
-    await saveToDataBase().catch((e) => console.log('Error updating from sign-up form: ', e))
+    await saveLocally(true)
+    await saveToDataBase()
     router.push('/')
   }
 
@@ -179,6 +185,7 @@ export default function Home() {
                     className='items-center text-center justify-center'
                     birthdate={birthdate}
                     setBirthdate={setBirthdate}
+                    setWrongBirthdate={setWrongBirthdate}
                   />
                 )}
               </div>

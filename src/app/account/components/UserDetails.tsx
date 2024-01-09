@@ -35,6 +35,7 @@ const UserDetails = ({}: Props) => {
   const [selectedLocation, setSelectedLocation] = useState(userDetails?.default_location)
   const [gender, setGender] = useState(userDetails?.gender)
   const [enteredEmail, setEnteredEmail] = useState(userDetails?.email)
+  const [wrongBirthdate, setWrongBirthdate] = useState(false)
   //End form state
 
   const supabase = useSupabase()
@@ -57,7 +58,7 @@ const UserDetails = ({}: Props) => {
       full_name: enteredName,
       primary_dance_role: primaryDanceRole,
       default_location: selectedLocation,
-      birthdate: birthdate,
+      birthdate: wrongBirthdate ? null : birthdate,
       gender,
       email: enteredEmail,
     } as UserDetailsType
@@ -113,6 +114,7 @@ const UserDetails = ({}: Props) => {
             birthdate={birthdate}
             setBirthdate={setBirthdate}
             disabled={!editable}
+            setWrongBirthdate={setWrongBirthdate}
           />
           <div className={labelClass}>Your Gender:</div>
           {editable ? (
