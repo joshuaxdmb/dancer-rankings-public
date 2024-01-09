@@ -11,6 +11,7 @@ import { updateEventsVotes } from '@/app/songs/songsUtils'
 import { BeatLoader } from 'react-spinners'
 import { eventVotesbyUserAtom, eventsAtom } from '@/atoms/eventsAtom'
 import EventItem from '../events/components/EventItem'
+import { useSupabase } from '@/hooks/useSupabase'
 
 type Props = {
   playlistFilter?: PlaylistEnum
@@ -21,7 +22,7 @@ const EventsCenter = ({}: Props) => {
   const [location] = useRecoilState(locationAtom)
   const [events, setEvents] = useRecoilState<any>(eventsAtom)
   const [userVotes, setUserVotes] = useRecoilState(eventVotesbyUserAtom)
-  const supabaseClient = new SupabaseWrapper(useSupabaseClient())
+  const supabaseClient = useSupabase()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {

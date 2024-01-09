@@ -6,6 +6,7 @@ import { locationAtom } from '@/atoms/locationAtom';
 import PlayingBar from '../components/PlayingBar';
 import { playlistAtom } from '@/atoms/playlistAtom';
 import EventsCenter from '../components/EventsCenter';
+import EventsBadge from './components/EventsBadge'
 
 
 export default function Home() {
@@ -40,7 +41,7 @@ export default function Home() {
         ${themes[playlist].pageBackground}
       `}
     >
-      <Header className='bg-none'pageTitle={`Top Events | ${LocationLabels[location]}`}>
+      <Header spotifyRequired={false} pageBadge={<EventsBadge/>} className='bg-none'pageTitle={`Top Events | ${LocationLabels[location]}`}>
       </Header>
       <EventsCenter/>
       <PlayingBar backGroundColor={themes[playlist].playingBarBackground}/>
