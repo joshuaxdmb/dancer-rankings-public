@@ -8,6 +8,19 @@ body,
   height: 100%;
   color-scheme: dark;
 }
+/* Hide arrows from number input */
+/* For Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 
 .page-padding {
   padding-top:max(env(safe-area-inset-top),2.5rem);
@@ -15,4 +28,21 @@ body,
 
 .page-margin {
   margin-top:max(env(safe-area-inset-top),2.5rem);
+}
+
+.react-datetime-picker__inputGroup__input {
+  min-width: 20px;
+  background-color: transparent;
+  text-align: center;
+  color: rgb(209,213,219);
+}
+
+.react-datetime-picker__inputGroup__divider {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+.react-datetime-picker__inputGroup__year{
+  min-width: 45px;
 }

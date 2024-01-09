@@ -3,6 +3,7 @@ import { LocationIdsEnum } from "../../content";
 import { EventLocalType, ProductWithPrice, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Provider } from "@supabase/supabase-js";
+import { EventType } from "@/types/types";
 
 class SupabaseWrapper {
     private client: SupabaseClient;
@@ -132,6 +133,18 @@ class SupabaseWrapper {
 
         return data?.[0];
 
+    }
+
+    async createEvent(event: EventType) {
+        const { data, error } = await this.client
+            .from('events')
+            .insert([event])
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
     }
 
     async createParty(userId: string) {

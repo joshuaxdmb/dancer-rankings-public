@@ -19,6 +19,7 @@ type Props = {
   pageTitle?: string
   showUserBadge?: boolean
   pageBadge?: React.ReactNode
+  spotifyRequired?: boolean
 }
 
 const Header: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const Header: React.FC<Props> = ({
   pageTitle,
   showUserBadge = true,
   pageBadge,
+  spotifyRequired = true,
 }) => {
   const { user, isLoading } = useUser()
   const [visible, setVisible] = useState(true)
@@ -75,7 +77,7 @@ const Header: React.FC<Props> = ({
   const PageBadge = () => {
     if(!user || isLoading){
       return <LoginButton isLoading={isLoading}/>
-    } else if(!spotifySession) {
+    } else if(!spotifySession && spotifyRequired) {
       return <LinkSpotifyButton/>
     } else if(pageBadge) {
       return pageBadge

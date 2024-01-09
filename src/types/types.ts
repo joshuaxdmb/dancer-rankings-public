@@ -17,6 +17,7 @@ export interface UserDetailsType {
     lead_level?: DanceLevelsEnum;
     follow_level?: DanceLevelsEnum;
     birthdate?: string;
+    identification?:string;
     
 
 }
@@ -163,6 +164,7 @@ export type ActiveLink = {
     label: string,
     playlist?: PlaylistEnum
     icon?: any
+    enabled: boolean
 };
 
 export enum SupportedCommunities {
@@ -214,10 +216,18 @@ export type EventType = {
     location_link?: string,
     event_site?: string,
     start_time: any,
-    classes_included?: ClassOfferedByInstructor[],
+    classes_included?: ClassOfferedByInstructor[] | any[],
     instructors: string,
     end_time: any,
     event_location: LocationIdsEnum
+    playlist_id?: string
+    image_path?: string,
+}
+
+export type EventClassType = {
+    class: string,
+    level: string,
+    instructors: string,
 }
 
 export type EventLocalType = {

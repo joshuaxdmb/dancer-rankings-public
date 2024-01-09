@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   showLoading?:boolean;
 }
 
-const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
+export const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, disabled, type = 'button', sparkle, sparkleWidth,onClick, showLoading=true, style}, ref, ...props) => {
     const [isLoading, setIsLoading] = useState(false)
     const handlePress = async () => {
@@ -31,7 +31,7 @@ const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         type={type}
         className={twMerge(
-          `w-full gap-1 flex flex-row rounded-full items-center justify-center bg-red-500 border border-transparent px-3 py-3 disabled:cursor-not-allowed disabled:opacity-50 text-black font-bold hover:opacity-75 transition`,className
+          `w-full gap-1 flex flex-row rounded-full items-center justify-center bg-primary-purple border border-transparent px-3 py-3 disabled:cursor-not-allowed disabled:opacity-50 text-black font-bold hover:opacity-75 transition`,className
         )}
         disabled={disabled ? true : isLoading}
         ref={ref}

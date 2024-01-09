@@ -134,34 +134,40 @@ export const ActiveLinks: Array<ActiveLink> = [
         href: Routes.Songs,
         emoji:'🎊',
         label:`Vote Salsa`,
-        playlist:PlaylistEnum.salsa
+        playlist:PlaylistEnum.salsa,
+        enabled: true
     },
     { 
         href: Routes.Songs,
         emoji:'🔥',
         label:'Vote Bachata',
-        playlist:PlaylistEnum.bachata
+        playlist:PlaylistEnum.bachata,
+        enabled: true
     },
     {
         href: Routes.Songs,
         emoji:'🌊',
         label:'Vote Zouk',
-        playlist:PlaylistEnum.zouk
+        playlist:PlaylistEnum.zouk,
+        enabled: true
     },
     {
         href: Routes.Events,
         emoji:'💃',
         label:'Vote Events',
+        enabled: true
     },
     {
         href: Routes.Classes,
         emoji:'🕺',
         label:'Book Classes',
+        enabled: false
     },
     {
         href: Routes.PartyPlaylist,
         emoji:'🎉',
         label:'Party Playlist',
+        enabled: true
     },
 ]
 

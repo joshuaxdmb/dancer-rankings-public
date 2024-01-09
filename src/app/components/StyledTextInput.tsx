@@ -19,7 +19,7 @@ const StyledTextInput = ({value,setValue, placeholder, disabled,id,type,classNam
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={placeholder}
-            className={"text-gray-500 bg-transparent w-full py-2 z-20 rounded-md h-12 outline-primary-purple "+className}
+            className={"text-gray-300 bg-transparent text-sm w-full py-2 z-20 rounded-md h-8 outline-primary-purple pl-2 "+className}
             disabled={disabled}
           />
   )
