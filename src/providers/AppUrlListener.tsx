@@ -53,7 +53,6 @@ const AppUrlListener: React.FC<any> = () => {
 
   const handleUrl = async (url: URL) => {
     const authCode = url.searchParams.get('code')
-    const partyId = url.searchParams.get('id')
     const signInMethod = await getPersistentSignInMethod()
     if (authCode) {
       switch (signInMethod) {
@@ -76,9 +75,6 @@ const AppUrlListener: React.FC<any> = () => {
           handleSupabaseCallbackNative(authCode)
       }
       clearAuthCodeFromUrl()
-    }
-    if (partyId) {
-      handleJoinParty(partyId)
     }
   }
 

@@ -149,7 +149,7 @@ const Sidebar = ({ children }: Props) => {
             </h2>
           </Link>
         ))}
-        {user && <AuthButtons isPremiumUser={isPremium} />}
+        {<AuthButtons isPremiumUser={isPremium} user={user} />}
       </Box>
     </div>
   )

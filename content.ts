@@ -171,3 +171,39 @@ export const ActiveLinks: Array<ActiveLink> = [
     },
 ]
 
+export enum ThemeEnum{
+    purple = 'purple',
+    blue = 'blue',
+    red = 'red'
+}
+
+export const themes = {
+  [PlaylistEnum.bachata]:{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  [PlaylistEnum.salsa]:{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  [PlaylistEnum.zouk]:{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  default:{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  'purple':{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  'blue':{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  },
+  'red':{
+    pageBackground: 'bg-gradient-to-b from-purple-900 via-black',
+    playingBarBackground: 'bg-opacity-80 bg-gradient-to-t from-purple-900 via-purple-900'
+  }
+}

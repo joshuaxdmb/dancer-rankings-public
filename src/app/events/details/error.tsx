@@ -1,6 +1,6 @@
 "use client"
 
-import Box from ".././components/global/Box"
+import Box from "../../components/global/Box"
 
 const Error = () =>{
     return (

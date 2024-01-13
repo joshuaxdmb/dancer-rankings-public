@@ -1,8 +1,6 @@
 import { PlaylistEnum } from '../../../content'
 import React, { useEffect, useState } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import SupabaseWrapper from '@/classes/SupabaseWrapper'
-import { EventLocalType } from '@/types/types'
+import { EventByVotesType } from '@/types/types'
 import { useUser } from '@/hooks/useUser'
 import toast from '@/lib/toast'
 import { useRecoilState } from 'recoil'
@@ -106,7 +104,7 @@ const EventsCenter = ({}: Props) => {
           </div>
         ) : events[location]?.length ? (
           <div>
-            {events[location]?.map((event: EventLocalType, index: number) => (
+            {events[location]?.map((event: EventByVotesType, index: number) => (
               <EventItem
                 key={index}
                 event={event}

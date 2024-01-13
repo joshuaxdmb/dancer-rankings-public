@@ -1,24 +1,19 @@
 import { DanceLevelsEnum } from '@/types/danceClassesTypes';
-import { EventLocalType } from '@/types/types';
+import { EventByVotesType } from '@/types/types';
 import { toBeautifulDateTime } from '@/utils/utils';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import {
   BsArrowUpCircleFill as ArrowUp,
 } from 'react-icons/bs';
-import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
-import ChevronUpIcon from '@heroicons/react/24/outline/ChevronUpIcon';
-import { HiMapPin } from 'react-icons/hi2';
-import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
-import SytledButton from '../../components/global/SytledButton';
-import { BiSolidParty } from 'react-icons/bi'
-import { getUrl } from '@/lib/helpers'
+import { FaExternalLinkAlt } from 'react-icons/fa'
+import { useRouter } from 'next/navigation';
 
 type Props = {
-  event: EventLocalType;
+  event: EventByVotesType;
   onVote: (event: any) => void;
   userVote: boolean;
-};
+}
 
 const getBroadCategory = (level: DanceLevelsEnum): string => {
   switch (level) {
@@ -62,6 +57,8 @@ const getLevelsTitle = (levels: DanceLevelsEnum[]): string => {
 const EventItem = ({ event, onVote, userVote }: Props) => {
   const [expand, setExpand] = useState(false);
   let classes_included: string[] = [];
+  const router = useRouter()
+
   if (typeof event.classes_included === 'string') {
     classes_included =
       event.classes_included
@@ -69,6 +66,12 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
         ?.map((item) => item.replace(/'/g, '')) || [];
   } else {
     classes_included = event.classes_included || [];
+  }
+
+  console.log(classes_included)
+
+  const goToEvent = () =>{
+    router.push('/events/details/?id='+event.id)
   }
 
   return (
@@ -80,17 +83,16 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
         <Image
           alt="song-image"
           src={event.image_path || '/assets/icons/spotify.svg'}
-          width={80}
           height={80}
+          width={80}
+          style={{objectFit: 'cover', height:80}}
         />
         <button
-          onClick={() => {
-            setExpand(!expand);
-          }}
-          className="flex flex-col pb-2 cursor-pointer text-left flex-grow truncate"
+          onClick={goToEvent}
+          className="flex flex-col cursor-pointer text-left flex-grow truncate"
         >
           <h2 className={`text-md w-full truncate`}>{event.label}</h2>
-          <p className="text-sm text-gray-300 w-full">{event.venue}</p>
+          <p className="text-sm text-gray-300 w-full truncate">{event.venue}</p>
           <p className="text-xs text-gray-400 w-full">
             Starts: {toBeautifulDateTime(event.start_time)}
           </p>
@@ -99,15 +101,9 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
           </p>
           <div className="flex-row flex items-center">
             <p className="text-sm text-gray-300 w-full">
-              {classes_included?.length > 0
-                ? 'Includes Dance Lessons'
-                : 'See Details'}
+              See Details
             </p>
-            {!expand ? (
-              <ChevronDownIcon className="inline-block h-6" />
-            ) : (
-              <ChevronUpIcon className="inline-block h-6" />
-            )}
+            <FaExternalLinkAlt size={16} className="ml-2 text-gray-300" />
           </div>
         </button>
         <div className="flex flex-col items-center">
@@ -125,7 +121,7 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
           </div>
         </div>
       </div>
-      {expand && (
+      {/* {expand && (
         <div className='xl:px-20'>
           {classes_included?.length > 0 && (
             <p className="text-sm text-gray-200 w-full">Included Classes:</p>
@@ -152,7 +148,7 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
           )}
           {
             event.playlist_id && (
-              <SytledButton className="max-w-[300px] bg-primary-purple ">
+              <SytledButton className="max-w-[300px] bg-spotify-green ">
                 <a target='_blank' href={getUrl()+'party-playlist?id='+event.playlist_id} className='text-sm text-black0 w-full flex justify-center items-center pt-1'>
                 <p>Event Playlist</p> <BiSolidParty size={20} className="ml-2 inline-block mb-1" />
                 </a>
@@ -162,7 +158,7 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
           </div>
         </div>
         
-      )}
+      )} */}
     </div>
   );
 };

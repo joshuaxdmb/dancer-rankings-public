@@ -1,4 +1,4 @@
-import { EventLocalType} from "@/types/types";
+import { EventByVotesType} from "@/types/types";
 import { atom } from "recoil";
 
 export const eventsAtom = atom({

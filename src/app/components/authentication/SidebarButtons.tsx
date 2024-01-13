@@ -8,12 +8,14 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import useSubscribeModal from '@/hooks/useSubscribeModal'
+import { User } from '@/types/types'
 
 type Props = {
   isPremiumUser: boolean
+  user: any
 }
 
-const AuthButtons = ({ isPremiumUser }: Props) => {
+const AuthButtons = ({ isPremiumUser, user }: Props) => {
   const [location, setLocation] = useRecoilState(locationAtom)
   const supabaseClient = useSupabaseClient()
   const { onOpen: openSubscribe } = useSubscribeModal()
@@ -36,9 +38,8 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
     }
   }
 
-  return (
-    <div className='mt-10 w-full flex items-center justify-center flex-col gap-4 pb-5'>
-      <StyledButton
+  const LocationSelect = () => {
+    return(<StyledButton
         onClick={() => {}}
         className='bg-white px-6 py-0 max-w-[200px] flex items-center justify-center gap-x-2'>
         <select
@@ -55,7 +56,13 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
             </option>
           ))}
         </select>
-      </StyledButton>
+      </StyledButton>)
+  }
+
+  return (
+    <div className='mt-10 w-full flex items-center justify-center flex-col gap-4 pb-5'>
+      { user ? <>
+      <LocationSelect />
       <StyledButton
         onClick={handleLogout}
         className='bg-white px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2'>
@@ -75,7 +82,8 @@ const AuthButtons = ({ isPremiumUser }: Props) => {
           className='bg-primary-purple px-6 py-2 max-w-[200px] flex items-center justify-center gap-x-2'>
           Go Premium
         </StyledButton>
-      )}
+      )}</> : <LocationSelect />}
+      
     </div>
   )
 }

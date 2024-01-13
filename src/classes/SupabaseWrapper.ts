@@ -1,6 +1,6 @@
 import { getUrl } from "@/lib/helpers";
 import { LocationIdsEnum } from "../../content";
-import { EventLocalType, ProductWithPrice, Song, SongLocal, UserSignUpType } from "@/types/types";
+import { EventByVotesType, ProductWithPrice, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Provider } from "@supabase/supabase-js";
 import { EventType } from "@/types/types";
@@ -268,10 +268,29 @@ class SupabaseWrapper {
                 return [];
             }
 
-            return data as EventLocalType[]
+            return data as EventByVotesType[]
         } catch (err) {
             console.error('Error executing getVotedEvents:', err);
             return [];
+        }
+    }
+
+    async getEventById(eventId: string) {
+        try {
+            const { data, error } = await this.client
+                .from('events')
+                .select('*')
+                .eq('id', eventId)
+
+            if (error) {
+                throw error;
+            }
+
+            return data?.[0];
+
+        } catch (err) {
+            console.error('Error executing getEventById:', err);
+            throw err;
         }
     }
 
