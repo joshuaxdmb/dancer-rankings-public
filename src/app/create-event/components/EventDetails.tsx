@@ -51,7 +51,7 @@ const UserDetails = ({}: Props) => {
   const updateClassesIncluded = async (index: number, newClass: any) => {
     const newClassesIncluded = classesIncluded.map((c, i) => {
       if (i === index) {
-        return { ...c, newClass }
+        return { ...c, ...newClass }
       }
       return c
     })
@@ -69,6 +69,8 @@ const UserDetails = ({}: Props) => {
       {
         class: '',
         level: '',
+        instructors:'',
+        start_time: startTime,
       },
     ])
   }
@@ -96,7 +98,7 @@ const UserDetails = ({}: Props) => {
       playlistId,
       picture,
     }
-
+    console.log('Saving form', insertData)
     setCreateEventForm(insertData)
     setEditable(false)
   }
@@ -181,12 +183,12 @@ const UserDetails = ({}: Props) => {
             })}
             placeholder='(required)'
           />
-          <div className={labelClass}>{`Who's teaching`}</div>
+          <div className={labelClass}>{`Main instructors`}</div>
           <StyledTextInput
             id='instructors'
             value={instructors}
             setValue={setInstructors}
-            placeholder={'Main instructors (optional)'}
+            placeholder={'Appears on shareable event page (optional)'}
             disabled={!editable}
           />
           <div className={labelClass + ' mb-2'}>{`Classes`}</div>
@@ -197,7 +199,7 @@ const UserDetails = ({}: Props) => {
                   <ClassInputFielt
                     key={i}
                     index={i}
-                    eventClass={c.class}
+                    eventClass={c}
                     setClass={updateClassesIncluded}
                     editable={editable}
                   />

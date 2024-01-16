@@ -31,9 +31,9 @@ export const mergeEvents = (currentEvents: any, location: LocationIdsEnum, newEv
     };
 }
 
-export const updateEventsVotes = (currentEvents: any, location: LocationIdsEnum, event_id: string, vote: number) => {
+export const updateEventsVotes = (currentEvents: any, location: LocationIdsEnum, event_id: Number | String, vote: number) => {
     const updatedLocation = currentEvents[location].map((e: EventByVotesType) => {
-        if (e.id === event_id) {
+        if (e.id == event_id) {
             return {
                 ...e,
                 total_votes: e.total_votes + vote

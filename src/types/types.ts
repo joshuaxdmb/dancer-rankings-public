@@ -210,7 +210,7 @@ export type EventVoteType = {
 }
 
 export type EventType = {
-    id:string,
+    id?:number,
     created_at: any,
     label: string,
     venue: string,
@@ -224,16 +224,18 @@ export type EventType = {
     playlist_id?: string
     image_path?: string,
     theme?:string
+    cover?:string | number
 }
 
 export type EventClassType = {
     class: string,
     level: string,
     instructors: string,
+    start_time: any,
 }
 
 export type EventByVotesType = {
-    id: string,
+    id: number,
     label: string,
     venue: string,
     location_link?: string,

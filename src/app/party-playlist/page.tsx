@@ -41,7 +41,7 @@ export default function Home() {
   const handleUrl = async (url: URL) => {
     const partyId = url.searchParams.get('id')
     if (partyId) {
-      setPartyPlaylistId(partyId)
+      handleJoinParty(partyId)
     }
   }
 

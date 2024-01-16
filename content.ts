@@ -171,6 +171,8 @@ export const ActiveLinks: Array<ActiveLink> = [
     },
 ]
 
+export const defaultEventImage = 'https://res.cloudinary.com/dgf1xlybh/image/upload/v1705182190/dancersapp-events/cw8hcnedklqwberzkpte.png'
+
 export enum ThemeEnum{
     purple = 'purple',
     blue = 'blue',

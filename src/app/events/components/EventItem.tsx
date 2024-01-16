@@ -2,7 +2,7 @@ import { DanceLevelsEnum } from '@/types/danceClassesTypes';
 import { EventByVotesType } from '@/types/types';
 import { toBeautifulDateTime } from '@/utils/utils';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BsArrowUpCircleFill as ArrowUp,
 } from 'react-icons/bs';
@@ -55,7 +55,6 @@ const getLevelsTitle = (levels: DanceLevelsEnum[]): string => {
 };
 
 const EventItem = ({ event, onVote, userVote }: Props) => {
-  const [expand, setExpand] = useState(false);
   let classes_included: string[] = [];
   const router = useRouter()
 

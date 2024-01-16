@@ -1,4 +1,3 @@
-import { EventByVotesType} from "@/types/types";
 import { atom } from "recoil";
 
 export const eventsAtom = atom({
@@ -6,7 +5,9 @@ export const eventsAtom = atom({
     default: {},
 })
 
+type id = number | string
+
 export const eventVotesbyUserAtom = atom({
     key:'eventVotesbyUser',
-    default: [] as string[]
+    default: [] as id[]
 })

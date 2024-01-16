@@ -41,7 +41,6 @@ const SubscribeModal: React.FC<SubscribeModalProps> = () => {
   const getProducts = async () => {
     try{
       const prods = await supabase.getProductsWithPrices()
-      console.log('PRODUUUUCTS',prods,process.env.NEXT_PUBLIC_SUBSCRIPTION_PRODUCT_ID)
       setProducts(prods)
     } catch (error){
       console.log(error)

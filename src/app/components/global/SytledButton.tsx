@@ -24,7 +24,7 @@ export const SytledButton = forwardRef<HTMLButtonElement, ButtonProps>(
           setIsLoading(false)
         }
       } else {
-        onClick()
+        onClick && onClick()
       }
     }
     return (

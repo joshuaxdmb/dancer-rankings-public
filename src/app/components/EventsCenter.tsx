@@ -57,6 +57,7 @@ const EventsCenter = ({}: Props) => {
   }, [user, location]) //eslint-disable-line
 
   const handleVote = async (eventId: string) => {
+    console.log('Vote event', eventId, user?.id)
     if (!user) {
       toast.error('You must login to vote', {
         id: 'failed-upvote-song-supabase',

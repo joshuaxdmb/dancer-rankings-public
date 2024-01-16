@@ -275,7 +275,7 @@ class SupabaseWrapper {
         }
     }
 
-    async getEventById(eventId: string) {
+    async getEventById(eventId: string | Number) {
         try {
             const { data, error } = await this.client
                 .from('events')
@@ -309,7 +309,7 @@ class SupabaseWrapper {
             ])
     }
 
-    async voteEvent(eventId: string, userId: string) {
+    async voteEvent(eventId: string | number, userId: string) {
 
         try {
             const { data, error } = await this.client
@@ -332,7 +332,7 @@ class SupabaseWrapper {
         }
     }
 
-    async deleteVoteEvent(eventId: string, userId: string) {
+    async deleteVoteEvent(eventId: string | Number, userId: string) {
         try {
             const { data, error } = await this.client
                 .from('events_votes')

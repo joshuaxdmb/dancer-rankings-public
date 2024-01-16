@@ -2,9 +2,6 @@
 import React, { useEffect } from 'react'
 import { App, URLOpenListenerEvent } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
-import toast from '@/lib/toast'
-import { partyPlaylistAtom } from '@/atoms/partyPlaylistAtom'
-import { useRecoilState } from 'recoil'
 import { useSupabase } from '@/hooks/useSupabase'
 import { useSpotify } from '@/hooks/useSpotify'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
@@ -13,24 +10,9 @@ import { SignInMethodsEnum } from '../../content'
 
 const AppUrlListener: React.FC<any> = () => {
   const isNative = Capacitor.isNativePlatform()
-  const [partyPlaylistId, setPartyPlaylistId] = useRecoilState(partyPlaylistAtom)
   const supabase = useSupabase()
   const { fetchSpotifySession, linkSpotify } = useSpotify()
   const [signInMethod, setSignInMethod, getPersistentSignInMethod, setPersistentSignInMethod] = usePersistentRecoilState(signInMethodAtom)
-
-  const handleJoinParty = async (partyId?: string) => {
-    const partyIdToJoin = partyId
-    const partyExists = await supabase.checkPartyExists(partyIdToJoin)
-    if (!partyExists) {
-      toast.error('No parties found. You can create one!', {
-        id: 'party-does-not-exist',
-        icon: '⚠️',
-      })
-    } else {
-      console.log('Setting party id:', partyIdToJoin)
-      setPartyPlaylistId(partyIdToJoin)
-    }
-  }
 
   const handleSupabaseCallbackNative = async (code: string) => {
     try {

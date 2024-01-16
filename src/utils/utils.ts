@@ -8,5 +8,5 @@ import { format, parseISO } from 'date-fns';
  */
 export function toBeautifulDateTime(dateString: string): string {
   const date = parseISO(dateString);
-  return format(date, 'MMMM dd, yyyy, h:mm a'); // Outputs: "October 31, 2023, 8:00 AM"
+  return format(date, 'EEEE, MMM dd, yyyy @ h:mm a'); // Outputs: "October 31, 2023, 8:00 AM"
 }
