@@ -76,6 +76,8 @@ const Header: React.FC<Props> = ({
 
   const PageBadge = () => {
     if(!user || isLoading){
+      console.log('No user found:',user)
+      console.log('Is loading:',isLoading)
       return <LoginButton isLoading={isLoading}/>
     } else if(!spotifySession && spotifyRequired) {
       return <LinkSpotifyButton/>
@@ -84,7 +86,7 @@ const Header: React.FC<Props> = ({
     } else if (user && userDetails && showUserBadge) {
       return <UserBadge userDetails={userDetails} />
     }
-    return <LoginButton isLoading={isLoading}/>
+    return <div className='h-[42px]'/>
   }
 
   return (
