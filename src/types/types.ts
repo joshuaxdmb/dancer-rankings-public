@@ -217,7 +217,7 @@ export type EventType = {
     location_link?: string,
     event_site?: string,
     start_time: any,
-    classes_included?: ClassOfferedByInstructor[] | any[],
+    classes_included?: EventClassType[] | string,
     instructors: string,
     end_time: any,
     event_location: LocationIdsEnum
@@ -225,6 +225,7 @@ export type EventType = {
     image_path?: string,
     theme?:string
     cover?:string | number
+    description?:string
 }
 
 export type EventClassType = {

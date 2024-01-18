@@ -86,6 +86,10 @@ const Header: React.FC<Props> = ({
     } else if (user && userDetails && showUserBadge) {
       return <UserBadge userDetails={userDetails} />
     }
+    console.log('No user found:',user)
+    console.log('No spotify session found:',spotifySession)
+    console.log('No user details found:',userDetails)
+    console.log('Is loading:',isLoading)
     return <div className='h-[42px]'/>
   }
 

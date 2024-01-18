@@ -34,6 +34,7 @@ const UserDetails = ({}: Props) => {
   const [classesIncluded, setClassesIncluded] = useState<any[]>(
     createEventForm?.classes_included || []
   )
+  const [description, setDescription] = useState(createEventForm?.description || '')
   const [instructors, setInstructors] = useState(createEventForm?.instructors)
   const [endTime, setEndTime] = useState(createEventForm?.endTime)
   const [location, setLocation] = useState(createEventForm?.location || LocationIdsEnum.toronto)
@@ -69,7 +70,7 @@ const UserDetails = ({}: Props) => {
       {
         class: '',
         level: '',
-        instructors:'',
+        instructors: '',
         start_time: startTime,
       },
     ])
@@ -118,7 +119,7 @@ const UserDetails = ({}: Props) => {
       playlist_id: playlistId,
       image_path: picture,
     }
-    try{
+    try {
       await supabase.createEvent(insertData)
       toast.success('Event submitted successfully', { id: 'event-submitted' })
       router.push('/events')
@@ -126,7 +127,6 @@ const UserDetails = ({}: Props) => {
       console.log('Error creating event', error)
       toast.error('Error creating event', { id: 'event-submitted' })
     }
-
   }
 
   const labelClass = 'mt-3'
@@ -155,7 +155,7 @@ const UserDetails = ({}: Props) => {
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
             onPlaceSelected={(place) => {
               setAddress(place.formatted_address)
-              setAddressLink('https://www.google.com/maps/search/place_id:' + place.place_id)
+              setAddressLink('https://www.google.com/maps/place/q?=place_id:' + place.place_id)
             }}
             className='text-gray-300 bg-transparent text-sm w-full py-2 z-20 rounded-md h-8 outline-primary-purple pl-2 '
             types={[]}
@@ -182,6 +182,14 @@ const UserDetails = ({}: Props) => {
               return l.label
             })}
             placeholder='(required)'
+          />
+          <div className={labelClass}>{`Event Notes`}</div>
+          <StyledTextInput
+            id='description'
+            value={description}
+            setValue={setDescription}
+            placeholder={'Anything people should know? (Optional)'}
+            disabled={!editable}
           />
           <div className={labelClass}>{`Main instructors`}</div>
           <StyledTextInput

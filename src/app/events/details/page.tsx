@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useSupabase } from '@/hooks/useSupabase'
 import toast from '@/lib/toast'
 import { useUser } from '@/hooks/useUser'
-import { EventByVotesType, EventType } from '@/types/types'
+import { EventByVotesType, EventClassType, EventType } from '@/types/types'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { themes } from '@/../../content'
 import SwipeableViews from 'react-swipeable-views-react-18-fix'
@@ -17,7 +17,7 @@ import Loading from '../loading'
 import EventPage from '../components/EventPage'
 import Image from 'next/image'
 import { defaultEventImage } from '@/../../content'
-import { toBeautifulDateTime } from '@/utils/utils'
+import { toBeautifulDateTime, toBeautifulTime } from '@/utils/utils'
 
 export default function Home() {
   const [index, setIndex] = useState(0)
@@ -26,12 +26,19 @@ export default function Home() {
   const [eventByVotes, setEventByVotes] = useState<EventByVotesType | undefined>()
   const [location] = useRecoilState<LocationIdsEnum>(locationAtom)
   const [isLoading, setIsLoading] = useState(true)
+  const [classes_included, setClassesIncluded] = useState<any[]>([])
   const supabaseClient = useSupabase()
   const [userVotes, setUserVotes] = useRecoilState(eventVotesbyUserAtom)
   const { user } = useUser()
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = Number(searchParams.get('id'))
+
+  useEffect(() => {
+    setClassesIncluded(
+      eventById?.classes_included ? JSON.parse(eventById.classes_included as string) : []
+    )
+  }, [eventById])
 
   const prevSlide = () => {
     console.log('Changing slide -1', index)
@@ -74,7 +81,7 @@ export default function Home() {
     setUserVotes(votes_list)
   }
 
-  const handleVote = async (upVoteOnly:boolean = false) => {
+  const handleVote = async (upVoteOnly: boolean = false) => {
     console.log('Vote event', eventId, user?.id)
     if (!user) {
       toast.error('You must login to vote', {
@@ -84,7 +91,7 @@ export default function Home() {
     }
     const voteIndex = userVotes.find((v: any) => v == eventId)
     if (voteIndex) {
-      if(upVoteOnly) return
+      if (upVoteOnly) return
       supabaseClient
         .deleteVoteEvent(eventId, user.id)
         .then((data: any) => {
@@ -156,7 +163,7 @@ export default function Home() {
         scrollbar-hide
         ${themes[eventById?.theme as ThemeEnum]?.pageBackground || themes['default'].pageBackground}
       `}>
-      <Header showUserBadge={false} spotifyRequired={false} className='bg-none' pageTitle={``} />
+      <Header showUserBadge={true} spotifyRequired={true} className='bg-none' pageTitle={``} />
       <SwipeableViews
         enableMouseEvents
         animateTransitions
@@ -195,23 +202,41 @@ export default function Home() {
               />
             </div>
             <div className='flex flex-col gap-2 items-center w-5/6 mt-2'>
-            <div className='flex flex-row items-start gap-2 w-full max-w-[350px] text-left'>
-              <p className='font-bold w-1/4'>Starts:</p>
-              <p className='w-3/4' >{toBeautifulDateTime(eventById.start_time)}</p>
-            </div>
-            <div className='flex flex-row items-start gap-2 w-full max-w-[350px] text-left'>
-              <p className='font-bold w-1/4'>Ends:</p>
-              <p className='w-3/4' >{toBeautifulDateTime(eventById.end_time)}</p>
-            </div>
-            <div className='flex flex-row items-start gap-2 w-full max-w-[350px] text-left'>
-              <p className='font-bold w-1/4'>Location:</p>
-              <p className='w-3/4' >{eventById.venue}</p>
-            </div>
-            {eventById.cover && <div className='flex flex-row items-start gap-2 w-full max-w-[350px] text-left'>
-              <p className='font-bold w-1/4'>Cover:</p>
-              <p className='w-3/4' >${eventById.cover}</p>
-            </div>}
-            <div>{eventById.classes_included}</div>
+              <div className={rowContainerClass}>
+                <p className='font-bold w-1/4'>Starts:</p>
+                <p className='w-3/4'>{toBeautifulDateTime(eventById.start_time)}</p>
+              </div>
+              <div className={rowContainerClass}>
+                <p className='font-bold w-1/4'>Ends:</p>
+                <p className='w-3/4'>{toBeautifulDateTime(eventById.end_time)}</p>
+              </div>
+              <div className={rowContainerClass}>
+                <p className='font-bold w-1/4'>Location:</p>
+                <a target='blank' href={eventById.location_link} className='w-3/4 underline'>{eventById.venue}</a>
+              </div>
+              {eventById.cover && (
+                <div className={rowContainerClass}>
+                  <p className='font-bold w-1/4'>Cover:</p>
+                  <p className='w-3/4'>${eventById.cover}</p>
+                </div>
+              )}
+              {classes_included?.length > 0 && (
+                <div className={rowContainerClass}>
+                  <p className='font-bold w-1/4'>Classes:</p>
+                  <div className='w-3/4'>
+                    {classes_included.map((c: EventClassType, index: number) => {
+                      let classTime = c.start_time ? toBeautifulTime(c.start_time) : ''
+                      return (
+                        <div className='mb-2' key={index}>
+                          <p className='w-full'>{c.class} by {c.instructors && c.instructors}</p>
+                          {c.level && <p className='w-full text-gray-400 text-sm'>Level: {c.level}</p>}
+                          {c.start_time && <p className='w-full text-gray-400 text-sm'>Starts: {classTime}</p>}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -219,3 +244,5 @@ export default function Home() {
     </div>
   )
 }
+
+const rowContainerClass = 'flex flex-row items-start gap-2 w-full max-w-[350px] text-left'
