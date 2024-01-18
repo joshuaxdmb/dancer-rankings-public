@@ -41,12 +41,10 @@ export default function Home() {
   }, [eventById])
 
   const prevSlide = () => {
-    console.log('Changing slide -1', index)
     if (index > 0) setIndex(index - 1)
   }
 
   const nextSlide = () => {
-    console.log('Changing slide +1', index)
     if (index < 1) setIndex(index + 1)
   }
 
@@ -159,7 +157,7 @@ export default function Home() {
         h-full 
         w-full 
         overflow-hidden 
-        overflow-y-auto
+        overflow-y-hidden
         scrollbar-hide
         ${themes[eventById?.theme as ThemeEnum]?.pageBackground || themes['default'].pageBackground}
       `}>
@@ -174,7 +172,7 @@ export default function Home() {
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        containerStyle={{ height: window.innerHeight }}
+        containerStyle={{ height: window.innerHeight, scrollbarWidth: 'none' }}
         index={index}
         axis='y'
         onChangeIndex={onChangeIndex}>
@@ -188,8 +186,8 @@ export default function Home() {
             userVotes={userVotes}
           />
         </div>
-        <div className='h-screen w-full text-lg'>
-          <div className='flex flex-col items-center gap-5'>
+        <div className='h-screen w-full text-lg overflow-y-auto'>
+          <div className='flex flex-col items-center gap-5 justify-start'>
             <h1 className='text-2xl font-semibold'>{eventById.label}</h1>
             <div
               className='aspect-square max-w-[220px] max-h-[220px] w-5/6 object-cover overflow-hidden'
@@ -201,7 +199,7 @@ export default function Home() {
                 src={eventById?.image_path || defaultEventImage}
               />
             </div>
-            <div className='flex flex-col gap-2 items-center w-5/6 mt-2'>
+            <div className='flex flex-col gap-2 items-center w-5/6 mt-2 pb-[120px]'>
               <div className={rowContainerClass}>
                 <p className='font-bold w-1/4'>Starts:</p>
                 <p className='w-3/4'>{toBeautifulDateTime(eventById.start_time)}</p>
@@ -212,12 +210,17 @@ export default function Home() {
               </div>
               <div className={rowContainerClass}>
                 <p className='font-bold w-1/4'>Location:</p>
-                <a target='blank' href={eventById.location_link} className='w-3/4 underline'>{eventById.venue}</a>
+                <a
+                  target='blank'
+                  href={eventById.location_link}
+                  className='w-3/4 underline cursor-pointer'>
+                  {eventById.venue}
+                </a>
               </div>
               {eventById.cover && (
                 <div className={rowContainerClass}>
                   <p className='font-bold w-1/4'>Cover:</p>
-                  <p className='w-3/4'>${eventById.cover}</p>
+                  <a className='w-3/4'>${eventById.cover}</a>
                 </div>
               )}
               {classes_included?.length > 0 && (
@@ -228,13 +231,33 @@ export default function Home() {
                       let classTime = c.start_time ? toBeautifulTime(c.start_time) : ''
                       return (
                         <div className='mb-2' key={index}>
-                          <p className='w-full'>{c.class} by {c.instructors && c.instructors}</p>
-                          {c.level && <p className='w-full text-gray-400 text-sm'>Level: {c.level}</p>}
-                          {c.start_time && <p className='w-full text-gray-400 text-sm'>Starts: {classTime}</p>}
+                          <p className='w-full'>
+                            {c.class} by {c.instructors && c.instructors}
+                          </p>
+                          {c.level && (
+                            <p className='w-full text-gray-400 text-sm'>Level: {c.level}</p>
+                          )}
+                          {c.start_time && (
+                            <p className='w-full text-gray-400 text-sm'>Starts: {classTime}</p>
+                          )}
                         </div>
                       )
                     })}
                   </div>
+                </div>
+              )}
+              {eventById.description && (
+                <div className={rowContainerClass}>
+                  <p className='font-bold w-1/4'>Notes:</p>
+                  <p className='w-3/4 text-gray-300'>{eventById.description}</p>
+                </div>
+              )}
+              {eventById.event_site && (
+                <div className={rowContainerClass}>
+                  <p className='font-bold w-1/4'>Website:</p>
+                  <p className='w-3/4 underline truncate overflow-hidden cursor-pointer'>
+                    {eventById.event_site}
+                  </p>
                 </div>
               )}
             </div>

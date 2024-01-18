@@ -131,6 +131,18 @@ export const EventsThisWeek: Array<any> = [
 
 export const ActiveLinks: Array<ActiveLink> = [
     {
+        href: Routes.Events,
+        emoji:'💃',
+        label:'Events',
+        enabled: true
+    },
+    {
+        href: Routes.PartyPlaylist,
+        emoji:'🎉',
+        label:'Party Playlists',
+        enabled: true
+    },
+    {
         href: Routes.Songs,
         emoji:'🎊',
         label:`Vote Salsa`,
@@ -152,22 +164,10 @@ export const ActiveLinks: Array<ActiveLink> = [
         enabled: true
     },
     {
-        href: Routes.Events,
-        emoji:'💃',
-        label:'Vote Events',
-        enabled: true
-    },
-    {
         href: Routes.Classes,
         emoji:'🕺',
         label:'Book Classes',
         enabled: false
-    },
-    {
-        href: Routes.PartyPlaylist,
-        emoji:'🎉',
-        label:'Party Playlist',
-        enabled: true
     },
 ]
 

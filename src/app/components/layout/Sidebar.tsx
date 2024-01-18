@@ -59,32 +59,32 @@ const Sidebar = ({ children }: Props) => {
         Icon: HiHome,
       },
       {
-        label: `🔥 Bachata`,
-        active: pathname === Routes.Songs && playlist === PlaylistEnum.bachata,
-        onClick: () => setPlaylist(PlaylistEnum.bachata),
-        href: Routes.Songs,
-      },
-      {
-        label: `🎊 Salsa`,
-        active: pathname === Routes.Songs && playlist === PlaylistEnum.salsa,
-        href: Routes.Songs,
-        onClick: () => setPlaylist(PlaylistEnum.salsa),
-      },
-      {
-        label: `🌊 Zouk`,
-        active: pathname === Routes.Songs && playlist === PlaylistEnum.zouk,
-        href: Routes.Songs,
-        onClick: () => setPlaylist(PlaylistEnum.zouk),
-      },
-      {
         label: `💃 Events`,
         active: pathname === Routes.Events,
         href: Routes.Events,
       },
       {
-        label: `🎉 Party Playlist`,
+        label: `🎉 Party Playlists`,
         active: pathname === Routes.PartyPlaylist,
         href: Routes.PartyPlaylist,
+      },
+      {
+        label: `🔥 Vote Bachata`,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.bachata,
+        onClick: () => setPlaylist(PlaylistEnum.bachata),
+        href: Routes.Songs,
+      },
+      {
+        label: `🎊 Vote Salsa`,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.salsa,
+        href: Routes.Songs,
+        onClick: () => setPlaylist(PlaylistEnum.salsa),
+      },
+      {
+        label: `🌊 Vote Zouk`,
+        active: pathname === Routes.Songs && playlist === PlaylistEnum.zouk,
+        href: Routes.Songs,
+        onClick: () => setPlaylist(PlaylistEnum.zouk),
       },
       {
         label: `👤 My Account`,
