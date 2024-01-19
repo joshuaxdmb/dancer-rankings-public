@@ -7,9 +7,21 @@ import Header from '@/app/components/layout/Header'
 import { useUser } from '@/hooks/useUser'
 import Loading from './loading'
 import EventDetails from './components/CreateEventDetails'
+import { useEffect } from 'react'
+import toast from '@/lib/toast'
+import { useRouter } from 'next/navigation'
 
 export default function Account() {
-  const { isLoading } = useUser()
+  const { isLoading, user } = useUser()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!user?.id) {
+      toast.error('You need to login create an event', { id: 'create-event-error' })
+      router.push('/?login=true')
+    }
+  }, [user])
+
   if (isLoading) return <Loading />
 
   return (

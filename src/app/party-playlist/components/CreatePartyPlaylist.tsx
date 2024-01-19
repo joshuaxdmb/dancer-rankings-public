@@ -111,7 +111,7 @@ const CreatePartyPlaylist = (props: Props) => {
       setIsPartyOwner(true)
     } catch (error) {
       console.log(error)
-      toast.error('Unable to create house party', { id: 'create-house-party-error' })
+      toast.error('Unable to create party', { id: 'create-house-party-error' })
     }
   }
 
