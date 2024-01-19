@@ -34,17 +34,16 @@ export default function Home() {
       className={`
         bg-neutral-900 
         rounded-lg 
-        h-full 
+        h-screen
+        flex
+        flex-col
         w-full 
-        overflow-hidden 
-        overflow-y-auto
         ${themes[playlist].pageBackground}
       `}
     >
       <Header spotifyRequired={false} pageBadge={<EventsBadge/>} className='bg-none'pageTitle={`Top Events | ${LocationLabels[location]}`}>
       </Header>
       <EventsCenter/>
-      <PlayingBar backGroundColor={themes[playlist].playingBarBackground}/>
     </div>
   );
 }

@@ -94,8 +94,8 @@ const EventsCenter = ({}: Props) => {
   }
 
   return (
-    <div className='h-full mb-20'>
-      <section>
+    <div className='flex flex-col h-[90vh]'>
+      <section className='flex flex-col overflow-y-auto'>
         {isLoading ? (
           <div className='w-full flex items-center justify-center flex-col h-screen'>
             <div className='loader-container'>
@@ -104,7 +104,7 @@ const EventsCenter = ({}: Props) => {
             <h1 className='text-lg mt-4'>Getting you the latest 🔥 events</h1>
           </div>
         ) : events[location]?.length ? (
-          <div>
+          <div className='overflow-y-auto pb-20 scrollbar-hide'>
             {events[location]?.map((event: EventByVotesType, index: number) => (
               <EventItem
                 key={index}

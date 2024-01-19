@@ -64,7 +64,7 @@ const AppUrlListener: React.FC<any> = () => {
     if (!isNative) return
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       const url = new URL(event.url)
-      console.log('Got url', url)
+      console.log('Got url 🚀', url)
       handleUrl(url)
     })
 
@@ -76,7 +76,7 @@ const AppUrlListener: React.FC<any> = () => {
   useEffect(() => {
     if (isNative) return
     const url = window.location.href
-    console.log('Got URL', url)
+    console.log('Got URL 🚀', url)
     handleUrl(new URL(url))
   }, [])
 

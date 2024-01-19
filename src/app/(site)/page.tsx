@@ -81,7 +81,7 @@ export default function Home() {
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
             : DEFAULT_NOT_SIGNED_IN_MESSAGE 
         }></Header>
-      <div className=' h-screen overflow-y-auto pb-52 scrollbar-hide'>
+      <div className=' h-screen overflow-y-scroll pb-52 scrollbar-hide'>
       <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
         {routes.map((al) => (
           al.enabled && <MainLinkItem

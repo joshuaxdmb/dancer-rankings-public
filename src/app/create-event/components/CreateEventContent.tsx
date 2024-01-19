@@ -6,7 +6,7 @@ import { useUser } from '@/hooks/useUser'
 import { useEffect, useState } from 'react'
 import { postDataToApi } from '@/lib/helpers'
 import toast from '@/lib/toast'
-import EventDetails from './EventDetails'
+import EventDetails from './CreateEventDetails'
 
 const AccountContent = () => {
   const router = useRouter()
@@ -39,7 +39,7 @@ const AccountContent = () => {
   }
 
   return (
-    <div className='mb-7 px-6 w-full items-center justify-center flex flex-col gap-y-2'>
+    <div className='mb-7 px-6 w-full items-center justify-center flex flex-col gap-y-2 overflow-y-auto scrollbar-hide'>
       <EventDetails/>
     </div>
   )

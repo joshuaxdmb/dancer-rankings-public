@@ -5,11 +5,11 @@ Allows the user to edit their details and also to cancel their subscription (red
 'use client'
 import Header from '@/app/components/layout/Header'
 import { useUser } from '@/hooks/useUser'
-import CreateEventContent from './components/CreateEventContent'
 import Loading from './loading'
+import EventDetails from './components/CreateEventDetails'
 
 export default function Account() {
-  const {isLoading } = useUser()
+  const { isLoading } = useUser()
   if (isLoading) return <Loading />
 
   return (
@@ -20,14 +20,12 @@ export default function Account() {
         h-full 
         w-full 
         overflow-hidden 
-        overflow-y-auto
+        overflow-y-hidden
       '>
-      <Header
-        className=''
-        pageTitle={
-          `Let's plan something memorable! 🎉`
-        }></Header>
-      <CreateEventContent />
+      <Header className='' pageTitle={`Let's plan something memorable! 🎉`}></Header>
+      <div className='mb-7 px-6 w-full items-center justify-center flex flex-col gap-y-2 overflow-y-auto scrollbar-hide'>
+        <EventDetails />
+      </div>
     </div>
   )
 }

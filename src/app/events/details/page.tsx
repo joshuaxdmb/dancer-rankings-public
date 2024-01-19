@@ -33,12 +33,17 @@ export default function Home() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = Number(searchParams.get('id'))
+  const [isThinScreen, setIsThinScreen] = useState(false)
 
   useEffect(() => {
     setClassesIncluded(
       eventById?.classes_included ? JSON.parse(eventById.classes_included as string) : []
     )
   }, [eventById])
+
+  useEffect(() => {
+    setIsThinScreen(window.innerWidth <= 300)
+  }, [])
 
   const prevSlide = () => {
     if (index > 0) setIndex(index - 1)
@@ -199,7 +204,9 @@ export default function Home() {
                 src={eventById?.image_path || defaultEventImage}
               />
             </div>
-            <div className='flex flex-col gap-2 items-center w-5/6 mt-2 pb-[120px]'>
+            <div
+              style={{ width: !isThinScreen ? '83.33%' : '90%', fontSize: isThinScreen && 15 }}
+              className='flex flex-col gap-2 items-center w-5/6 mt-2 pb-[120px]'>
               <div className={rowContainerClass}>
                 <p className='font-bold w-1/4'>Starts:</p>
                 <p className='w-3/4'>{toBeautifulDateTime(eventById.start_time)}</p>
@@ -232,7 +239,7 @@ export default function Home() {
                       return (
                         <div className='mb-2' key={index}>
                           <p className='w-full'>
-                            {c.class} by {c.instructors && c.instructors}
+                            {c.class} {c.instructors && 'by '+c.instructors}
                           </p>
                           {c.level && (
                             <p className='w-full text-gray-400 text-sm'>Level: {c.level}</p>
