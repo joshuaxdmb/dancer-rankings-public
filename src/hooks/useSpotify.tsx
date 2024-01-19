@@ -10,7 +10,7 @@ import { Capacitor } from '@capacitor/core'
 import { SPOTIFY_LOGIN_URL_CAPACITOR, SPOTIFY_LOGIN_URL_WEB } from '@/lib/spotify'
 import SpotifyApi from '@/classes/SpotifyApi'
 import { signInMethodAtom } from '@/atoms/signInMethodAtom'
-import { SignInMethodsEnum } from '../../content'
+import { SignInMethodsEnum } from '../lib/content'
 
 type SpotifyContextType = {
   togglePlay?: () => void

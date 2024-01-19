@@ -1,6 +1,6 @@
 import StyledTextInput from '@/app/components/StyledTextInput'
 import React from 'react'
-import { LocationIdsEnum, LocationLabels } from '../../../../content'
+import { LocationIdsEnum, LocationLabels } from '../../../lib/content'
 
 type Props = {
     editable:boolean

@@ -1,4 +1,4 @@
-import { LocationIdsEnum, PlaylistEnum } from "../../content";
+import { LocationIdsEnum, PlaylistEnum } from "../lib/content";
 import Stripe from "stripe";
 import { ClassOfferedByInstructor, DanceLevelsEnum, DanceRolesEnum } from "./danceClassesTypes";
 

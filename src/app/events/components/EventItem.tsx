@@ -92,10 +92,10 @@ const EventItem = ({ event, onVote, userVote }: Props) => {
         >
           <h2 className={`text-md w-full truncate`}>{event.label}</h2>
           <p className="text-sm text-gray-300 w-full truncate">{event.venue}</p>
-          <p className="text-xs text-gray-400 w-full">
+          <p className="text-xs text-gray-400 w-full truncate">
             Starts: {toBeautifulDateTime(event.start_time)}
           </p>
-          <p className="text-xs text-gray-400 !-full">
+          <p className="text-xs text-gray-400 w-full truncate">
             Ends: {toBeautifulDateTime(event.end_time)}
           </p>
           <div className="flex-row flex items-center">

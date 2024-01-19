@@ -1,5 +1,5 @@
 import { getUrl } from "@/lib/helpers";
-import { LocationIdsEnum } from "../../content";
+import { LocationIdsEnum } from "../lib/content";
 import { EventByVotesType, ProductWithPrice, Song, SongLocal, UserSignUpType } from "@/types/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Provider } from "@supabase/supabase-js";

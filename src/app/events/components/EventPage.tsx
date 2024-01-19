@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { defaultEventImage } from '@/../../content'
+import { defaultEventImage } from '@/lib/content'
 import StyledButton from '@/app/components/global/SytledButton'
 import { HiChevronDoubleDown } from 'react-icons/hi2'
 import { toBeautifulDateTime } from '@/utils/utils'
@@ -21,7 +21,7 @@ type Props = {
 
 const EventPage = ({ eventById, userVotes, eventByVotes, handleVote, nextSlide }: Props) => {
   return (
-    <div className='h-5/6 flex flex-col justify-center items-center text-left gap-5'>
+    <div className='h-full flex flex-col justify-center items-center text-left gap-5'>
       <div className='flex flex-col items-center gap-5 justify-between'>
         <div
           className='aspect-square max-w-[250px] max-h-[250px] w-5/6 object-cover'

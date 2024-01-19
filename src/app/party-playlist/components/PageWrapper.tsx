@@ -1,5 +1,5 @@
 import React from 'react'
-import { PlaylistEnum } from '../../../../content'
+import { PlaylistEnum } from '../../../lib/content'
 import { themes } from '@/lib/themes'
 
 type Props = {

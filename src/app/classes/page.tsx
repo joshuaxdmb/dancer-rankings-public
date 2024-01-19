@@ -1,7 +1,7 @@
 'use client'
 import Header from '@/app/components/layout/Header'
 import { playlistAtom } from '@/atoms/playlistAtom'
-import { PlaylistEnum, ActiveLinks } from '../../../content'
+import { PlaylistEnum, ActiveLinks } from '../../lib/content'
 import { useUser } from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'

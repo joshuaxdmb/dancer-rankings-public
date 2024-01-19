@@ -1,6 +1,6 @@
 import { SongLocal } from '@/types/types'
 import SpotifyWebApi from 'spotify-web-api-node'
-import { LocationIdsEnum } from '../../content'
+import { LocationIdsEnum } from '../lib/content'
 
 interface Credentials {
     accessToken?: string | undefined

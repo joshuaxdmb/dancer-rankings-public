@@ -20,7 +20,8 @@ export default function Account() {
         h-full 
         w-full 
         overflow-hidden 
-        overflow-y-hidden
+        overflow-y-auto
+        scrollbar-hide
       '>
       <Header className='' pageTitle={`Let's plan something memorable! 🎉`}></Header>
       <div className='mb-7 px-6 w-full items-center justify-center flex flex-col gap-y-2 overflow-y-auto scrollbar-hide'>

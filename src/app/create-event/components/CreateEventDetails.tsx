@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Box from '../../components/global/Box'
-import { LocationIdsEnum, Locations } from '../../../../content'
+import { LocationIdsEnum, Locations, availableThemes } from '../../../lib/content'
 import { FaEdit } from 'react-icons/fa'
 import StyledButton from '@/app/components/global/SytledButton'
 import DateInputField from './TimeInput'
@@ -20,7 +20,7 @@ import { useRouter } from 'next/navigation'
 
 type Props = {}
 
-const UserDetails = ({}: Props) => {
+const CreateEventDetails = ({}: Props) => {
   const [createEventForm, setCreateEventForm] = usePersistentRecoilState(createEventFormAtom)
   const supabase = useSupabase()
   const router = useRouter()
@@ -34,6 +34,7 @@ const UserDetails = ({}: Props) => {
   const [classesIncluded, setClassesIncluded] = useState<any[]>(
     createEventForm?.classes_included || []
   )
+  const [theme, setTheme] = useState(createEventForm?.theme || 'purple')
   const [description, setDescription] = useState(createEventForm?.description || '')
   const [instructors, setInstructors] = useState(createEventForm?.instructors)
   const [endTime, setEndTime] = useState(createEventForm?.endTime)
@@ -98,6 +99,7 @@ const UserDetails = ({}: Props) => {
       location,
       playlistId,
       picture,
+      theme,
     }
     console.log('Saving form', insertData)
     setCreateEventForm(insertData)
@@ -118,6 +120,7 @@ const UserDetails = ({}: Props) => {
       event_location: location,
       playlist_id: playlistId,
       image_path: picture,
+      theme: theme,
     }
     try {
       await supabase.createEvent(insertData)
@@ -268,6 +271,37 @@ const UserDetails = ({}: Props) => {
               className='w-auto h-40 mx-auto object-cover rounded-md'
             />
           )}
+          <div className={labelClass}>Choose a theme:</div>
+          <div className='flex items-center gap-1'>
+            <MultipleChoiceInput
+              id='location'
+              editable={editable}
+              value={theme}
+              setValue={setTheme}
+              options={Object.keys(availableThemes)
+                .filter((l) => l !== 'default')
+                .map((l) => {
+                  return l
+                })}
+              labels={Object.keys(availableThemes)
+                .filter((l) => l !== 'default')
+                .map((l) => {
+                  const theme = l as keyof typeof availableThemes
+                  return availableThemes[theme].label
+                })}
+              placeholder='Default Purple'
+            />{' '}
+            {theme && (
+              <div
+                style={{
+                  backgroundColor:
+                    availableThemes[theme as keyof typeof availableThemes]?.mainColor
+                    || availableThemes['default']?.mainColor,
+                }}
+                className={'min-h-[25px] min-w-[25px] rounded-full mt-1'}
+              />
+            )}
+          </div>
         </form>
       </Box>
       {editable ? (
@@ -287,4 +321,4 @@ const UserDetails = ({}: Props) => {
   )
 }
 
-export default UserDetails
+export default CreateEventDetails

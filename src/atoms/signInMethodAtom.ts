@@ -1,4 +1,4 @@
-import { SignInMethodsEnum } from "../../content";
+import { SignInMethodsEnum } from "../lib/content";
 import { atom } from "recoil";
 
 export const signInMethodAtom = atom({

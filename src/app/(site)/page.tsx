@@ -5,7 +5,7 @@ This is the home component of the application
 import Header from '@/app/components/layout/Header'
 import MainLinkItem from '@/app/components/MainLinkItem'
 import { playlistAtom } from '@/atoms/playlistAtom'
-import { PlaylistEnum, ActiveLinks } from '../../../content'
+import { PlaylistEnum, ActiveLinks } from '../../lib/content'
 import { useUser } from '@/hooks/useUser'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -72,6 +72,8 @@ export default function Home() {
         rounded-lg 
         h-full 
         w-full 
+        overflow-hidden
+        overflow-y-auto
       '>
       <Header
         className=''
@@ -81,7 +83,7 @@ export default function Home() {
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
             : DEFAULT_NOT_SIGNED_IN_MESSAGE 
         }></Header>
-      <div className=' h-screen overflow-y-scroll pb-52 scrollbar-hide'>
+      <div className=' h-screen pb-52 scrollbar-hide'>
       <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
         {routes.map((al) => (
           al.enabled && <MainLinkItem

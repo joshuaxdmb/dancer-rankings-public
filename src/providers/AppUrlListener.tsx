@@ -6,7 +6,7 @@ import { useSupabase } from '@/hooks/useSupabase'
 import { useSpotify } from '@/hooks/useSpotify'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { signInMethodAtom } from '@/atoms/signInMethodAtom'
-import { SignInMethodsEnum } from '../../content'
+import { SignInMethodsEnum } from '../lib/content'
 
 const AppUrlListener: React.FC<any> = () => {
   const isNative = Capacitor.isNativePlatform()

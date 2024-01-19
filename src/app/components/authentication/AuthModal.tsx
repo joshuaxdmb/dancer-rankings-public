@@ -10,7 +10,7 @@ import SupabaseWrapper from '@/classes/SupabaseWrapper'
 import SytledButton from '../global/SytledButton'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { signInMethodAtom } from '@/atoms/signInMethodAtom'
-import { SignInMethodsEnum } from '../../../../content'
+import { SignInMethodsEnum } from '../../../lib/content'
 import Bluebird from 'bluebird'
 
 type Props = {}

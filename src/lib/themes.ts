@@ -1,4 +1,4 @@
-import { PlaylistEnum } from "../../content";
+import { PlaylistEnum } from "./content";
 
 export const themes = {
     [PlaylistEnum.bachata]: {

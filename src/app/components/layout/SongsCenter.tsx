@@ -13,7 +13,7 @@ import { currentTrackAtom, isPlayingAtom } from '@/atoms/playingSongAtom'
 import SearchBar from '../SearchBar'
 import { BeatLoader } from 'react-spinners'
 import { useSupabase } from '@/hooks/useSupabase'
-import { LocationIdsEnum } from '../../../../content'
+import { LocationIdsEnum } from '../../../lib/content'
 
 type Props = {
   playlist: string
@@ -32,7 +32,8 @@ const Center = ({ playlist, isParty }: Props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
 
-  const fetchSongs = async () => {
+  const fetchSongs = async (requestLocation?: LocationIdsEnum) => {
+    const playlistLocation = requestLocation || location
     try {
       if (!(songs[playlistLocation]?.[playlist]?.length > 0)) {
         console.log('Fetching songs from supabase')
@@ -71,9 +72,13 @@ const Center = ({ playlist, isParty }: Props) => {
 
   useEffect(() => {
     !isLoading && setIsLoading(true)
-    if (isParty) setPlaylistLocation(LocationIdsEnum.global)
-    else setPlaylistLocation(location)
-    fetchSongs()
+    if (isParty) {
+      setPlaylistLocation(LocationIdsEnum.global)
+      fetchSongs(LocationIdsEnum.global)
+    } else {
+      setPlaylistLocation(location)
+      fetchSongs()
+    }
   }, [user, playlist, location]) //eslint-disable-line
 
   const selectSong = (song: SongLocal) => {

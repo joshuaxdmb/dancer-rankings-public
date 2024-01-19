@@ -10,7 +10,7 @@ import { faSpotify } from '@fortawesome/free-brands-svg-icons'
 import StyledButton from '../../components/global/SytledButton'
 import { useRecoilState } from 'recoil'
 import { songsAtom } from '@/atoms/songsAtom'
-import { LocationIdsEnum } from '../../../../content'
+import { LocationIdsEnum } from '../../../lib/content'
 import toast from 'react-hot-toast'
 
 type Props = {

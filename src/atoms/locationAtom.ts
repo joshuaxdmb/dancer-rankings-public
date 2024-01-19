@@ -1,4 +1,4 @@
-import { LocationIdsEnum } from "../../content";
+import { LocationIdsEnum } from "../lib/content";
 import { atom } from "recoil";
 
 export const locationAtom = atom({

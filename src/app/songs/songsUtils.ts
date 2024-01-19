@@ -1,4 +1,4 @@
-import { LocationIdsEnum } from "../../../content";
+import { LocationIdsEnum } from "../../lib/content";
 import { EventByVotesType, SongLocal } from "@/types/types";
 
 export const isValidEmail = (email: string) => {

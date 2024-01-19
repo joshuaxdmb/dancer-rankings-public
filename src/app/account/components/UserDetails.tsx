@@ -7,7 +7,7 @@ import {
   LocationIdsEnum,
   LocationLabels,
   Locations,
-} from '../../../../content'
+} from '../../../lib/content'
 import { DanceRolesEnum } from '@/types/danceClassesTypes'
 import { useSupabase } from '@/hooks/useSupabase'
 

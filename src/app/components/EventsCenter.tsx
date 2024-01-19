@@ -1,4 +1,4 @@
-import { PlaylistEnum } from '../../../content'
+import { PlaylistEnum } from '../../lib/content'
 import React, { useEffect, useState } from 'react'
 import { EventByVotesType } from '@/types/types'
 import { useUser } from '@/hooks/useUser'
@@ -23,37 +23,33 @@ const EventsCenter = ({}: Props) => {
   const supabaseClient = useSupabase()
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    !isLoading && setIsLoading(true)
-    if (!events[location] || !events[location].length) {
-      supabaseClient
-        .getVotedEvents(location)
-        .then((data: any) => {
+  const fetchEvents = async () => {
+    try {
+      if (!events[location] || !events[location].length) {
+        supabaseClient.getVotedEvents(location).then((data: any) => {
           console.log(data, 'events fetched')
           setEvents({ ...events, [location]: data })
         })
-        .catch((e: any) => {
-          console.log('Error fetching events', e)
-          toast.error('Failed to fetch events', { id: 'failed-fetch-events' })
-          setIsLoading(false)
-        })
-    }
-    if (Object.keys(userVotes).length < 1) {
-      if (user) {
-        supabaseClient
-          .getVotedEventsByUser(user?.id)
-          .then((data: any) => {
+      }
+      if (Object.keys(userVotes).length < 1) {
+        if (user) {
+          supabaseClient.getVotedEventsByUser(user?.id).then((data: any) => {
             const votes_list = data.map((v: any) => v.event_id)
             setUserVotes(votes_list)
           })
-          .catch((e: any) => {
-            console.error('Error fetching votes', e)
-            toast.error('Failed to fetch votes', { id: 'failed-fetch-votes' })
-            setIsLoading(false)
-          })
+        }
       }
+    } catch (e) {
+      console.error('Error fetching events', e)
+      toast.error('Failed to fetch events', { id: 'failed-fetch-events' })
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    !isLoading && setIsLoading(true)
+    fetchEvents()
   }, [user, location]) //eslint-disable-line
 
   const handleVote = async (eventId: string) => {
@@ -101,7 +97,7 @@ const EventsCenter = ({}: Props) => {
             <div className='loader-container'>
               <BeatLoader color='#FFFFFF' size={20} />
             </div>
-            <h1 className='text-lg mt-4'>Getting you the latest 🔥 events</h1>
+            <h1 className='text-lg mt-4 px-2'>Getting you the latest 🔥 events</h1>
           </div>
         ) : events[location]?.length ? (
           <div className='overflow-y-auto pb-20 scrollbar-hide'>
@@ -115,7 +111,7 @@ const EventsCenter = ({}: Props) => {
             ))}
           </div>
         ) : (
-          <div className='text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen'>
+          <div className='text-xl text-center text-gray-300 flex items-center justify-center mb-10 h-screen px-2'>
             <h1>{`No events found? Something must be wrong`}</h1>
           </div>
         )}
