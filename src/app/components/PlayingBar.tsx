@@ -16,9 +16,10 @@ import { getMarginBottom } from './layout/StatusBarSpacing'
 
 type Props = {
   backGroundColor?: string
+  shown?: boolean
 }
 
-const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
+const PlayingBar: React.FC<Props> = ({ backGroundColor, shown = true }) => {
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackAtom)
   const [playlist] = useRecoilState<PlaylistEnum>(playlistAtom)
   const [location] = useRecoilState<any>(locationAtom)
@@ -96,7 +97,7 @@ const PlayingBar: React.FC<Props> = ({ backGroundColor }) => {
 
   return (
     <div
-      style={{ paddingBottom: marginBottom ? marginBottom - 10 : 0 }} //Safe area is too large
+      style={{ paddingBottom: marginBottom ? marginBottom - 10 : 0, display: !shown && 'none' }} //Safe area is too large
       className={`overscroll-y-contain flex flex-col sticky bottom-0 pt-6 px-4 items-center justify-center ${
         backGroundColor || 'bg-black'
       } `}>

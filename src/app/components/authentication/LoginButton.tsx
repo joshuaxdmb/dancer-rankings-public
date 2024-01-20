@@ -1,7 +1,6 @@
 import React from 'react'
 import useAuthModal from '@/hooks/useAuthModal'
 import StyledButton from '../global/SytledButton'
-import { SpotifyProfile } from 'next-auth/providers/spotify'
 import { BeatLoader } from 'react-spinners'
 
 type Props = {

@@ -1,14 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 import { defaultEventImage } from '@/lib/content'
+import { availableThemes } from '@/lib/themes'
 import StyledButton from '@/app/components/global/SytledButton'
 import { HiChevronDoubleDown } from 'react-icons/hi2'
 import { toBeautifulDateTime } from '@/utils/utils'
 import { HiOutlineClock, HiOutlineLocationMarker } from 'react-icons/hi'
 import { BsArrowUpCircleFill as ArrowUp } from 'react-icons/bs'
 import { EventByVotesType, EventType } from '@/types/types'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpotify } from '@fortawesome/free-brands-svg-icons'
+import { IoIosMusicalNotes } from 'react-icons/io'
+import { FiPauseCircle } from 'react-icons/fi'
 
 type Props = {
   eventById: EventType
@@ -17,9 +18,19 @@ type Props = {
   handleVote?: (upVoteOnly?: boolean) => void
   nextSlide?: () => void
   prevSlide?: () => void
+  toggleAudio?: () => void
+  isPlaying?: boolean
 }
 
-const EventPage = ({ eventById, userVotes, eventByVotes, handleVote, nextSlide }: Props) => {
+const EventPage = ({
+  eventById,
+  userVotes,
+  eventByVotes,
+  handleVote,
+  nextSlide,
+  toggleAudio,
+  isPlaying = false,
+}: Props) => {
   return (
     <div className='h-full flex flex-col justify-center items-center text-left gap-5'>
       <div className='flex flex-col items-center gap-5 justify-between'>
@@ -31,11 +42,19 @@ const EventPage = ({ eventById, userVotes, eventByVotes, handleVote, nextSlide }
             maxWidth: window.innerHeight > 710 ? 250 : 150,
           }}>
           <Image
+            onClick={toggleAudio}
             fill={true}
             objectFit='cover'
             alt='event-image'
             src={eventById?.image_path || defaultEventImage}
           />
+          {isPlaying && (
+            <div
+              className='z-20 absolute h-full w-full flex items-center justify-center'
+              onClick={toggleAudio}>
+              <FiPauseCircle className='opacity-70' size={70} color='white' />
+            </div>
+          )}
         </div>
         <h1 className='text-2xl font-semibold text-center w-full max-w-[300px]'>
           {eventById.label}
@@ -68,13 +87,22 @@ const EventPage = ({ eventById, userVotes, eventByVotes, handleVote, nextSlide }
       </div>
       <div className='gap-3 flex flex-col w-full max-w-[290px]'>
         <StyledButton
+          style={{
+            backgroundColor:
+              eventById.theme &&
+              availableThemes[eventById.theme as keyof typeof availableThemes]
+                ?.buttonBackgroundColor,
+          }}
           onClick={() => {
             handleVote(true)
           }}>
           <ArrowUp className='mr-[2px]' size={20} />
           Upvote Event
         </StyledButton>
-        <StyledButton className='bg-spotify-green'>Open Playlist</StyledButton>
+        <StyledButton className='bg-white'>
+          <IoIosMusicalNotes size={20} className='mr-[2px]' />
+          Open Playlist
+        </StyledButton>
         <StyledButton onClick={nextSlide} className='bg-transparent text-white font-medium'>
           <HiChevronDoubleDown size={24} />
           More Details

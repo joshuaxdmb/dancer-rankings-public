@@ -39,8 +39,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <UserProvider>
             <RecoilProvider>
               <SpotifyProvider>
-                <AppUrlListener />
                 <ModalProvider />
+                <AppUrlListener />
                 <Sidebar>{children}</Sidebar>
               </SpotifyProvider>
             </RecoilProvider>

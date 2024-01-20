@@ -9,7 +9,7 @@ import toast from '@/lib/toast'
 import { useUser } from '@/hooks/useUser'
 import { EventByVotesType, EventType } from '@/types/types'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { availableThemes } from '@/lib/content'
+import { availableThemes } from '@/lib/themes'
 import SwipeableViews from 'react-swipeable-views-react-18-fix'
 import Header from '@/app/components/layout/Header'
 import { updateEventsVotes } from '@/app/songs/songsUtils'
@@ -30,6 +30,8 @@ export default function Home() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = Number(searchParams.get('id'))
+  const [audioInstance, setAudioInstance] = useState<HTMLAudioElement | undefined>()
+  const [isPlaying, setIsPlaying] = useState(false)
 
   const prevSlide = () => {
     if (index > 0) setIndex(index - 1)
@@ -44,11 +46,40 @@ export default function Home() {
     else prevSlide()
   }
 
+  const setupAudio = (theme_song_url: string) => {
+    if (!theme_song_url) return;
+    // Check if an audio instance already exists
+    if (audioInstance) {
+      // If it exists, just change the source
+      audioInstance.src = theme_song_url;
+    } else {
+      // If it doesn't exist, create a new instance
+      const audio = new Audio(theme_song_url);
+      audio.volume = 0.02;
+      setAudioInstance(audio);
+    }
+  };
+
+  const toggleAudio = () => {
+    console.log('Toggle audio')
+    if (audioInstance?.paused) {
+      console.log('Playing audio')
+      audioInstance.play()
+      setIsPlaying(true)
+    } else {
+      console.log('Pausing audio')
+      audioInstance?.pause()
+      setIsPlaying(false)
+    }
+  }
+
   const getEvent = async () => {
     try {
       const thisEvent = await supabaseClient.getEventById(eventId)
       if (!thisEvent) throw new Error('Event not found')
       setEventById(thisEvent)
+      setupAudio(thisEvent?.theme_song_url)
+      console.log('Displaying event', thisEvent)
     } catch (e) {
       console.log('Error fetching event', e, 'eventId:', searchParams.get('id'))
       toast.error('Event not found', { id: 'event-not-found' })
@@ -115,6 +146,32 @@ export default function Home() {
   }
 
   useEffect(() => {
+    // Define the event handler
+    const playAudio = () => {
+      if (audioInstance?.paused) {
+        document.removeEventListener('click', playAudio)
+        document.removeEventListener('keydown', playAudio)
+        window.removeEventListener('scroll', playAudio);
+        toggleAudio()
+      }
+    }
+
+    // Add event listeners for user interactions
+    document.addEventListener('click', playAudio)
+    document.addEventListener('keydown', playAudio)
+    window.addEventListener('scroll', playAudio, { passive: true });
+
+    // Cleanup function to remove event listeners
+    return () => {
+      audioInstance?.pause()
+      audioInstance?.remove()
+      document.removeEventListener('click', playAudio);
+      document.removeEventListener('keydown', playAudio);
+      window.removeEventListener('scroll', playAudio);
+    }
+  }, [audioInstance])
+
+  useEffect(() => {
     try {
       !isLoading && setIsLoading(true)
 
@@ -150,9 +207,17 @@ export default function Home() {
         overflow-hidden 
         overflow-y-hidden
         scrollbar-hide
-        ${availableThemes[eventById?.theme as keyof typeof availableThemes]?.pageBackground || availableThemes['default'].pageBackground}
+        ${
+          availableThemes[eventById?.theme as keyof typeof availableThemes]?.pageBackground ||
+          availableThemes['default'].pageBackground
+        }
       `}>
-      <Header showUserBadge={false} spotifyRequired={false} className='bg-none absolute right-0' pageTitle={``} />
+      <Header
+        showUserBadge={false}
+        spotifyRequired={false}
+        className='bg-none absolute right-0'
+        pageTitle={``}
+      />
       <SwipeableViews
         enableMouseEvents
         animateTransitions
@@ -164,7 +229,7 @@ export default function Home() {
           justifyContent: 'center',
           scrollbarWidth: 'none',
         }}
-        containerStyle={{ height: window.innerHeight}}
+        containerStyle={{ height: window.innerHeight }}
         index={index}
         axis='y'
         onChangeIndex={onChangeIndex}>
@@ -176,9 +241,11 @@ export default function Home() {
             prevSlide={prevSlide}
             nextSlide={nextSlide}
             userVotes={userVotes}
+            toggleAudio={toggleAudio}
+            isPlaying={isPlaying}
           />
         </div>
-         <EventDetailsPage eventById={eventById}/>
+        <EventDetailsPage eventById={eventById} />
       </SwipeableViews>
     </div>
   )

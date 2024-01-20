@@ -7,10 +7,14 @@ import { useSpotify } from '@/hooks/useSpotify'
 import { usePersistentRecoilState } from '@/hooks/usePersistentState'
 import { signInMethodAtom } from '@/atoms/signInMethodAtom'
 import { SignInMethodsEnum } from '../lib/content'
+import useAuthModal from '@/hooks/useAuthModal'
+import { useUser } from '@/hooks/useUser'
 
 const AppUrlListener: React.FC<any> = () => {
   const isNative = Capacitor.isNativePlatform()
   const supabase = useSupabase()
+  const authModal = useAuthModal()
+  const {user}  = useUser()
   const { fetchSpotifySession, linkSpotify } = useSpotify()
   const [signInMethod, setSignInMethod, getPersistentSignInMethod, setPersistentSignInMethod] = usePersistentRecoilState(signInMethodAtom)
 
@@ -22,19 +26,22 @@ const AppUrlListener: React.FC<any> = () => {
     }
   }
 
-  const clearAuthCodeFromUrl = () => {
+  const clearUrl = () => {
     try{
+      console.log('Clearing url')
       const url = new URL(window.location.href);
       url.searchParams.delete('code'); // Remove the authCode parameter
+      url.searchParams.delete('login'); // Remove the authCode parameter
       window.history.replaceState({}, document.title, url.toString());
     } catch {
-      // Supress
+      console.log('Error clearing url')
     }
   }
   
 
   const handleUrl = async (url: URL) => {
     const authCode = url.searchParams.get('code')
+    const login = url.searchParams.get('login')
     const signInMethod = await getPersistentSignInMethod()
     if (authCode) {
       switch (signInMethod) {
@@ -56,8 +63,13 @@ const AppUrlListener: React.FC<any> = () => {
           console.log('Handling sign-in: default')
           handleSupabaseCallbackNative(authCode)
       }
-      clearAuthCodeFromUrl()
     }
+
+    if(login){
+      !user?.id && (authModal.onOpen())
+    }
+
+    clearUrl()
   }
 
   useEffect(() => {

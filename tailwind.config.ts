@@ -23,7 +23,7 @@ const config: Config = {
       },
       colors: {
         'spotify-green': '#1db954',
-        'primary-purple':'#8250e6'
+        'primary-purple':'#8250e6',
       }
     },
   },

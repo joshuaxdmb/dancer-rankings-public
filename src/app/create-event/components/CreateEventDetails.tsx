@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Box from '../../components/global/Box'
-import { LocationIdsEnum, Locations, availableThemes } from '../../../lib/content'
+import { LocationIdsEnum, Locations } from '@/lib/content'
+import { availableThemes } from '@/lib/themes'
 import { FaEdit } from 'react-icons/fa'
 import StyledButton from '@/app/components/global/SytledButton'
 import DateInputField from './TimeInput'
@@ -17,6 +18,7 @@ import Image from 'next/image'
 import Autocomplete from 'react-google-autocomplete'
 import { useSupabase } from '@/hooks/useSupabase'
 import { useRouter } from 'next/navigation'
+import AddClass from './AddClass'
 
 type Props = {}
 
@@ -34,6 +36,7 @@ const CreateEventDetails = ({}: Props) => {
   const [classesIncluded, setClassesIncluded] = useState<any[]>(
     createEventForm?.classes_included || []
   )
+  const [themeSong, setThemeSong] = useState(createEventForm?.theme_song_url || '')
   const [theme, setTheme] = useState(createEventForm?.theme || 'purple')
   const [description, setDescription] = useState(createEventForm?.description || '')
   const [instructors, setInstructors] = useState(createEventForm?.instructors)
@@ -100,6 +103,7 @@ const CreateEventDetails = ({}: Props) => {
       playlistId,
       picture,
       theme,
+      theme_song_url: themeSong,
     }
     console.log('Saving form', insertData)
     setCreateEventForm(insertData)
@@ -121,6 +125,7 @@ const CreateEventDetails = ({}: Props) => {
       playlist_id: playlistId,
       image_path: picture,
       theme: theme,
+      theme_song_url: themeSong,
     }
     try {
       await supabase.createEvent(insertData)
@@ -204,39 +209,45 @@ const CreateEventDetails = ({}: Props) => {
           />
           <div className={labelClass + ' mb-2'}>{`Classes`}</div>
           {classesIncluded.length ? (
-            <div>
-              {classesIncluded.map((c, i) => {
-                return (
-                  <ClassInputFielt
-                    key={i}
-                    index={i}
-                    eventClass={c}
-                    setClass={updateClassesIncluded}
-                    editable={editable}
-                  />
-                )
-              })}
-              <StyledButton
-                onClick={addClass}
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.45)',
-                  color: 'white',
-                  fontWeight: 'lighter',
-                }}
-                className={`rounded-lg sm:min-w-[260px] h-10 text-left items-center justify-start pl-3 text-sm mt-4`}>
-                {<HiMiniPlusCircle size={20} />} Add Class
-              </StyledButton>
-              <StyledButton
-                onClick={removeLastClass}
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.45)',
-                  color: 'white',
-                  fontWeight: 'lighter',
-                }}
-                className={`rounded-lg sm:min-w-[260px] h-10 text-left items-center justify-start pl-3 text-sm mt-4`}>
-                {<HiMiniMinusCircle size={20} />} Remove Last
-              </StyledButton>
-            </div>
+            <AddClass
+            editable={editable}
+            classesIncluded={classesIncluded}
+            setClassesIncluded={setClassesIncluded}
+            startTime={startTime}
+            />
+            // <div>
+            //   {classesIncluded.map((c, i) => {
+            //     return (
+            //       <ClassInputFielt
+            //         key={i}
+            //         index={i}
+            //         eventClass={c}
+            //         setClass={updateClassesIncluded}
+            //         editable={editable}
+            //       />
+            //     )
+            //   })}
+            //   <StyledButton
+            //     onClick={addClass}
+            //     style={{
+            //       backgroundColor: 'rgba(255,255,255,0.45)',
+            //       color: 'white',
+            //       fontWeight: 'lighter',
+            //     }}
+            //     className={`rounded-lg sm:min-w-[260px] h-10 text-left items-center justify-start pl-3 text-sm mt-4`}>
+            //     {<HiMiniPlusCircle size={20} />} Add Class
+            //   </StyledButton>
+            //   <StyledButton
+            //     onClick={removeLastClass}
+            //     style={{
+            //       backgroundColor: 'rgba(255,255,255,0.45)',
+            //       color: 'white',
+            //       fontWeight: 'lighter',
+            //     }}
+            //     className={`rounded-lg sm:min-w-[260px] h-10 text-left items-center justify-start pl-3 text-sm mt-4`}>
+            //     {<HiMiniMinusCircle size={20} />} Remove Last
+            //   </StyledButton>
+            // </div>
           ) : (
             <StyledButton
               onClick={addClass}
@@ -250,7 +261,6 @@ const CreateEventDetails = ({}: Props) => {
             </StyledButton>
           )}
           <div className={labelClass + ' mb-2'}>{`Add a Picture`}</div>
-
           <StyledButton
             onClick={addPicture}
             style={{
@@ -295,8 +305,8 @@ const CreateEventDetails = ({}: Props) => {
               <div
                 style={{
                   backgroundColor:
-                    availableThemes[theme as keyof typeof availableThemes]?.mainColor
-                    || availableThemes['default']?.mainColor,
+                    availableThemes[theme as keyof typeof availableThemes]?.mainColor ||
+                    availableThemes['default']?.mainColor,
                 }}
                 className={'min-h-[25px] min-w-[25px] rounded-full mt-1'}
               />

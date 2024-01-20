@@ -18,8 +18,6 @@ export interface UserDetailsType {
     follow_level?: DanceLevelsEnum;
     birthdate?: string;
     identification?:string;
-    
-
 }
 
 export interface Song {
@@ -226,6 +224,7 @@ export type EventType = {
     theme?:string
     cover?:string | number
     description?:string
+    theme_song_url?:string
 }
 
 export type EventClassType = {
