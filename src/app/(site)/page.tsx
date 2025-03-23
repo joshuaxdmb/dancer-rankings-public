@@ -23,8 +23,7 @@ export default function Home() {
   const [playlist, setPlaylist] = useRecoilState(playlistAtom)
   const [showSidebar, setShowSidebar] = useRecoilState(showSideBarAtom)
   const router = useRouter()
-  const [signUpForm, setSignUpForm, persistentSignUpForm] =
-    usePersistentRecoilState(signUpFormAtom)
+  const [signUpForm] = usePersistentRecoilState(signUpFormAtom)
   const [rejectedSignUp] = useRecoilState(rejectedSignUpAtom)
 
   const routes = useMemo(
@@ -34,16 +33,20 @@ export default function Home() {
         active: pathname === link.href,
         href: link.href,
         icon: link.icon ? link.icon : null,
-        onClick: link.playlist ? () => setPlaylist(link.playlist as PlaylistEnum) : null,
+        onClick: link.playlist
+          ? () => setPlaylist(link.playlist as PlaylistEnum)
+          : null,
         emoji: link.emoji ? link.emoji : null,
-        enabled: link.enabled
+        enabled: link.enabled,
       })),
     [pathname, playlist]
   )
 
+  const needsSignUp = () =>
+    userDetails && !userDetails?.identification && !rejectedSignUp
+
   useEffect(() => {
-    console.log(signUpForm)
-    if(userDetails && !userDetails?.identification && !rejectedSignUp) router.push('/signup')
+    if (needsSignUp()) router.push('/signup')
     setShowSidebar(true)
     setTopMargin(window.innerWidth <= 768)
   }, [])
@@ -66,33 +69,31 @@ export default function Home() {
   }, [topMargin])
 
   return (
-    <div
-      className='
-        bg-neutral-900 
-        rounded-lg 
-        h-full 
-        w-full 
-      '>
+    <div className='bg-neutral-900 rounded-lg h-full w-full'>
       <Header
         className=''
         showUserBadge={true}
         pageTitle={
           userDetails
             ? `Hi ${userDetails.full_name || 'there'} 👋! `
-            : DEFAULT_NOT_SIGNED_IN_MESSAGE 
-        }></Header>
+            : DEFAULT_NOT_SIGNED_IN_MESSAGE
+        }
+      ></Header>
       <div className=' h-screen overflow-y-auto pb-52 scrollbar-hide'>
-      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
-        {routes.map((al) => (
-          al.enabled && <MainLinkItem
-            key={al.label}
-            name={al.label}
-            emoji={al.emoji}
-            href={al.href}
-            onClick={al.onClick}
-          />
-        ))}
-      </div>
+        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4 mx-4 overflow-y-auto'>
+          {routes.map(
+            (al) =>
+              al.enabled && (
+                <MainLinkItem
+                  key={al.label}
+                  name={al.label}
+                  emoji={al.emoji}
+                  href={al.href}
+                  onClick={al.onClick}
+                />
+              )
+          )}
+        </div>
       </div>
     </div>
   )
