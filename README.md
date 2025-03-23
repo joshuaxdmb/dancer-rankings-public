@@ -32,3 +32,7 @@ leader or a follower
 ### Buy tickets for events 🤞
 
 We will offer event organizers options to let you pay for tickets from the app. How will this help you? No more going to the ATM. No more carrying cash with you if you don't want to. Plus, you will be able to keep track of all the socials you go to and see how much practice you're getting (or just go down memory lane from time to time)
+
+### Update 2025:
+
+After several months, Spotify has rejected this app for commercial use. I’ll park this project for now. YouTube seems more lenient with their APIs, so I might try switching to YouTube, or use a combination of both Spotify and YouTube to export, search, and play playlists.
